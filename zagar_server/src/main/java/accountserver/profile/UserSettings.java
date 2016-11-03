@@ -97,17 +97,6 @@ public class UserSettings {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            Boolean checkPassword = AuthenticationProvider.getRegisteredUsers().stream()
-                    .map(User::getPassword)
-                    .filter(password::equals)
-                    .findFirst()
-                    .isPresent();
-
-            if (checkPassword) {
-                log.warn("User try to change password, but password is already present: " + password);
-                return Response.status(Response.Status.BAD_REQUEST).build();
-            }
-
             User user = TokensStorage.getUser(token);
             String oldPassword = user.getPassword();
             TokensStorage.remove(token);
@@ -121,4 +110,53 @@ public class UserSettings {
         }
     }
 
+    // curl -X POST
+    //      -H "Content-Type: application/x-www-form-urlencoded"
+    //      -H "Authorization: Bearer {token}"
+    //      -H "Host: localhost:8080
+    //      -d "email={newEmail}"
+    // "http://localhost:8080/profile/email"
+    @Authorized
+    @POST
+    @Path("/email")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("text/plain")
+    public Response changePlayerEmail(@HeaderParam("Authorization") String rawToken,
+                                         @FormParam("email") String email) {
+        try {
+
+            if (email == null || email.equals("")) {
+                log.warn("Wrong email - " + email);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            Token token = TokensStorage.parse(rawToken);
+
+            if (!TokensStorage.contains(token)) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            Boolean checkEmail = AuthenticationProvider.getRegisteredUsers().stream()
+                    .map(User::getEmail)
+                    .filter(email::equals)
+                    .findFirst()
+                    .isPresent();
+
+            if (checkEmail) {
+                log.warn("User try to change email, but email is already present: " + email);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            User user = TokensStorage.getUser(token);
+            String oldEmail = user.getEmail();
+            TokensStorage.remove(token);
+            user.setEmail(email);
+            TokensStorage.add(user, token);
+            log.info("User with email {} set email to {}", oldEmail, email);
+            return Response.ok("Your email successfully changed to " + email).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
 }
