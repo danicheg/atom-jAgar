@@ -1,10 +1,10 @@
-package accountserver.entities.token;
+package entities.token;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import accountserver.api.AuthenticationProvider;
-import accountserver.entities.user.User;
+import entities.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

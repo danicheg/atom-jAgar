@@ -3,8 +3,8 @@ package accountserver.api;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import accountserver.entities.token.TokensStorage;
-import accountserver.entities.user.UserBatchHolder;
+import entities.token.TokensStorage;
+import entities.user.UserBatchHolder;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
