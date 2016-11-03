@@ -4,9 +4,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import accountserver.auth.Authorized;
-import accountserver.entities.token.Token;
-import accountserver.entities.token.TokensStorage;
-import accountserver.entities.user.User;
+import entities.token.Token;
+import entities.token.TokensStorage;
+import entities.user.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;

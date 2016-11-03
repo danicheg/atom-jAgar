@@ -1,6 +1,6 @@
 package network.handlers;
 
-import accountserver.entities.token.TokensStorage;
+import entities.token.TokensStorage;
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
 import model.Player;

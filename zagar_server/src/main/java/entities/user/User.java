@@ -1,7 +1,5 @@
-package accountserver.entities.user;
+package entities.user;
 
-import com.google.gson.Gson;
-import com.google.gson.annotations.Expose;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,6 +25,7 @@ public class User {
         this.userID = UUID.randomUUID();
         this.name = name;
         this.password = password;
+        registration_date = LocalDate.now();
         if (log.isInfoEnabled()) {
             log.info(this + " created");
         }

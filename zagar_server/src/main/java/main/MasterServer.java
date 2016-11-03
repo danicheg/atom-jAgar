@@ -19,9 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-/**
- * Created by apomosov on 14.05.16.
- */
 public class MasterServer {
   @NotNull
   private final static Logger log = LogManager.getLogger(MasterServer.class);

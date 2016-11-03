@@ -1,4 +1,4 @@
-package accountserver.entities.token;
+package entities.token;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,6 +11,7 @@ public class Token {
         this.token = token;
     }
 
+    @NotNull
     public Long getToken() {
         return this.token;
     }
