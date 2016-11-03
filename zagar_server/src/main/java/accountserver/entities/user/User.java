@@ -1,13 +1,12 @@
-package server.entities.user;
+package accountserver.entities.user;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.gson.Gson;
+import com.google.gson.annotations.Expose;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import server.session.GameSession;
 
 import java.util.UUID;
 
@@ -16,11 +15,10 @@ public class User {
     @NotNull
     private static final Logger log = LogManager.getLogger(Player.class);
 
-    @NotNull private UUID userID;
+    @NotNull transient private UUID userID;
     @NotNull private String name;
-    @NotNull private String password;
-    @Nullable private Player player;
-    @Nullable private GameSession session;
+    @NotNull transient private String password;
+    @Nullable transient private Player player;
 
     public User(@NotNull String name, @NotNull String password) {
         this.userID = UUID.randomUUID();
@@ -41,7 +39,6 @@ public class User {
     }
 
     @Nullable
-    @JsonIgnore
     public Player getPlayer() {
         return player;
     }

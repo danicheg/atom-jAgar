@@ -1,4 +1,4 @@
-package server.entities.token;
+package accountserver.entities.token;
 
 import org.jetbrains.annotations.NotNull;
 

@@ -1,12 +1,12 @@
-package server.profile;
+package accountserver.profile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import server.api.AuthenticationProvider;
-import server.auth.Authorized;
-import server.entities.token.Token;
-import server.entities.token.TokensStorage;
-import server.entities.user.User;
+import accountserver.api.AuthenticationProvider;
+import accountserver.auth.Authorized;
+import accountserver.entities.token.Token;
+import accountserver.entities.token.TokensStorage;
+import accountserver.entities.user.User;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;

@@ -1,8 +1,7 @@
-package server.entities.user;
+package accountserver.entities.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,11 +9,11 @@ import java.util.List;
 
 public class UserBatchHolder {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final Gson gson = new Gson();
 
-    static {
+    /*static {
         mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-    }
+    }*/
 
     private List<User> users = new ArrayList<>();
 
@@ -27,11 +26,11 @@ public class UserBatchHolder {
     }
 
     public static UserBatchHolder readJson(String json) throws IOException {
-        return mapper.readValue(json, UserBatchHolder.class);
+        return gson.fromJson(json, UserBatchHolder.class);
     }
 
-    public String writeJson() throws JsonProcessingException {
-        return mapper.writeValueAsString(this);
+    public String writeJson() {
+        return gson.toJson(this);
     }
 
 }

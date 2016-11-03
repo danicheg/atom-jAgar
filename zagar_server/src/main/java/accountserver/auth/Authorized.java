@@ -1,4 +1,4 @@
-package server.auth;
+package accountserver.auth;
 
 
 import javax.ws.rs.NameBinding;

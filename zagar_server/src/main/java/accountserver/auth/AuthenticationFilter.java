@@ -1,6 +1,6 @@
-package server.auth;
+package accountserver.auth;
 
-import server.entities.token.TokensStorage;
+import accountserver.entities.token.TokensStorage;
 
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;

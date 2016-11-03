@@ -1,10 +1,10 @@
-package server.api;
+package accountserver.api;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import server.entities.token.TokensStorage;
-import server.entities.user.UserBatchHolder;
+import accountserver.entities.token.TokensStorage;
+import accountserver.entities.user.UserBatchHolder;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -19,7 +19,7 @@ public class UserProvider {
     @GET
     @Path("/users")
     @Produces("application/json")
-    public Response getUsersBatch() throws JsonProcessingException {
+    public Response getUsersBatch() {
         log.info("Batch of users requested.");
         return Response.ok(new UserBatchHolder(TokensStorage.getUserList()).writeJson()).build();
     }
