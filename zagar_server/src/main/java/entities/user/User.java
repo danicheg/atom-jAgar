@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 public class User {
@@ -17,6 +18,8 @@ public class User {
 
     @NotNull transient private UUID userID;
     @NotNull private String name;
+    @Nullable transient private String email;
+    @NotNull transient private LocalDate registration_date;
     @NotNull transient private String password;
     @Nullable transient private Player player;
 
@@ -36,6 +39,15 @@ public class User {
 
     public void setName(@NotNull String name) {
         this.name = name;
+    }
+
+    @Nullable
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NotNull String email) {
+        this.email = email;
     }
 
     @NotNull
@@ -75,9 +87,7 @@ public class User {
         if (this == that) return true;
 
         User newUser = (User) that;
-        return this.name.equals(newUser.name) &&
-                this.userID.equals(newUser.userID) &&
-                this.password.equals(newUser.password);
+        return this.userID.equals(newUser.userID);
     }
 
     @Override
