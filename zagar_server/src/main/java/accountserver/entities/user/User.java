@@ -38,6 +38,15 @@ public class User {
         this.name = name;
     }
 
+    @NotNull
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(@NotNull String password) {
+        this.password = password;
+    }
+
     @Nullable
     public Player getPlayer() {
         return player;
