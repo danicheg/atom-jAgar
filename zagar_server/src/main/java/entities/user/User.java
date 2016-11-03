@@ -6,20 +6,48 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.UUID;
 
+@Entity
+@Table(name = "user", uniqueConstraints = {
+        @UniqueConstraint(columnNames = "name"),
+        @UniqueConstraint(columnNames = "email")
+})
 public class User {
 
     @NotNull
     private static final Logger log = LogManager.getLogger(Player.class);
 
-    @NotNull transient private UUID userID;
-    @NotNull private String name;
-    @Nullable transient private String email;
-    @NotNull transient private LocalDate registration_date;
-    @NotNull transient private String password;
-    @Nullable transient private Player player;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "userId", columnDefinition = "uuid")
+    @NotNull
+    private UUID userID;
+
+    @Column(name = "name", nullable = false)
+    @NotNull
+    private String name;
+
+    @Column(name = "password", nullable = false)
+    @NotNull
+    private String password;
+
+    @Column(name = "email")
+    @Nullable
+    private String email;
+
+    @Column(name = "registration_date")
+    @NotNull
+    private LocalDate registration_date;
 
     public User(@NotNull String name, @NotNull String password) {
         this.userID = UUID.randomUUID();
@@ -58,15 +86,6 @@ public class User {
         this.password = password;
     }
 
-    @Nullable
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(@Nullable Player player) {
-        this.player = player;
-    }
-
     public boolean checkPassword(@NotNull String pass) {
         return password.equals(pass);
     }
@@ -84,18 +103,13 @@ public class User {
     public boolean equals(Object that) {
         if (that == null || that.getClass() != getClass()) return false;
         if (this == that) return true;
-
         User newUser = (User) that;
         return this.userID.equals(newUser.userID);
     }
 
     @Override
     public int hashCode() {
-        int result = userID.hashCode();
-        result = 31 * result + name.hashCode();
-        result = 31 * result + password.hashCode();
-        result = 31 * result + (player != null ? player.hashCode() : 0);
-        return result;
+        return Objects.hashCode(userID);
     }
 
 }
