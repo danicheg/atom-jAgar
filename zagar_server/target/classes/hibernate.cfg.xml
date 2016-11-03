@@ -34,6 +34,7 @@
 
         <!-- Names the annotated entity class -->
         <mapping class="entities.user.User"/>
+        <mapping class="entities.token.Token"/>
 
     </session-factory>
 

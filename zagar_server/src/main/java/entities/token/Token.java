@@ -2,13 +2,28 @@ package entities.token;
 
 import org.jetbrains.annotations.NotNull;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "token")
 public class Token {
 
+    @Id
+    @Column(name = "token")
     @NotNull
     private Long token;
 
+    @Column(name = "date", nullable = false)
+    @NotNull
+    private LocalDate date;
+
     public Token(@NotNull Long token) {
         this.token = token;
+        date = LocalDate.now();
     }
 
     @NotNull
@@ -19,6 +34,16 @@ public class Token {
     public void setToken(@NotNull Long token) {
         this.token = token;
     }
+
+    @NotNull
+    public LocalDate getDate() {
+        return this.date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
 
     @Override
     public boolean equals(Object that) {
