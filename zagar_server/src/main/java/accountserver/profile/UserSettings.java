@@ -32,8 +32,8 @@ public class UserSettings {
     @Path("/name")
     @Consumes("application/x-www-form-urlencoded")
     @Produces("text/plain")
-    public Response setPlayerName(@HeaderParam("Authorization") String rawToken,
-                                  @FormParam("name") String name) {
+    public Response changePlayerName(@HeaderParam("Authorization") String rawToken,
+                                     @FormParam("name") String name) {
         try {
 
             if (name == null || name.equals("")) {
@@ -65,6 +65,56 @@ public class UserSettings {
             TokensStorage.add(user, token);
             log.info("User with name {} set name to {}", oldName, name);
             return Response.ok("Your name successfully changed to " + name).build();
+
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+    }
+
+    // curl -X POST
+    //      -H "Content-Type: application/x-www-form-urlencoded"
+    //      -H "Authorization: Bearer {token}"
+    //      -H "Host: localhost:8080
+    //      -d "password={newPassword}"
+    // "http://localhost:8080/profile/password"
+    @Authorized
+    @POST
+    @Path("/password")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("text/plain")
+    public Response changePlayerPassword(@HeaderParam("Authorization") String rawToken,
+                                     @FormParam("password") String password) {
+        try {
+
+            if (password == null || password.equals("")) {
+                log.warn("Wrong password - " + password);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            Token token = TokensStorage.parse(rawToken);
+
+            if (!TokensStorage.contains(token)) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            Boolean checkPassword = AuthenticationProvider.getRegisteredUsers().stream()
+                    .map(User::getPassword)
+                    .filter(password::equals)
+                    .findFirst()
+                    .isPresent();
+
+            if (checkPassword) {
+                log.warn("User try to change password, but password is already present: " + password);
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+
+            User user = TokensStorage.getUser(token);
+            String oldPassword = user.getPassword();
+            TokensStorage.remove(token);
+            user.setPassword(password);
+            TokensStorage.add(user, token);
+            log.info("User with password {} set password to {}", oldPassword, password);
+            return Response.ok("Your password successfully changed to " + password).build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
