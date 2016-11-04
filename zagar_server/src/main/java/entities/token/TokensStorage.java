@@ -51,7 +51,7 @@ public class TokensStorage {
             return token;
         }
 
-        token = new Token(ThreadLocalRandom.current().nextLong());
+        token = new Token(ThreadLocalRandom.current().nextLong(), user);
         log.info("Generate new token {} for User with name {}", token, name);
         TokensStorage.add(user, token);
         return token;
@@ -61,7 +61,10 @@ public class TokensStorage {
     @NotNull
     public static Token parse(String rawToken) {
         Long longToken = Long.parseLong(rawToken.substring("Bearer".length()).trim());
-        return new Token(longToken);
+        return usersTokensReversed.keySet().parallelStream()
+                .filter(key -> key.getToken().equals(longToken))
+                .findFirst()
+                .get();
     }
 
     public static void validate(@NotNull String rawToken) throws Exception {

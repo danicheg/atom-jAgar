@@ -51,7 +51,7 @@ public class AuthenticationProvider {
         }
 
         // Старая реализация проверки
-/*        boolean checkUser = registeredUsers.parallelStream()
+        /*boolean checkUser = registeredUsers.parallelStream()
                 .filter(u -> u.getName().equals(name))
                 .findFirst()
                 .isPresent();
