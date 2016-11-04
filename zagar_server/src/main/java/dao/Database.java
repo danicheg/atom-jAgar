@@ -7,12 +7,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
-
 
 class Database {
 
@@ -24,6 +21,8 @@ class Database {
         log.info("Session factory configured.");
     }
 
+    private Database() {}
+
     static <T> List<T> selectTransactional(Function<Session, List<T>> selectAction) {
         Transaction txn = null;
         List<T> ts = Collections.emptyList();
@@ -33,11 +32,10 @@ class Database {
             txn.commit();
         } catch (RuntimeException e) {
             log.error("Transaction failed.", e);
-            if (txn != null) {
+            if (txn != null && txn.isActive()) {
                 txn.rollback();
             }
         }
-
         return ts;
     }
 
@@ -49,15 +47,14 @@ class Database {
             txn.commit();
         } catch (RuntimeException e) {
             log.error("Transaction failed.", e);
-            if (txn != null) {
+            if (txn != null && txn.isActive()) {
                 txn.rollback();
             }
         }
     }
 
-    static Session openSession() {
+    private static Session openSession() {
         return sessionFactory.openSession();
     }
 
-    private Database() { }
 }
