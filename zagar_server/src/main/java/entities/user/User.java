@@ -28,7 +28,7 @@ public class User {
     private static final Logger log = LogManager.getLogger(Player.class);
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "userId", columnDefinition = "uuid")
     @NotNull
     private UUID userID;
@@ -47,13 +47,20 @@ public class User {
 
     @Column(name = "registration_date")
     @NotNull
-    private LocalDate registration_date;
+    private LocalDate registrationDate;
+
+    /*
+    Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
+    javax.persistence.PersistenceException: org.hibernate.InstantiationException:
+        No default constructor for entity:  : entities.user.User
+    */
+    public User() {}
 
     public User(@NotNull String name, @NotNull String password) {
         this.userID = UUID.randomUUID();
         this.name = name;
         this.password = password;
-        registration_date = LocalDate.now();
+        registrationDate = LocalDate.now();
         if (log.isInfoEnabled()) {
             log.info(this + " created");
         }
@@ -90,13 +97,9 @@ public class User {
         return password.equals(pass);
     }
 
-    @Override
-    public String toString() {
-        return "User(" +
-                "userID=" + userID +
-                ", name=" + name +
-                ", password=" + password +
-                ')';
+    @NotNull
+    public LocalDate getRegistrationDate() {
+        return registrationDate;
     }
 
     @Override
@@ -112,4 +115,14 @@ public class User {
         return Objects.hashCode(userID);
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "userID=" + userID +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", registrationDate=" + registrationDate +
+                '}';
+    }
 }

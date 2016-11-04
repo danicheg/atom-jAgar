@@ -14,6 +14,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Path("/auth")
 public class AuthenticationProvider {
+
     private static final Logger log = LogManager.getLogger(AuthenticationProvider.class);
     private static CopyOnWriteArrayList<User> registeredUsers;
 
