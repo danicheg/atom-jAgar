@@ -1,5 +1,6 @@
 package accountserver.api;
 
+import dao.UserDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +18,11 @@ public class AuthenticationProvider {
 
     private static final Logger log = LogManager.getLogger(AuthenticationProvider.class);
     private static CopyOnWriteArrayList<User> registeredUsers;
+    private static UserDao userDao;
 
     static {
         registeredUsers = new CopyOnWriteArrayList<>();
+        userDao = new UserDao();
     }
 
     /*curl -i \
@@ -50,9 +53,12 @@ public class AuthenticationProvider {
         }
 
         User user = new User(name, password);
+        userDao.insert(user);
+        assert userDao.getAll().size() != 0;
         registeredUsers.add(user);
         log.info("New user registered with login {}", name);
         return Response.ok(user.getName() + " registered.").build();
+
     }
 
     /*curl -X POST \
@@ -83,6 +89,7 @@ public class AuthenticationProvider {
         } catch (Exception e) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
+
     }
 
     /*curl -X POST \
@@ -114,6 +121,7 @@ public class AuthenticationProvider {
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
         }
+
     }
 
     @NotNull
