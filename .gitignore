@@ -2,6 +2,11 @@
 .idea
 *.iml
 
+# Compile code
+zagar_server/target
+zagar_protocol/target
+zagar_client/target
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
