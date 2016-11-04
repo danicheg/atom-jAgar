@@ -16,6 +16,8 @@ public class UserProvider {
 
     private static final Logger log = LogManager.getLogger(UserProvider.class);
 
+    /*curl -X GET
+     "http://localhost:8080/data/users"*/
     @GET
     @Path("/users")
     @Produces("application/json")

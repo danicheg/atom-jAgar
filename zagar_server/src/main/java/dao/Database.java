@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
-class Database {
+public class Database {
 
     private static final Logger log = LogManager.getLogger(Database.class);
     private static final SessionFactory sessionFactory;
@@ -53,7 +53,7 @@ class Database {
         }
     }
 
-    private static Session openSession() {
+    public static Session openSession() {
         return sessionFactory.openSession();
     }
 

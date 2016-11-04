@@ -28,8 +28,7 @@ public class AuthenticationProvider {
     /*curl -i \
           -X POST \
           -H "Content-Type: application/x-www-form-urlencoded" \
-          -H "Host: localhost:8080" \
-          -d "login=qq&password=qq" \
+          -d "user={user}&password={password}" \
      "http://localhost:8080/auth/register"*/
 
     @POST
@@ -54,7 +53,7 @@ public class AuthenticationProvider {
 
         User user = new User(name, password);
         userDao.insert(user);
-        assert userDao.getAll().size() != 0;
+
         registeredUsers.add(user);
         log.info("New user registered with login {}", name);
         return Response.ok(user.getName() + " registered.").build();
@@ -63,8 +62,7 @@ public class AuthenticationProvider {
 
     /*curl -X POST \
           -H "Content-Type: application/x-www-form-urlencoded" \
-          -H "Host: localhost:8080" \
-          -d "login=qq&password=qq" \
+          -d "user={user}&password={password}" \
      "http://localhost:8080/auth/login"*/
     @POST
     @Path("login")
@@ -93,8 +91,7 @@ public class AuthenticationProvider {
     }
 
     /*curl -X POST \
-            -H "Authorization: Bearer 3008650623990024943" \
-            -H "Host: localhost:8080" \
+            -H "Authorization: Bearer {token}" \
             "http://localhost:8080/auth/logout"*/
 
     @Authorized

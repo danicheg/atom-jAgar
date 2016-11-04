@@ -1,6 +1,7 @@
 package main;
 
 import accountserver.AccountServer;
+import dao.Database;
 import matchmaker.MatchMaker;
 import matchmaker.MatchMakerImpl;
 import mechanics.Mechanics;
@@ -27,6 +28,7 @@ public class MasterServer {
     private final List<Service> services = new ArrayList<>();
 
     public static void main(@NotNull String[] args) throws ExecutionException, InterruptedException {
+        Database.openSession();
         MasterServer server = new MasterServer();
         server.start();
     }
