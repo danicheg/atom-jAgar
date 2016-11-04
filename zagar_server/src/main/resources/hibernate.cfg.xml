@@ -27,6 +27,8 @@
 
         <!-- Echo all executed SQL to stdout -->
         <property name="show_sql">true</property>
+
+        <!-- Format SQL output -->
         <property name="format_sql">true</property>
 
         <!-- Drop and re-create the database schema on startup -->

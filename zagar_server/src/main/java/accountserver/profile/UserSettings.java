@@ -21,12 +21,11 @@ public class UserSettings {
 
     private static final Logger log = LogManager.getLogger(UserSettings.class);
 
-    // curl -X POST
-    //      -H "Content-Type: application/x-www-form-urlencoded"
-    //      -H "Authorization: Bearer {token}"
-    //      -H "Host: localhost:8080
-    //      -d "name={newName}"
-    // "http://localhost:8080/profile/name"
+     /*curl -X POST
+          -H "Content-Type: application/x-www-form-urlencoded"
+          -H "Authorization: Bearer {token}"
+          -d "name={newName}"
+     "http://localhost:8080/profile/name"*/
     @Authorized
     @POST
     @Path("/name")
@@ -71,12 +70,12 @@ public class UserSettings {
         }
     }
 
-    // curl -X POST
-    //      -H "Content-Type: application/x-www-form-urlencoded"
-    //      -H "Authorization: Bearer {token}"
-    //      -H "Host: localhost:8080
-    //      -d "password={newPassword}"
-    // "http://localhost:8080/profile/password"
+    /* curl -X POST
+          -H "Content-Type: application/x-www-form-urlencoded"
+          -H "Authorization: Bearer {token}"
+          -H "Host: localhost:8080
+          -d "password={newPassword}"
+     "http://localhost:8080/profile/password"*/
     @Authorized
     @POST
     @Path("/password")
@@ -110,12 +109,12 @@ public class UserSettings {
         }
     }
 
-    // curl -X POST
-    //      -H "Content-Type: application/x-www-form-urlencoded"
-    //      -H "Authorization: Bearer {token}"
-    //      -H "Host: localhost:8080
-    //      -d "email={newEmail}"
-    // "http://localhost:8080/profile/email"
+    /*curl -X POST
+          -H "Content-Type: application/x-www-form-urlencoded"
+          -H "Authorization: Bearer {token}"
+          -H "Host: localhost:8080
+          -d "email={newEmail}"
+     "http://localhost:8080/profile/email"*/
     @Authorized
     @POST
     @Path("/email")
