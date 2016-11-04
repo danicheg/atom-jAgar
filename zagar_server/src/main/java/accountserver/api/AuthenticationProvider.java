@@ -17,6 +17,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class AuthenticationProvider {
 
     private static final Logger log = LogManager.getLogger(AuthenticationProvider.class);
+
+    /*Нужно заменить на операции с таблицой Users.
+      Пока оставил для корректности работы всех методов*/
     private static CopyOnWriteArrayList<User> registeredUsers;
     private static UserDao userDao;
 
@@ -30,7 +33,6 @@ public class AuthenticationProvider {
           -H "Content-Type: application/x-www-form-urlencoded" \
           -d "user={user}&password={password}" \
      "http://localhost:8080/auth/register"*/
-
     @POST
     @Path("register")
     @Consumes("application/x-www-form-urlencoded")
@@ -38,18 +40,25 @@ public class AuthenticationProvider {
     public Response register(@FormParam("user") String name,
                              @FormParam("password") String password) {
 
-        if (name == null || password == null) {
+        if (name == null || password == null || name.isEmpty() || password.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
-        boolean checkUser = registeredUsers.parallelStream()
+        final String findByNameCondition = "name=\'" + name + "\'";
+
+        if (!userDao.getAllWhere(findByNameCondition).isEmpty()) {
+            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+        }
+
+        // Старая реализация проверки
+/*        boolean checkUser = registeredUsers.parallelStream()
                 .filter(u -> u.getName().equals(name))
                 .findFirst()
                 .isPresent();
 
         if (checkUser) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-        }
+        }*/
 
         User user = new User(name, password);
         userDao.insert(user);
@@ -93,7 +102,6 @@ public class AuthenticationProvider {
     /*curl -X POST \
             -H "Authorization: Bearer {token}" \
             "http://localhost:8080/auth/logout"*/
-
     @Authorized
     @POST
     @Path("logout")

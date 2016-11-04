@@ -2,7 +2,8 @@ package dao;
 
 import java.util.List;
 
-public interface Dao<T> {
+interface Dao<T> {
     List<T> getAll();
+    List<T> getAllWhere(String... conditions);
     void insert(T insertedEntity);
 }
