@@ -94,7 +94,6 @@ public class AuthenticationProvider {
             }
 
             Token token = TokensStorage.issueToken(user);
-            tokenDao.insert(token);
             log.info("User '{}' successfully logged in", user);
             return Response.ok(Long.toString(token.getToken())).build();
 
