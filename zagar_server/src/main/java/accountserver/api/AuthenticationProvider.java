@@ -1,5 +1,6 @@
 package accountserver.api;
 
+import dao.TokenDao;
 import dao.UserDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,10 +23,12 @@ public class AuthenticationProvider {
       Пока оставил для корректности работы всех методов*/
     private static CopyOnWriteArrayList<User> registeredUsers;
     private static UserDao userDao;
+    private static TokenDao tokenDao;
 
     static {
         registeredUsers = new CopyOnWriteArrayList<>();
         userDao = new UserDao();
+        tokenDao = new TokenDao();
     }
 
     /*curl -i \
@@ -80,7 +83,7 @@ public class AuthenticationProvider {
     public Response authenticateUser(@FormParam("user") String user,
                                      @FormParam("password") String password) {
 
-        if (user == null || password == null) {
+        if (user == null || password == null || user.isEmpty() || password.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
@@ -89,7 +92,9 @@ public class AuthenticationProvider {
             if (!authenticate(user, password)) {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
+
             Token token = TokensStorage.issueToken(user);
+            tokenDao.insert(token);
             log.info("User '{}' successfully logged in", user);
             return Response.ok(Long.toString(token.getToken())).build();
 
@@ -135,10 +140,9 @@ public class AuthenticationProvider {
     }
 
     private boolean authenticate(String name, String password) throws Exception {
-        return registeredUsers.stream()
-                .filter(usr -> usr.getName().equals(name) && usr.checkPassword(password))
-                .findFirst()
-                .isPresent();
+        final String findByNameCondition = "name=\'" + name + "\'";
+        final String findByPassCondition = "password=\'" + password + "\'";
+        return !(userDao.getAllWhere(findByNameCondition, findByPassCondition).isEmpty());
     }
 
 }
