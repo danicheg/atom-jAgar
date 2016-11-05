@@ -23,6 +23,13 @@ public class Token {
     @NotNull
     private User user;
 
+    /*
+    Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
+    javax.persistence.PersistenceException: org.hibernate.InstantiationException:
+        No default constructor for entity:  : entities.user.User
+    */
+    public Token(){}
+
     public Token(@NotNull Long token, @NotNull User user) {
         this.token = token;
         date = LocalDate.now();

@@ -99,6 +99,11 @@ public class User {
         return token;
     }
 
+    @NotNull
+    public UUID getUserID(){
+        return userID;
+    }
+
     public void setToken(@Nullable Token token) {
         this.token = token;
     }
