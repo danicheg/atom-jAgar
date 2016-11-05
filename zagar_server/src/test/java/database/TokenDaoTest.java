@@ -14,7 +14,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 
 public class TokenDaoTest {
 
-    private TokenDao firstTokenDao;
+    private TokenDao tokenDao;
     private UserDao userDao;
 
     private Token firstToken;
@@ -28,7 +28,7 @@ public class TokenDaoTest {
     @Before
     public void setUp() {
 
-        firstTokenDao = new TokenDao();
+        tokenDao = new TokenDao();
         userDao = new UserDao();
 
         user1 = new User("userOne", "password");
@@ -43,44 +43,50 @@ public class TokenDaoTest {
 
     @Test
     public void getAllToken() {
-        assertThat(firstTokenDao.getAll()).hasSize(0);
+        assertThat(tokenDao.getAll()).hasSize(0);
     }
 
     @Test
     public void insertTokenTest(){
-        final int initialSize = firstTokenDao.getAll().size();
-        user1.setToken(firstToken);
+        final int initialSize = tokenDao.getAll().size();
+        tokenDao.insert(firstToken);
         userDao.insert(user1);
-        assertThat(firstTokenDao.getAll())
+        assertThat(tokenDao.getAll())
                 .hasSize(initialSize + 1)
                 .extracting(Token::getToken, Token::getDate, Token::getUser)
                 .contains(tuple(0L, LocalDate.now(), user1));
         assertThat(userDao.getAll()).extracting(User::getToken).contains(firstToken);
-        firstTokenDao.delete(firstToken);
+        tokenDao.delete(firstToken);
+        userDao.delete(user1);
     }
 
     @Test
     public void deleteTest() {
-        user1.setToken(firstToken);
+        tokenDao.insert(firstToken);
         userDao.insert(user1);
-        final int initialSize = firstTokenDao.getAll().size();
+        final int initialSize = tokenDao.getAll().size();
+        tokenDao.delete(firstToken);
         userDao.delete(user1);
-        assertThat(firstTokenDao.getAll()).hasSize(initialSize - 1);
+        assertThat(tokenDao.getAll()).hasSize(initialSize - 1);
     }
 
     @Test
     public void insertAllTokensTest(){
-        final int initialSize = firstTokenDao.getAll().size();
-        firstTokenDao.insertAll(firstToken, secondToken, thirdToken);
-        assertThat(firstTokenDao.getAll()).hasSize(initialSize + 3);
-        firstTokenDao.deleteAll(firstToken, secondToken, thirdToken);
+        final int initialSize = tokenDao.getAll().size();
+        tokenDao.insertAll(firstToken, secondToken, thirdToken);
+        userDao.insertAll(user1, user2, user3);
+        assertThat(tokenDao.getAll()).hasSize(initialSize + 3);
+        tokenDao.deleteAll(firstToken, secondToken, thirdToken);
+        userDao.deleteAll(user1, user2, user3);
     }
 
     @Test
     public void deleteAllTest(){
-        firstTokenDao.insertAll(firstToken, secondToken, thirdToken);
-        final int initialSize = firstTokenDao.getAll().size();
-        firstTokenDao.deleteAll(firstToken, secondToken, thirdToken);
-        assertThat(firstTokenDao.getAll()).hasSize(initialSize - 3);
+        tokenDao.insertAll(firstToken, secondToken, thirdToken);
+        userDao.insertAll(user1, user2, user3);
+        final int initialSize = tokenDao.getAll().size();
+        tokenDao.deleteAll(firstToken, secondToken, thirdToken);
+        userDao.deleteAll(user1, user2, user3);
+        assertThat(tokenDao.getAll()).hasSize(0);
     }
 }
