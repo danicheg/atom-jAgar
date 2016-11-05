@@ -1,5 +1,7 @@
 package entities.token;
 
+import dao.TokenDao;
+import dao.UserDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -14,35 +16,31 @@ import java.util.concurrent.ThreadLocalRandom;
 public class TokensStorage {
 
     private static final Logger log = LogManager.getLogger(TokensStorage.class);
-    private static ConcurrentHashMap<User, Token> userTokens;
-    private static ConcurrentHashMap<Token, User> usersTokensReversed;
+    private static UserDao userDao;
+    private static TokenDao tokenDao;
 
     static {
-        userTokens = new ConcurrentHashMap<>();
-        usersTokensReversed = new ConcurrentHashMap<>();
+        userDao = new UserDao();
+        tokenDao = new TokenDao();
     }
 
     @NotNull
     public static List<User> getUserList() {
-        return new ArrayList<>(userTokens.keySet());
+        return userDao.getAll();
     }
 
     public static void remove(@NotNull Token token) {
-        User user = usersTokensReversed.get(token);
-        usersTokensReversed.remove(token);
-        if (user != null) {
-            userTokens.remove(user);
-        }
+        tokenDao.delete(token);
     }
 
     public static boolean contains(@NotNull Token token) {
-        return usersTokensReversed.containsKey(token);
+        final String findByTokenCondition = "token=\'" + token.getToken() + "\'";
+        return !(tokenDao.getAllWhere(findByTokenCondition).isEmpty());
     }
 
     public static Token issueToken(@NotNull String name) {
-
-        User user = AuthenticationProvider.getRegisteredUsers().parallelStream()
-                .filter(u -> u.getName().equals(name))
+        final String findByNameCondition = "name=\'" + name + "\'";
+        User user = userDao.getAllWhere(findByNameCondition).parallelStream()
                 .findFirst()
                 .orElse(null);
 
@@ -51,17 +49,19 @@ public class TokensStorage {
             return token;
         }
 
-        token = new Token(ThreadLocalRandom.current().nextLong());
+        token = new Token(ThreadLocalRandom.current().nextLong(), user);
+        tokenDao.insert(token);
         log.info("Generate new token {} for User with name {}", token, name);
-        TokensStorage.add(user, token);
         return token;
-
     }
 
     @NotNull
     public static Token parse(String rawToken) {
         Long longToken = Long.parseLong(rawToken.substring("Bearer".length()).trim());
-        return new Token(longToken);
+        return tokenDao.getAll().parallelStream()
+                .filter(tkn -> tkn.getToken().equals(longToken))
+                .findFirst()
+                .get();
     }
 
     public static void validate(@NotNull String rawToken) throws Exception {
@@ -81,17 +81,18 @@ public class TokensStorage {
         return true;
     }
 
-    public static void add(@NotNull User user, @NotNull Token token) {
-        userTokens.put(user, token);
-        usersTokensReversed.put(token, user);
-    }
-
     public static User getUser(@NotNull Token token) {
-        return usersTokensReversed.get(token);
+        return userDao.getAll().parallelStream()
+                .filter(usr -> usr.getToken().equals(token))
+                .findFirst()
+                .orElse(null);
     }
 
     private static Token getToken(@NotNull User user) {
-        return userTokens.get(user);
+        return tokenDao.getAll().parallelStream()
+                .filter(tkn -> tkn.getUser().equals(user))
+                .findFirst()
+                .orElse(null);
     }
 
 }

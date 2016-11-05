@@ -1,17 +1,14 @@
 package entities.user;
 
+import entities.token.Token;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -31,6 +28,11 @@ public class User {
     @Column(name = "userId", columnDefinition = "uuid")
     @NotNull
     private UUID userID;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user")
+    @Nullable
+    private Token token;
 
     @Column(name = "name", nullable = false)
     @NotNull
@@ -92,6 +94,19 @@ public class User {
         this.password = password;
     }
 
+    @Nullable
+    public Token getToken() {
+        return token;
+    }
+
+    @NotNull
+    public UUID getUserID(){
+        return userID;
+    }
+
+    public void setToken(@Nullable Token token) {
+        this.token = token;
+    }
     public boolean checkPassword(@NotNull String pass) {
         return password.equals(pass);
     }

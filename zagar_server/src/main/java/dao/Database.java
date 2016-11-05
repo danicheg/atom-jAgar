@@ -7,9 +7,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class Database {
 
@@ -44,6 +47,52 @@ public class Database {
         try (Session session = Database.openSession()) {
             txn = session.beginTransaction();
             f.apply(session);
+            txn.commit();
+        } catch (RuntimeException e) {
+            log.error("Transaction failed.", e);
+            if (txn != null && txn.isActive()) {
+                txn.rollback();
+            }
+        }
+    }
+
+    //TODO: refactoring signature of method to work as doTransactional(Function<Session, ?>... tasks)
+    static void doTransactional(List<Function<Session, ?>> tasks) {
+        Transaction txn = null;
+        try (Session session = Database.openSession()) {
+            txn = session.beginTransaction();
+            tasks.forEach(func -> func.apply(session));
+            txn.commit();
+        } catch (RuntimeException e) {
+            log.error("Transaction failed.", e);
+            if (txn != null && txn.isActive()) {
+                txn.rollback();
+            }
+        }
+    }
+
+    /*TODO: refactoring signature of method to work as doTransactional(Consumer<Session>... tasks)
+    NOTICE: cannot overload method doTransactional because type erasure
+    (List<Function<Session, ?>> and List<Consumer<Session>> have same types)*/
+    static void doTransactionalList(List<Consumer<Session>> tasks) {
+        Transaction txn = null;
+        try (Session session = Database.openSession()) {
+            txn = session.beginTransaction();
+            tasks.forEach(func -> func.accept(session));
+            txn.commit();
+        } catch (RuntimeException e) {
+            log.error("Transaction failed.", e);
+            if (txn != null && txn.isActive()) {
+                txn.rollback();
+            }
+        }
+    }
+
+    static void doTransactional(Consumer<Session> f) {
+        Transaction txn = null;
+        try (Session session = Database.openSession()) {
+            txn = session.beginTransaction();
+            f.accept(session);
             txn.commit();
         } catch (RuntimeException e) {
             log.error("Transaction failed.", e);

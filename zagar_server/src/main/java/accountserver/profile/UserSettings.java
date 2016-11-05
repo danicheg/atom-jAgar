@@ -61,7 +61,7 @@ public class UserSettings {
             String oldName = user.getName();
             TokensStorage.remove(token);
             user.setName(name);
-            TokensStorage.add(user, token);
+            //TokensStorage.add(user, token);
             log.info("User with name {} set name to {}", oldName, name);
             return Response.ok("Your name successfully changed to " + name).build();
 
@@ -100,7 +100,7 @@ public class UserSettings {
             String oldPassword = user.getPassword();
             TokensStorage.remove(token);
             user.setPassword(password);
-            TokensStorage.add(user, token);
+            //TokensStorage.add(user, token);
             log.info("User with password {} set password to {}", oldPassword, password);
             return Response.ok("Your password successfully changed to " + password).build();
 
@@ -150,7 +150,7 @@ public class UserSettings {
             String oldEmail = user.getEmail();
             TokensStorage.remove(token);
             user.setEmail(email);
-            TokensStorage.add(user, token);
+            //TokensStorage.add(user, token);
             log.info("User with email {} set email to {}", oldEmail, email);
             return Response.ok("Your email successfully changed to " + email).build();
 
