@@ -6,8 +6,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,7 +34,7 @@ public class UserDao implements Dao<User> {
 
     @Override
     public void insert(User user) {
-        Database.doTransactional(session -> session.save(user));
+        Database.doTransactional((Function<Session, ?>) session -> session.save(user));
         log.info("User {} inserted into db", user);
     }
 
@@ -48,20 +50,18 @@ public class UserDao implements Dao<User> {
     @Override
     public void delete(User deleteUser) {
         Database.doTransactional(
-                session -> session.createQuery("delete User where userID = :deleteUser")
-                        .setParameter("deleteUser", deleteUser.getUserID())
-                        .executeUpdate()
+                (Consumer<Session>) session -> session.delete(deleteUser)
         );
         log.info("Token '{}' removed into DB", deleteUser.getName());
     }
 
-    //TODO: works not atomicity and it's suck.
-    //TODO: We have List(Transaction1(delete(user1), ... TransactionN(delete(userN))), but must have:
-    //TODO: Transaction(List(delete(user1), ... delete(userN))), as insertAll method
+    //now works atomicity
     @Override
     public void deleteAll(User... deleteUsers) {
         List<User> listTokens = Arrays.asList(deleteUsers);
-        listTokens.forEach(tkn -> delete(tkn));
+        Stream<Consumer<Session>> tasks = listTokens.parallelStream()
+                .map(usr -> (Consumer<Session>) session -> session.delete(usr));
+        Database.doTransactionalList(tasks.collect(Collectors.toList()));
         log.info("All tokens '{}' removed into DB", deleteUsers);
     }
 

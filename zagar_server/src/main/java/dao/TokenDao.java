@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,7 +38,7 @@ public class TokenDao implements Dao<Token> {
 
     @Override
     public void insert(Token token) {
-        Database.doTransactional(session -> session.save(token));
+        Database.doTransactional((Function<Session, ?>) session -> session.save(token));
         log.info("Token '{}' inserted into DB", token);
     }
 
@@ -50,23 +51,27 @@ public class TokenDao implements Dao<Token> {
         log.info("All tokens: '{}' inserted into DB", listTokens);
     }
 
+    //TODO: figure out why (Consumer<Session>) session -> session.delete(deleteToken)) doesn't works
     @Override
     public void delete(Token deleteToken) {
         Database.doTransactional(
-                session -> session.createQuery("delete Token where token = :delToken")
+                (Consumer<Session>) session -> session.createQuery("delete Token where token = :delToken")
                         .setParameter("delToken", deleteToken.getToken())
                         .executeUpdate()
         );
         log.info("Token '{}' removed into DB", deleteToken);
     }
 
-    //TODO: works not atomicity and it's suck.
-    //TODO: We have List(Transaction1(delete(token1), ... TransactionN(delete(tokenN))), but must have:
-    //TODO: Transaction(List(delete(token1), ... delete(tokenN))), as insertAll method
+    //now works atomicity
     @Override
     public void deleteAll(Token... deleteTokens) {
         List<Token> listTokens = Arrays.asList(deleteTokens);
-        listTokens.forEach(tkn -> delete(tkn));
+        Stream<Consumer<Session>> tasks = listTokens.parallelStream()
+                .map(tkn -> (Consumer<Session>) session ->
+                        session.createQuery("delete Token where token = :delToken")
+                        .setParameter("delToken", tkn.getToken())
+                        .executeUpdate());
+        Database.doTransactionalList(tasks.collect(Collectors.toList()));
         log.info("All tokens '{}' removed into DB", deleteTokens);
     }
 }
