@@ -11,6 +11,8 @@ interface Dao<T> {
 
     void insertAll(T... insertedEntities);
 
+    void update(T updatedEntity);
+
     void delete(T deleteEntity);
 
     void deleteAll(T... deleteEntities);

@@ -2,10 +2,9 @@ package accountserver.profile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import accountserver.api.AuthenticationProvider;
 import accountserver.auth.Authorized;
 import entities.token.Token;
-import entities.token.TokensStorage;
+import dao.DatabaseAccessLayer;
 import entities.user.User;
 
 import javax.ws.rs.Consumes;
@@ -40,28 +39,24 @@ public class UserSettings {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            Token token = TokensStorage.parse(rawToken);
+            Token token = DatabaseAccessLayer.parse(rawToken);
 
-            if (!TokensStorage.contains(token)) {
+            if (!DatabaseAccessLayer.contains(token)) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            Boolean checkName = AuthenticationProvider.getRegisteredUsers().stream()
-                    .map(User::getName)
-                    .filter(name::equals)
-                    .findFirst()
-                    .isPresent();
+            final String findByNameCondition = "name=\'" + name + "\'";
+            Boolean checkName = DatabaseAccessLayer.checkByCondition(findByNameCondition);
 
             if (checkName) {
                 log.warn("User try to change name, but name is already present: " + name);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            User user = TokensStorage.getUser(token);
+            User user = DatabaseAccessLayer.getUser(token);
             String oldName = user.getName();
-            TokensStorage.remove(token);
             user.setName(name);
-            //TokensStorage.add(user, token);
+            DatabaseAccessLayer.updateUser(user);
             log.info("User with name {} set name to {}", oldName, name);
             return Response.ok("Your name successfully changed to " + name).build();
 
@@ -90,18 +85,16 @@ public class UserSettings {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            Token token = TokensStorage.parse(rawToken);
+            Token token = DatabaseAccessLayer.parse(rawToken);
 
-            if (!TokensStorage.contains(token)) {
+            if (!DatabaseAccessLayer.contains(token)) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            User user = TokensStorage.getUser(token);
-            String oldPassword = user.getPassword();
-            TokensStorage.remove(token);
+            User user = DatabaseAccessLayer.getUser(token);
             user.setPassword(password);
-            //TokensStorage.add(user, token);
-            log.info("User with password {} set password to {}", oldPassword, password);
+            DatabaseAccessLayer.updateUser(user);
+            log.info("User {} successfully change password", user.getName());
             return Response.ok("Your password successfully changed to " + password).build();
 
         } catch (Exception e) {
@@ -129,28 +122,24 @@ public class UserSettings {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            Token token = TokensStorage.parse(rawToken);
+            Token token = DatabaseAccessLayer.parse(rawToken);
 
-            if (!TokensStorage.contains(token)) {
+            if (!DatabaseAccessLayer.contains(token)) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            Boolean checkEmail = AuthenticationProvider.getRegisteredUsers().stream()
-                    .map(User::getEmail)
-                    .filter(email::equals)
-                    .findFirst()
-                    .isPresent();
+            final String findByEmailCondition = "name=\'" + email + "\'";
+            Boolean checkEmail = DatabaseAccessLayer.checkByCondition(findByEmailCondition);
 
             if (checkEmail) {
                 log.warn("User try to change email, but email is already present: " + email);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            User user = TokensStorage.getUser(token);
+            User user = DatabaseAccessLayer.getUser(token);
             String oldEmail = user.getEmail();
-            TokensStorage.remove(token);
             user.setEmail(email);
-            //TokensStorage.add(user, token);
+            DatabaseAccessLayer.updateUser(user);
             log.info("User with email {} set email to {}", oldEmail, email);
             return Response.ok("Your email successfully changed to " + email).build();
 

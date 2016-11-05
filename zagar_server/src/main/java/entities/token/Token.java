@@ -19,7 +19,8 @@ public class Token {
     @NotNull
     private LocalDate date;
 
-    @OneToOne(mappedBy = "token", orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne
+    @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     @NotNull
     private User user;
 
@@ -57,6 +58,10 @@ public class Token {
     @NotNull
     public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
