@@ -1,6 +1,6 @@
 package accountserver.auth;
 
-import entities.token.TokensStorage;
+import dao.DatabaseAccessLayer;
 
 import javax.ws.rs.NotAuthorizedException;
 import javax.ws.rs.container.ContainerRequestContext;
@@ -25,7 +25,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 
         try {
-            TokensStorage.validate(authorizationHeader);
+            DatabaseAccessLayer.validate(authorizationHeader);
         } catch (Exception e) {
             requestContext.abortWith(Response.status(Response.Status.UNAUTHORIZED).build());
         }

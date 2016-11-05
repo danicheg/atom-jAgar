@@ -1,6 +1,6 @@
 package network.handlers;
 
-import entities.token.TokensStorage;
+import dao.DatabaseAccessLayer;
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
 import model.Player;
@@ -26,7 +26,7 @@ public class PacketHandlerAuth {
             return;
         }
         try {
-            if (!TokensStorage.validateToken(commandAuth.getToken())) {
+            if (!DatabaseAccessLayer.validateToken(commandAuth.getToken())) {
                 try {
                     new PacketAuthFail(commandAuth.getLogin(), commandAuth.getToken(),
                             "Invalid user or password").write(session);

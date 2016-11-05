@@ -1,35 +1,19 @@
 package accountserver.api;
 
-import dao.TokenDao;
-import dao.UserDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
 import accountserver.auth.Authorized;
 import entities.token.Token;
-import entities.token.TokensStorage;
+import dao.DatabaseAccessLayer;
 import entities.user.User;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 @Path("/auth")
 public class AuthenticationProvider {
 
     private static final Logger log = LogManager.getLogger(AuthenticationProvider.class);
-
-    /*Нужно заменить на операции с таблицой Users.
-      Пока оставил для корректности работы всех методов*/
-    private static CopyOnWriteArrayList<User> registeredUsers;
-    private static UserDao userDao;
-    private static TokenDao tokenDao;
-
-    static {
-        registeredUsers = new CopyOnWriteArrayList<>();
-        userDao = new UserDao();
-        tokenDao = new TokenDao();
-    }
 
     /*curl -i \
           -X POST \
@@ -49,14 +33,13 @@ public class AuthenticationProvider {
 
         final String findByNameCondition = "name=\'" + name + "\'";
 
-        if (!userDao.getAllWhere(findByNameCondition).isEmpty()) {
+        if (DatabaseAccessLayer.checkByCondition(findByNameCondition)) {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
 
         User user = new User(name, password);
-        userDao.insert(user);
+        DatabaseAccessLayer.insertUser(user);
 
-        registeredUsers.add(user);
         log.info("New user registered with login {}", name);
         return Response.ok(user.getName() + " registered.").build();
 
@@ -83,7 +66,7 @@ public class AuthenticationProvider {
                 return Response.status(Response.Status.UNAUTHORIZED).build();
             }
 
-            Token token = TokensStorage.issueToken(user);
+            Token token = DatabaseAccessLayer.issueToken(user);
             log.info("User '{}' successfully logged in", user);
             return Response.ok(Long.toString(token.getToken())).build();
 
@@ -103,13 +86,13 @@ public class AuthenticationProvider {
     public Response logoutPlayer(@HeaderParam("Authorization") String rawToken) {
 
         try {
-            Token token = TokensStorage.parse(rawToken);
+            Token token = DatabaseAccessLayer.parse(rawToken);
             log.info("Token is {}", token);
-            if (!TokensStorage.contains(token)) {
+            if (!DatabaseAccessLayer.contains(token)) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             } else {
-                User user = TokensStorage.getUser(token);
-                tokenDao.delete(token);
+                User user = DatabaseAccessLayer.getUser(token);
+                DatabaseAccessLayer.removeToken(token);
                 log.info("User '{}' logout successfully", user.getName());
                 return Response.ok(user.getName() + " successfully logout!").build();
             }
@@ -122,15 +105,10 @@ public class AuthenticationProvider {
 
     }
 
-    @NotNull
-    public static CopyOnWriteArrayList<User> getRegisteredUsers() {
-        return registeredUsers;
-    }
-
     private boolean authenticate(String name, String password) throws Exception {
         final String findByNameCondition = "name=\'" + name + "\'";
         final String findByPassCondition = "password=\'" + password + "\'";
-        return !(userDao.getAllWhere(findByNameCondition, findByPassCondition).isEmpty());
+        return (DatabaseAccessLayer.checkByCondition(findByNameCondition, findByPassCondition));
     }
 
 }
