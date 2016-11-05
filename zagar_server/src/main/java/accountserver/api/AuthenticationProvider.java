@@ -53,16 +53,6 @@ public class AuthenticationProvider {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
 
-        // Старая реализация проверки
-        /*boolean checkUser = registeredUsers.parallelStream()
-                .filter(u -> u.getName().equals(name))
-                .findFirst()
-                .isPresent();
-
-        if (checkUser) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
-        }*/
-
         User user = new User(name, password);
         userDao.insert(user);
 
@@ -113,14 +103,14 @@ public class AuthenticationProvider {
     public Response logoutPlayer(@HeaderParam("Authorization") String rawToken) {
 
         try {
-
+            log.info("hello!");
             Token token = TokensStorage.parse(rawToken);
-
+            log.info("Token is {}", token);
             if (!TokensStorage.contains(token)) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             } else {
                 User user = TokensStorage.getUser(token);
-                TokensStorage.remove(token);
+                tokenDao.delete(token);
                 log.info("User '{}' logout successfully", user.getName());
                 return Response.ok(user.getName() + " successfully logout!").build();
             }

@@ -34,7 +34,7 @@ public class TokensStorage {
     }
 
     public static boolean contains(@NotNull Token token) {
-        final String findByTokenCondition = "token=\'" + token.getToken() + "\'";
+        final String findByTokenCondition = "token=" + token.getToken();
         return !(tokenDao.getAllWhere(findByTokenCondition).isEmpty());
     }
 
@@ -58,10 +58,10 @@ public class TokensStorage {
     @NotNull
     public static Token parse(String rawToken) {
         Long longToken = Long.parseLong(rawToken.substring("Bearer".length()).trim());
-        return tokenDao.getAll().parallelStream()
-                .filter(tkn -> tkn.getToken().equals(longToken))
-                .findFirst()
-                .get();
+        final String findByTokenCondition = "token=" + longToken;
+        /*final Token result = tokenDao.getAllWhere(findByTokenCondition).get(0);
+        log.info("Result of finding token: {}", result);*/
+        return tokenDao.getAllWhere(findByTokenCondition).get(0);
     }
 
     public static void validate(@NotNull String rawToken) throws Exception {
@@ -82,17 +82,13 @@ public class TokensStorage {
     }
 
     public static User getUser(@NotNull Token token) {
-        return userDao.getAll().parallelStream()
-                .filter(usr -> usr.getToken().equals(token))
-                .findFirst()
-                .orElse(null);
+        final String findByTokenCondition = "token=" + token.getToken();
+        return tokenDao.getAllWhere(findByTokenCondition).get(0).getUser();
     }
 
     private static Token getToken(@NotNull User user) {
-        return tokenDao.getAll().parallelStream()
-                .filter(tkn -> tkn.getUser().equals(user))
-                .findFirst()
-                .orElse(null);
+        final String findByNameCondition = "name=\'" + user.getName() + "\'";
+        return userDao.getAllWhere(findByNameCondition).get(0).getToken();
     }
 
 }

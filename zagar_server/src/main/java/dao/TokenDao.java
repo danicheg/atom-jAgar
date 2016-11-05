@@ -29,11 +29,12 @@ public class TokenDao implements Dao<Token> {
     @Override
     public List<Token> getAllWhere(String... conditions) {
         String totalCondition = Joiner.on(" and ").join(Arrays.asList(conditions));
-        List<Token> result = Database.selectTransactional(session ->
+        /*final List<Token> result = Database.selectTransactional(session ->
                 session.createQuery("from Token where " + totalCondition, Token.class).list());
         log.info("Successfully retrieved tokens from DB: '{}' that satisfied conditions: '{}'",
-                result, totalCondition);
-        return result;
+                result, totalCondition);*/
+        return Database.selectTransactional(session ->
+                session.createQuery("from Token where " + totalCondition, Token.class).list());
     }
 
     @Override

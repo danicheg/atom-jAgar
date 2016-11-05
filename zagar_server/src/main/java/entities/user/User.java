@@ -30,7 +30,7 @@ public class User {
     private UUID userID;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "token")
     @Nullable
     private Token token;
 
