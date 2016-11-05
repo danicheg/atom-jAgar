@@ -52,6 +52,12 @@ public class TokenDao implements Dao<Token> {
         log.info("All tokens: '{}' inserted into DB", listTokens);
     }
 
+    @Override
+    public void update(Token token) {
+        Database.doTransactional((Consumer<Session>) session -> session.update(token));
+        log.info("Token '{}' successfully updated", token);
+    }
+
     //TODO: figure out why (Consumer<Session>) session -> session.delete(deleteToken)) doesn't works
     @Override
     public void delete(Token deleteToken) {

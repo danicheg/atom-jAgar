@@ -48,6 +48,12 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
+    public void update(User user) {
+        Database.doTransactional((Consumer<Session>) session -> session.update(user));
+        log.info("User {} successfully updated", user);
+    }
+
+    @Override
     public void delete(User deleteUser) {
         Database.doTransactional(
                 (Consumer<Session>) session -> session.delete(deleteUser)

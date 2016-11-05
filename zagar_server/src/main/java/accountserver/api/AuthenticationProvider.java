@@ -103,7 +103,6 @@ public class AuthenticationProvider {
     public Response logoutPlayer(@HeaderParam("Authorization") String rawToken) {
 
         try {
-            log.info("hello!");
             Token token = TokensStorage.parse(rawToken);
             log.info("Token is {}", token);
             if (!TokensStorage.contains(token)) {

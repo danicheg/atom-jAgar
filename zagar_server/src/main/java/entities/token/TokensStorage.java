@@ -50,7 +50,8 @@ public class TokensStorage {
         }
 
         token = new Token(ThreadLocalRandom.current().nextLong(), user);
-        tokenDao.insert(token);
+        user.setToken(token);
+        userDao.update(user);
         log.info("Generate new token {} for User with name {}", token, name);
         return token;
     }

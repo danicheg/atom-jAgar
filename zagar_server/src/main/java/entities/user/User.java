@@ -25,12 +25,11 @@ public class User {
 
     @Id
     @GeneratedValue
-    @Column(name = "userId", columnDefinition = "uuid")
+    @Column(name = "user_id", columnDefinition = "uuid")
     @NotNull
     private UUID userID;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "token")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     @Nullable
     private Token token;
 
