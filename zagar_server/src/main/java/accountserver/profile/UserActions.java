@@ -4,7 +4,7 @@ import accountserver.auth.Authorized;
 import dao.LeaderboardDao;
 import entities.leaderboard.Leaderboard;
 import entities.token.Token;
-import entities.token.TokensStorage;
+import dao.DatabaseAccessLayer;
 import entities.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,12 +37,13 @@ public class UserActions {
                 log.warn("Wrong value - " + score);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            Token token = TokensStorage.parse(rawToken);
-            if (!TokensStorage.contains(token)) {
+
+            Token token = DatabaseAccessLayer.parse(rawToken);
+            if (!DatabaseAccessLayer.contains(token)) {
                 log.warn(token);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            User user = TokensStorage.getUser(token);
+            User user = DatabaseAccessLayer.getUser(token);
             UUID userId = user.getUserID();
             LeaderboardDao ldao = new LeaderboardDao();
             Leaderboard leader = ldao.getAllWhere(String.format("user_id = '%s'", userId))

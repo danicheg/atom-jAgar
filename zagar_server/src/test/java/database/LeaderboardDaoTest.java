@@ -14,35 +14,31 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class LeaderboardDaoTest {
 
     private LeaderboardDao leaderboardDao;
     private UserDao userDao;
-    private TokenDao tokenDao;
 
     private User firstTestUser;
     private User secondTestUser;
-    private User thirdTestUser;
 
     private Leaderboard firstTestLeader;
     private Leaderboard secondTestLeader;
-    private Leaderboard thirdTestLeader;
 
     @Before
     public void setUp() {
         leaderboardDao = new LeaderboardDao();
         userDao = new UserDao();
-        tokenDao = new TokenDao();
 
         firstTestUser = new User("TestName", "TestPassword");
         secondTestUser = new User("user", "pass");
-        thirdTestUser = new User("Jegor", "dmonelove");
 
         firstTestLeader = new Leaderboard(firstTestUser.getUserID(),0);
         secondTestLeader = new Leaderboard(secondTestUser.getUserID(),0);
-        thirdTestLeader = new Leaderboard(thirdTestUser.getUserID(),0);
     }
 
     @Test
@@ -63,7 +59,7 @@ public class LeaderboardDaoTest {
     }
 
     @Test
-    public void updateLeaderboardTest() {
+    public void updateLeaderTest() {
         final int initialSize = leaderboardDao.getAll().size();
         leaderboardDao.update(firstTestLeader);
         Integer oldMark = firstTestLeader.getScore();
@@ -74,6 +70,7 @@ public class LeaderboardDaoTest {
                 .hasSize(initialSize + 1)
                 .extracting(Leaderboard::getUser, Leaderboard::getScore)
                 .contains(tuple(firstTestUser.getUserID(), newMark));
+        leaderboardDao.delete(firstTestLeader);
     }
 
     @Test
@@ -81,9 +78,33 @@ public class LeaderboardDaoTest {
         userDao.insert(firstTestUser);
         leaderboardDao.insert(firstTestLeader);
         assertNotNull(leaderboardDao.getAll().size());
-        String query = String.format("user_id = '%s'",firstTestLeader.getUser());
-        List<Leaderboard> list = leaderboardDao.getAllWhere(query);
-        System.out.print(query);
-        System.out.print(list);
+        assertEquals(
+                firstTestLeader,
+                leaderboardDao.getAllWhere(String.format("user_id = '%s'",firstTestLeader.getUser()))
+                .stream()
+                .findFirst()
+                .orElse(null)
+                );
+        leaderboardDao.delete(firstTestLeader);
+        userDao.delete(firstTestUser);
+    }
+
+    @Test
+    public void compareTwoLeadersTest() {
+        userDao.insert(firstTestUser);
+        userDao.insert(secondTestUser);
+        leaderboardDao.update(firstTestLeader);
+        leaderboardDao.update(secondTestLeader);
+        assertNotEquals(
+                secondTestLeader,
+                leaderboardDao.getAllWhere(String.format("user_id = '%s'",firstTestLeader.getUser()))
+                        .stream()
+                        .findFirst()
+                        .orElse(null)
+        );
+        leaderboardDao.delete(firstTestLeader);
+        leaderboardDao.delete(secondTestLeader);
+        userDao.delete(firstTestUser);
+        userDao.delete(secondTestUser);
     }
 }

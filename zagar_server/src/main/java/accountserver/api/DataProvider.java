@@ -5,7 +5,7 @@ import dao.LeaderboardDao;
 import entities.leaderboard.LeaderboardBatchHolder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import entities.token.TokensStorage;
+import dao.DatabaseAccessLayer;
 import entities.user.UserBatchHolder;
 import org.apache.logging.log4j.core.lookup.Interpolator;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,7 @@ public class DataProvider {
     @Produces("application/json")
     public Response getUsersBatch() {
         log.info("Batch of users requested.");
-        return Response.ok(new UserBatchHolder(TokensStorage.getUserList()).writeJson()).build();
+        return Response.ok(new UserBatchHolder(DatabaseAccessLayer.getUserList()).writeJson()).build();
     }
 
     /*curl -X GET
