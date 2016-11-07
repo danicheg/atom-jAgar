@@ -39,16 +39,19 @@ public class TokenDao implements Dao<Token> {
 
     @Override
     public void insert(Token token) {
-        Database.doTransactional((Function<Session, ?>) session -> session.save(token));
+        token.getUser().setToken(token);
+        //Database.doTransactional((Function<Session, ?>) session -> session.save(token));
         log.info("Token '{}' inserted into DB", token);
     }
 
+    //no atomicity
     @Override
     public void insertAll(Token... tokens) {
         List<Token> listTokens = Arrays.asList(tokens);
-        Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
+        listTokens.forEach(tkn -> tkn.getUser().setToken(tkn));
+        /*Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
                 .map(tkn -> session -> session.save(tkn));
-        Database.doTransactional(tasks.collect(Collectors.toList()));
+        Database.doTransactional(tasks.collect(Collectors.toList()));*/
         log.info("All tokens: '{}' inserted into DB", listTokens);
     }
 

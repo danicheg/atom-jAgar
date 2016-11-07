@@ -1,21 +1,17 @@
-package entities.token;
+package dao;
 
-import dao.TokenDao;
-import dao.UserDao;
+import entities.token.Token;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import accountserver.api.AuthenticationProvider;
 import entities.user.User;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TokensStorage {
+public class DatabaseAccessLayer {
 
-    private static final Logger log = LogManager.getLogger(TokensStorage.class);
+    private static final Logger log = LogManager.getLogger(DatabaseAccessLayer.class);
     private static UserDao userDao;
     private static TokenDao tokenDao;
 
@@ -29,9 +25,6 @@ public class TokensStorage {
         return userDao.getAll();
     }
 
-    public static void remove(@NotNull Token token) {
-        tokenDao.delete(token);
-    }
 
     public static boolean contains(@NotNull Token token) {
         final String findByTokenCondition = "token=" + token.getToken();
@@ -50,7 +43,7 @@ public class TokensStorage {
         }
 
         token = new Token(ThreadLocalRandom.current().nextLong(), user);
-        user.setToken(token);
+        tokenDao.insert(token);
         userDao.update(user);
         log.info("Generate new token {} for User with name {}", token, name);
         return token;
@@ -90,6 +83,25 @@ public class TokensStorage {
     private static Token getToken(@NotNull User user) {
         final String findByNameCondition = "name=\'" + user.getName() + "\'";
         return userDao.getAllWhere(findByNameCondition).get(0).getToken();
+    }
+
+    public static Boolean checkByCondition(String... conditions) {
+        return userDao.getAllWhere(conditions)
+                .stream()
+                .findFirst()
+                .isPresent();
+    }
+
+    public static void removeToken(Token token) {
+        tokenDao.delete(token);
+    }
+
+    public static void updateUser(User user) {
+        userDao.update(user);
+    }
+
+    public static void insertUser(User user) {
+        userDao.insert(user);
     }
 
 }
