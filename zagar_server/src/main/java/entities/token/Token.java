@@ -3,7 +3,12 @@ package entities.token;
 import entities.user.User;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity

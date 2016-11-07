@@ -25,6 +25,14 @@ public class UserDao implements Dao<User> {
                 session.createQuery("from User", User.class).list());
     }
 
+    public List<User> getAllLogin() {
+        return Database.selectTransactional(session ->
+                session.createQuery("SELECT u FROM User u " +
+                        "INNER JOIN Token t " +
+                        "ON t.user.userID = u.userID " +
+                        "WHERE t.user is not null", User.class).list());
+    }
+
     @Override
     public List<User> getAllWhere(String... conditions) {
         String totalCondition = Joiner.on(" and ").join(Arrays.asList(conditions));

@@ -1,9 +1,8 @@
 package entities.leaderboard;
 
-
-import com.google.gson.Gson;
-import entities.user.User;
-import entities.user.UserBatchHolder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +10,11 @@ import java.util.List;
 
 public class LeaderboardBatchHolder {
 
-    private static final Gson gson = new Gson();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    static {
+        MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+    }
 
     private List<Leaderboard> leaders = new ArrayList<>();
 
@@ -24,10 +27,10 @@ public class LeaderboardBatchHolder {
     }
 
     public static LeaderboardBatchHolder readJson(String json) throws IOException {
-        return gson.fromJson(json, LeaderboardBatchHolder.class);
+        return MAPPER.readValue(json, LeaderboardBatchHolder.class);
     }
 
-    public String writeJson() {
-        return gson.toJson(this);
+    public String writeJson() throws JsonProcessingException {
+        return MAPPER.writeValueAsString(this);
     }
 }

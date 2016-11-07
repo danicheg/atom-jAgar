@@ -1,12 +1,6 @@
 package entities.leaderboard;
 
-import entities.user.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.UUID;
-
 
 public class Leaderboard {
 

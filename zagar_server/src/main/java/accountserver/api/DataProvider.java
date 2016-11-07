@@ -1,17 +1,21 @@
 package accountserver.api;
 
-
+import com.fasterxml.jackson.core.JsonProcessingException;
 import dao.LeaderboardDao;
 import entities.leaderboard.LeaderboardBatchHolder;
+import entities.user.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import dao.DatabaseAccessLayer;
 import entities.user.UserBatchHolder;
-import org.apache.logging.log4j.core.lookup.Interpolator;
 import org.jetbrains.annotations.NotNull;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
+import java.util.List;
 
 @Path("/data")
 public class DataProvider {
@@ -23,9 +27,11 @@ public class DataProvider {
     @GET
     @Path("/users")
     @Produces("application/json")
-    public Response getUsersBatch() {
+    public Response getUsersBatch() throws JsonProcessingException {
         log.info("Batch of users requested.");
-        return Response.ok(new UserBatchHolder(DatabaseAccessLayer.getUserList()).writeJson()).build();
+        @NotNull final List<User> loginUserList = DatabaseAccessLayer.getLoginUserList();
+        log.warn(loginUserList);
+        return Response.ok(new UserBatchHolder(loginUserList).writeJson()).build();
     }
 
     /*curl -X GET
@@ -33,7 +39,7 @@ public class DataProvider {
     @GET
     @Path("/leaderboard")
     @Produces("application/json")
-    public Response getNLeaders(@QueryParam("amount") String n) {
+    public Response getNLeaders(@QueryParam("amount") String n) throws JsonProcessingException {
         log.info("Batch of leaders requested.");
         if (n != null) {
             Integer param = Integer.parseInt(n);

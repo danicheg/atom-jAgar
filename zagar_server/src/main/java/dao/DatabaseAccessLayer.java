@@ -25,6 +25,10 @@ public class DatabaseAccessLayer {
         return userDao.getAll();
     }
 
+    @NotNull
+    public static List<User> getLoginUserList() {
+        return userDao.getAllLogin();
+    }
 
     public static boolean contains(@NotNull Token token) {
         final String findByTokenCondition = "token=" + token.getToken();

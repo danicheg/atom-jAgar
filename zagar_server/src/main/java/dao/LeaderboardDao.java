@@ -2,18 +2,20 @@ package dao;
 
 import entities.leaderboard.Leaderboard;
 import jersey.repackaged.com.google.common.base.Joiner;
-import jersey.repackaged.com.google.common.util.concurrent.ExecutionError;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import java.lang.reflect.Constructor;
-import java.sql.*;
-import java.util.*;
-
-import static jdk.nashorn.internal.runtime.PrototypeObject.getConstructor;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class LeaderboardDao implements Dao<Leaderboard> {
 

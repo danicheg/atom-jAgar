@@ -1,5 +1,6 @@
 package entities.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import entities.token.Token;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
@@ -7,8 +8,14 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.*;
-import javax.validation.constraints.Null;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -26,10 +33,12 @@ public class User {
     @Id
     @GeneratedValue
     @Column(name = "user_id", columnDefinition = "uuid")
+    @JsonIgnore
     @NotNull
     private UUID userID;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
     @Nullable
     private Token token;
 
@@ -38,6 +47,7 @@ public class User {
     private String name;
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     @NotNull
     private String password;
 
@@ -46,6 +56,7 @@ public class User {
     private String email;
 
     @Column(name = "registration_date")
+    @JsonIgnore
     @NotNull
     private LocalDate registrationDate;
 
