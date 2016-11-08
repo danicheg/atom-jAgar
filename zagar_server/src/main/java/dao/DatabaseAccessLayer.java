@@ -27,7 +27,7 @@ public class DatabaseAccessLayer {
 
     @NotNull
     public static List<UserEntity> getLoginUserList() {
-        return userDao.getAllLogin();
+        return userDao.getAllLoginUsers();
     }
 
     public static boolean contains(@NotNull Token token) {

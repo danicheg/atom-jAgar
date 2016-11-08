@@ -24,7 +24,7 @@ public class UserDao implements Dao<UserEntity> {
                 session.createQuery("from UserEntity", UserEntity.class).list());
     }
 
-    public List<UserEntity> getAllLogin() {
+    public List<UserEntity> getAllLoginUsers() {
         return Database.selectTransactional(session ->
                 session.createQuery("SELECT u FROM UserEntity u " +
                         "INNER JOIN Token t " +
@@ -75,7 +75,7 @@ public class UserDao implements Dao<UserEntity> {
         Stream<Consumer<Session>> tasks = listTokens.parallelStream()
                 .map(usr -> (Consumer<Session>) session -> session.delete(usr));
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
-        log.info("All tokens '{}' removed into DB", deleteUsers);
+        log.info("All tokens '{}' removed into DB", (Object[]) deleteUsers);
     }
 
 }
