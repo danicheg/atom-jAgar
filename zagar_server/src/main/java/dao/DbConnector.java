@@ -11,15 +11,15 @@ import java.sql.SQLException;
 public class DbConnector {
     private static final Logger log = LogManager.getLogger(DbConnector.class);
 
-    private static final String URL_TEMPLATE = "jdbc:h2:./%s";
+    /*private static final String URL_TEMPLATE = "jdbc:h2:./%s";
     private static final String USER = "sa";
     private static final String PASSWORD = null;
-    private static final String DB_NAME = "database/test";
+    private static final String DB_NAME = "database/test";*/
 
-//    private static final String URL_TEMPLATE = "jdbx:postgresql://%s:%d/%s";
-//    private static final String USER = "postgres";
-//    private static final String PASSWORD = "";
-//    private static final String DB_NAME = "postgres";
+    private static final String URL_TEMPLATE = "jdbx:postgresql://%s:%d/%s";
+    private static final String USER = "postgres";
+    private static final String PASSWORD = "StephenWilliamHawking";
+    private static final String DB_NAME = "postgres";
 
     private static final String URL;
     private static final String HOST = "127.0.0.1";
@@ -35,9 +35,9 @@ public class DbConnector {
             System.exit(-1);
         }
 
-        URL = String.format(URL_TEMPLATE, DB_NAME);
+        //URL = String.format(URL_TEMPLATE, DB_NAME);
 
-        //URL = String.format(URL_TEMPLATE, HOST,PORT, DB_NAME);
+        URL = String.format(URL_TEMPLATE, HOST,PORT, DB_NAME);
         log.info("Success. DbConnector init.");
     }
 

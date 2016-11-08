@@ -3,7 +3,7 @@ package accountserver.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dao.LeaderboardDao;
 import entities.leaderboard.LeaderboardBatchHolder;
-import entities.user.User;
+import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import dao.DatabaseAccessLayer;
@@ -29,7 +29,7 @@ public class DataProvider {
     @Produces("application/json")
     public Response getUsersBatch() throws JsonProcessingException {
         log.info("Batch of users requested.");
-        @NotNull final List<User> loginUserList = DatabaseAccessLayer.getLoginUserList();
+        @NotNull final List<UserEntity> loginUserList = DatabaseAccessLayer.getLoginUserList();
         return Response.ok(new UserBatchHolder(loginUserList).writeJson()).build();
     }
 

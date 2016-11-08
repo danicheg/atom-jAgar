@@ -1,11 +1,11 @@
 package accountserver.profile;
 
+import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import accountserver.auth.Authorized;
 import entities.token.Token;
 import dao.DatabaseAccessLayer;
-import entities.user.User;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -49,15 +49,15 @@ public class UserSettings {
             Boolean checkName = DatabaseAccessLayer.checkByCondition(findByNameCondition);
 
             if (checkName) {
-                log.warn("User try to change name, but name is already present: " + name);
+                log.warn("UserEntity try to change name, but name is already present: " + name);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            User user = DatabaseAccessLayer.getUser(token);
+            UserEntity user = DatabaseAccessLayer.getUser(token);
             String oldName = user.getName();
             user.setName(name);
             DatabaseAccessLayer.updateUser(user);
-            log.info("User with name {} set name to {}", oldName, name);
+            log.info("UserEntity with name {} set name to {}", oldName, name);
             return Response.ok("Your name successfully changed to " + name).build();
 
         } catch (Exception e) {
@@ -91,10 +91,10 @@ public class UserSettings {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            User user = DatabaseAccessLayer.getUser(token);
+            UserEntity user = DatabaseAccessLayer.getUser(token);
             user.setPassword(password);
             DatabaseAccessLayer.updateUser(user);
-            log.info("User {} successfully change password", user.getName());
+            log.info("UserEntity {} successfully change password", user.getName());
             return Response.ok("Your password successfully changed to " + password).build();
 
         } catch (Exception e) {
@@ -132,15 +132,15 @@ public class UserSettings {
             Boolean checkEmail = DatabaseAccessLayer.checkByCondition(findByEmailCondition);
 
             if (checkEmail) {
-                log.warn("User try to change email, but email is already present: " + email);
+                log.warn("UserEntity try to change email, but email is already present: " + email);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
 
-            User user = DatabaseAccessLayer.getUser(token);
+            UserEntity user = DatabaseAccessLayer.getUser(token);
             String oldEmail = user.getEmail();
             user.setEmail(email);
             DatabaseAccessLayer.updateUser(user);
-            log.info("User with email {} set email to {}", oldEmail, email);
+            log.info("UserEntity with email {} set email to {}", oldEmail, email);
             return Response.ok("Your email successfully changed to " + email).build();
 
         } catch (Exception e) {

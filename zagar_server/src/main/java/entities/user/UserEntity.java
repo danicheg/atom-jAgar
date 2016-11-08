@@ -21,11 +21,11 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user", uniqueConstraints = {
+@Table(name = "userEntity", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name"),
         @UniqueConstraint(columnNames = "email")
 })
-public class User {
+public class UserEntity {
 
     @NotNull
     private static final Logger log = LogManager.getLogger(Player.class);
@@ -63,11 +63,11 @@ public class User {
     /*
     Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
     javax.persistence.PersistenceException: org.hibernate.InstantiationException:
-        No default constructor for entity:  : entities.user.User
+        No default constructor for entity:  : entities.user.UserEntity
     */
-    public User() {}
+    public UserEntity() {}
 
-    public User(@NotNull String name, @NotNull String password) {
+    public UserEntity(@NotNull String name, @NotNull String password) {
         this.userID = UUID.randomUUID();
         this.name = name;
         this.password = password;
@@ -130,7 +130,7 @@ public class User {
     public boolean equals(Object that) {
         if (that == null || that.getClass() != getClass()) return false;
         if (this == that) return true;
-        User newUser = (User) that;
+        UserEntity newUser = (UserEntity) that;
         return this.userID.equals(newUser.userID);
     }
 
@@ -141,7 +141,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity{" +
                 "userID=" + userID +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +

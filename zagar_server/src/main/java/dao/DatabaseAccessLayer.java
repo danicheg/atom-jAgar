@@ -1,10 +1,10 @@
 package dao;
 
 import entities.token.Token;
+import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import entities.user.User;
 
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -21,12 +21,12 @@ public class DatabaseAccessLayer {
     }
 
     @NotNull
-    public static List<User> getUserList() {
+    public static List<UserEntity> getUserList() {
         return userDao.getAll();
     }
 
     @NotNull
-    public static List<User> getLoginUserList() {
+    public static List<UserEntity> getLoginUserList() {
         return userDao.getAllLogin();
     }
 
@@ -37,7 +37,7 @@ public class DatabaseAccessLayer {
 
     public static Token issueToken(@NotNull String name) {
         final String findByNameCondition = "name=\'" + name + "\'";
-        User user = userDao.getAllWhere(findByNameCondition).parallelStream()
+        UserEntity user = userDao.getAllWhere(findByNameCondition).parallelStream()
                 .findFirst()
                 .orElse(null);
 
@@ -49,7 +49,7 @@ public class DatabaseAccessLayer {
         token = new Token(ThreadLocalRandom.current().nextLong(), user);
         tokenDao.insert(token);
         userDao.update(user);
-        log.info("Generate new token {} for User with name {}", token, name);
+        log.info("Generate new token {} for UserEntity with name {}", token, name);
         return token;
     }
 
@@ -79,12 +79,12 @@ public class DatabaseAccessLayer {
         return true;
     }
 
-    public static User getUser(@NotNull Token token) {
+    public static UserEntity getUser(@NotNull Token token) {
         final String findByTokenCondition = "token=" + token.getToken();
         return tokenDao.getAllWhere(findByTokenCondition).get(0).getUser();
     }
 
-    private static Token getToken(@NotNull User user) {
+    private static Token getToken(@NotNull UserEntity user) {
         final String findByNameCondition = "name=\'" + user.getName() + "\'";
         return userDao.getAllWhere(findByNameCondition).get(0).getToken();
     }
@@ -100,11 +100,11 @@ public class DatabaseAccessLayer {
         tokenDao.delete(token);
     }
 
-    public static void updateUser(User user) {
+    public static void updateUser(UserEntity user) {
         userDao.update(user);
     }
 
-    public static void insertUser(User user) {
+    public static void insertUser(UserEntity user) {
         userDao.insert(user);
     }
 

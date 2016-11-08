@@ -2,15 +2,11 @@ package database;
 
 
 import dao.LeaderboardDao;
-import dao.TokenDao;
 import dao.UserDao;
 import entities.leaderboard.Leaderboard;
-import entities.user.User;
+import entities.user.UserEntity;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.time.LocalDate;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
@@ -23,8 +19,8 @@ public class LeaderboardDaoTest {
     private LeaderboardDao leaderboardDao;
     private UserDao userDao;
 
-    private User firstTestUser;
-    private User secondTestUser;
+    private UserEntity firstTestUser;
+    private UserEntity secondTestUser;
 
     private Leaderboard firstTestLeader;
     private Leaderboard secondTestLeader;
@@ -34,8 +30,8 @@ public class LeaderboardDaoTest {
         leaderboardDao = new LeaderboardDao();
         userDao = new UserDao();
 
-        firstTestUser = new User("TestName", "TestPassword");
-        secondTestUser = new User("user", "pass");
+        firstTestUser = new UserEntity("TestName", "TestPassword");
+        secondTestUser = new UserEntity("user", "pass");
 
         firstTestLeader = new Leaderboard(firstTestUser.getUserID(),0);
         secondTestLeader = new Leaderboard(secondTestUser.getUserID(),0);

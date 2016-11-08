@@ -5,7 +5,7 @@ import dao.LeaderboardDao;
 import entities.leaderboard.Leaderboard;
 import entities.token.Token;
 import dao.DatabaseAccessLayer;
-import entities.user.User;
+import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -47,7 +47,7 @@ public class UserActions {
                 log.warn(token);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-            User user = DatabaseAccessLayer.getUser(token);
+            UserEntity user = DatabaseAccessLayer.getUser(token);
             UUID userId = user.getUserID();
             LeaderboardDao ldao = new LeaderboardDao();
             Leaderboard leader = ldao.getAllWhere(String.format("user_id = '%s'", userId))
@@ -64,7 +64,7 @@ public class UserActions {
                 leader = new Leaderboard(userId, scoreInt);
             }
             ldao.update(leader);
-            log.info("User increased its score from {} to {}", oldScore, leader.getScore());
+            log.info("UserEntity increased its score from {} to {}", oldScore, leader.getScore());
             return Response.ok("Your score successfully increased up to " + leader.getScore()).build();
         } catch (Exception e) {
             return Response.ok(e.toString()).build();

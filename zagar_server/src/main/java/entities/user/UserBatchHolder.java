@@ -16,13 +16,13 @@ public class UserBatchHolder {
         MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
     }
 
-    private List<User> users = new ArrayList<>();
+    private List<UserEntity> users = new ArrayList<>();
 
-    public UserBatchHolder(List<User> users) {
+    public UserBatchHolder(List<UserEntity> users) {
         this.users = users;
     }
 
-    public List<User> getUsers() {
+    public List<UserEntity> getUsers() {
         return users;
     }
 

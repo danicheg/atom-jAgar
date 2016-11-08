@@ -1,12 +1,11 @@
 package dao;
 
-import entities.user.User;
+import entities.user.UserEntity;
 import jersey.repackaged.com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
@@ -14,41 +13,41 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class UserDao implements Dao<User> {
+public class UserDao implements Dao<UserEntity> {
 
-    private static final Logger log = LogManager.getLogger(User.class);
+    private static final Logger log = LogManager.getLogger(UserEntity.class);
 
     @Override
-    public List<User> getAll() {
+    public List<UserEntity> getAll() {
         log.info("All users successfully obtained from db");
         return Database.selectTransactional(session ->
-                session.createQuery("from User", User.class).list());
+                session.createQuery("from UserEntity", UserEntity.class).list());
     }
 
-    public List<User> getAllLogin() {
+    public List<UserEntity> getAllLogin() {
         return Database.selectTransactional(session ->
-                session.createQuery("SELECT u FROM User u " +
+                session.createQuery("SELECT u FROM UserEntity u " +
                         "INNER JOIN Token t " +
                         "ON t.user.userID = u.userID " +
-                        "WHERE t.user is not null", User.class).list());
+                        "WHERE t.user is not null", UserEntity.class).list());
     }
 
     @Override
-    public List<User> getAllWhere(String... conditions) {
+    public List<UserEntity> getAllWhere(String... conditions) {
         String totalCondition = Joiner.on(" and ").join(Arrays.asList(conditions));
         return Database.selectTransactional(session ->
-                session.createQuery("from User where " + totalCondition, User.class).list());
+                session.createQuery("from UserEntity where " + totalCondition, UserEntity.class).list());
     }
 
     @Override
-    public void insert(User user) {
+    public void insert(UserEntity user) {
         Database.doTransactional((Function<Session, ?>) session -> session.save(user));
-        log.info("User {} inserted into db", user);
+        log.info("UserEntity {} inserted into db", user);
     }
 
     @Override
-    public void insertAll(User... user) {
-        List<User> listTokens = Arrays.asList(user);
+    public void insertAll(UserEntity... user) {
+        List<UserEntity> listTokens = Arrays.asList(user);
         Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
                 .map(usr -> session -> session.save(usr));
         Database.doTransactional(tasks.collect(Collectors.toList()));
@@ -56,13 +55,13 @@ public class UserDao implements Dao<User> {
     }
 
     @Override
-    public void update(User user) {
+    public void update(UserEntity user) {
         Database.doTransactional((Consumer<Session>) session -> session.update(user));
-        log.info("User {} successfully updated", user);
+        log.info("UserEntity {} successfully updated", user);
     }
 
     @Override
-    public void delete(User deleteUser) {
+    public void delete(UserEntity deleteUser) {
         Database.doTransactional(
                 (Consumer<Session>) session -> session.delete(deleteUser)
         );
@@ -71,8 +70,8 @@ public class UserDao implements Dao<User> {
 
     //now works atomicity
     @Override
-    public void deleteAll(User... deleteUsers) {
-        List<User> listTokens = Arrays.asList(deleteUsers);
+    public void deleteAll(UserEntity... deleteUsers) {
+        List<UserEntity> listTokens = Arrays.asList(deleteUsers);
         Stream<Consumer<Session>> tasks = listTokens.parallelStream()
                 .map(usr -> (Consumer<Session>) session -> session.delete(usr));
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
