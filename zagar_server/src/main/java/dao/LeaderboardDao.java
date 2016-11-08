@@ -25,7 +25,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
     private static final String SELECT_ALL_LEADERS =
             "SELECT * FROM leaderboard ORDER BY score DESC;";
     private static final String SELECT_N_LEADERS =
-            "SELECT TOP(%d) * FROM leaderboard ORDER BY score DESC;";
+            "SELECT * FROM leaderboard ORDER BY score DESC LIMIT %d;";
     private static final String SELECT_LEADERS_WHERE =
             "SELECT * FROM leaderboard WHERE %s";
     private static final String UPDATE_LEADER_TEMPLATE =

@@ -103,4 +103,18 @@ public class LeaderboardDaoTest {
         userDao.delete(firstTestUser);
         userDao.delete(secondTestUser);
     }
+
+    @Test
+    public void NLeadersTest() {
+        final int initialSize = leaderboardDao.getAll().size();
+        userDao.insert(firstTestUser);
+        userDao.insert(secondTestUser);
+        leaderboardDao.update(firstTestLeader);
+        leaderboardDao.update(secondTestLeader);
+        assertThat(leaderboardDao.getNLeaders(10)).hasSize(initialSize + 2);
+        leaderboardDao.delete(firstTestLeader);
+        leaderboardDao.delete(secondTestLeader);
+        userDao.delete(firstTestUser);
+        userDao.delete(secondTestUser);
+    }
 }

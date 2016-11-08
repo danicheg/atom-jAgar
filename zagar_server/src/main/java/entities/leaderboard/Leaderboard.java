@@ -12,6 +12,7 @@ public class Leaderboard {
         this.score = score;
     }
 
+
     public Long getUser() {
         return this.user_id;
     }

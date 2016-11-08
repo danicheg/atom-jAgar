@@ -2,6 +2,7 @@ package accountserver.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dao.LeaderboardDao;
+import entities.leaderboard.Leaderboard;
 import entities.leaderboard.LeaderboardBatchHolder;
 import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
@@ -16,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/data")
 public class DataProvider {
@@ -52,4 +54,36 @@ public class DataProvider {
         }
     }
 
+    /*curl -X GET
+     "http://localhost:8080/data/leaderboard"*/
+    @GET
+    @Path("/leadernames")
+    @Produces("application/json")
+    public Response getNLeaderNames(@QueryParam("amount") String n) throws JsonProcessingException {
+        log.info("Batch of leaders requested.");
+        if (n != null) {
+            Integer param = Integer.parseInt(n);
+            List<Long> list = new LeaderboardDao().getNLeaders(param)
+                    .stream().map(Leaderboard::getUser)
+                    .collect(Collectors.toList());
+            List<UserEntity> users = DatabaseAccessLayer.getUserList();
+            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
+                    .map(UserEntity::getName)
+                    .collect(Collectors.toList());
+            return Response.ok(LeaderboardBatchHolder
+                    .writeJsonNames(usersList))
+                    .build();
+        } else {
+            List<Long> list = new LeaderboardDao().getAll()
+                    .stream().map(Leaderboard::getUser)
+                    .collect(Collectors.toList());
+            List<UserEntity> users = DatabaseAccessLayer.getUserList();
+            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
+                    .map(UserEntity::getName)
+                    .collect(Collectors.toList());
+            return Response.ok(LeaderboardBatchHolder
+                    .writeJsonNames(usersList))
+                    .build();
+        }
+    }
 }

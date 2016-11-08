@@ -33,4 +33,8 @@ public class LeaderboardBatchHolder {
     public String writeJson() throws JsonProcessingException {
         return MAPPER.writeValueAsString(this);
     }
+
+    public static String writeJsonNames(List<String> m) throws JsonProcessingException {
+        return MAPPER.writeValueAsString(m);
+    }
 }
