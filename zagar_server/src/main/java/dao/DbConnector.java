@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DbConnector {
     private static final Logger log = LogManager.getLogger(DbConnector.class);
@@ -43,6 +44,23 @@ public class DbConnector {
 
     static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL, USER, PASSWORD);
+    }
+
+    public static void Initiliaze() {
+        try (Connection con = DbConnector.getConnection();
+             Statement stm = con.createStatement()) {
+            String query = "DROP TABLE IF EXISTS leaderboard;" +
+                    "SET FOREIGN_KEY_CHECKS = 0;" +
+                    "CREATE TABLE IF NOT EXISTS leaderboard (" +
+                    "user_id uuid," +
+                    "score int not null," +
+                    "    CONSTRAINT FK_leader FOREIGN KEY (user_id) REFERENCES user(user_id)" +
+                    ");" +
+                    "SET FOREIGN_KEY_CHECKS = 1;";
+            stm.execute(query);
+        } catch (SQLException e) {
+            log.error("Failed to create a table.", e);
+        }
     }
 
     private DbConnector() { }

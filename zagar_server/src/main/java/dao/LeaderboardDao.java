@@ -36,31 +36,6 @@ public class LeaderboardDao implements Dao<Leaderboard> {
     private static final String DELETE_ALL_LEADERS =
             "DELETE FROM leaderboard";
 
-    static {
-        try (Connection con = DbConnector.getConnection();
-             Statement stm = con.createStatement()) {
-            //stm.execute("CREATE TABLE IF NOT EXISTS leaderboard (" +
-            //        "user_id uuid UNIQUE," +
-            //        "score int not null" +
-            //        ")");
-            String query = "DROP TABLE IF EXISTS leaderboard;" +
-                    "SET FOREIGN_KEY_CHECKS = 0;" +
-                    "CREATE TABLE IF NOT EXISTS leaderboard (" +
-                        "user_id uuid," +
-                        "score int not null," +
-                    "    CONSTRAINT FK_leader FOREIGN KEY (user_id) REFERENCES user(user_id)" +
-                    ");" +
-                    "SET FOREIGN_KEY_CHECKS = 1;";
-            stm.execute(query);
-            //stm.execute("ALTER TABLE IF EXISTS leaderboard" +
-             //       "        add constraint FK_leader" +
-             //       "        foreign key if not exists (user_id)" +
-             //       "        references user(user_id)");
-        } catch (SQLException e) {
-            log.error("Failed to create a table.", e);
-        }
-    }
-
     @Override
     public List<Leaderboard> getAll() {
         return getData(SELECT_ALL_LEADERS, null);
