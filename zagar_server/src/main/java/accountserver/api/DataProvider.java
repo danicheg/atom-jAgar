@@ -30,7 +30,6 @@ public class DataProvider {
     public Response getUsersBatch() throws JsonProcessingException {
         log.info("Batch of users requested.");
         @NotNull final List<User> loginUserList = DatabaseAccessLayer.getLoginUserList();
-        log.warn(loginUserList);
         return Response.ok(new UserBatchHolder(loginUserList).writeJson()).build();
     }
 
