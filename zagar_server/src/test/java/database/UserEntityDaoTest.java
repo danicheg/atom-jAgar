@@ -31,6 +31,11 @@ public class UserEntityDaoTest {
     }
 
     @Test
+    public void getAllLoginUsersTest() {
+        assertThat(userDao.getAllLoginUsers()).hasSize(0);
+    }
+
+    @Test
     public void insertUserTest() {
         final int initialSize = userDao.getAll().size();
         userDao.insert(firstTestUser);

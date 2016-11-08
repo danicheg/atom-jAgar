@@ -61,14 +61,9 @@ public class TokenDao implements Dao<Token> {
         log.info("Token '{}' successfully updated", token);
     }
 
-    //TODO: figure out why (Consumer<Session>) session -> session.delete(deleteToken)) doesn't works
     @Override
     public void delete(Token deleteToken) {
-        Database.doTransactional(
-                (Consumer<Session>) session -> session.createQuery("delete Token where token = :delToken")
-                        .setParameter("delToken", deleteToken.getToken())
-                        .executeUpdate()
-        );
+        Database.doTransactional((Consumer<Session>) session -> session.delete(deleteToken));
         log.info("Token '{}' removed into DB", deleteToken);
     }
 
@@ -76,10 +71,7 @@ public class TokenDao implements Dao<Token> {
     public void deleteAll(Token... deleteTokens) {
         List<Token> listTokens = Arrays.asList(deleteTokens);
         Stream<Consumer<Session>> tasks = listTokens.parallelStream()
-                .map(tkn -> (Consumer<Session>) session ->
-                        session.createQuery("delete Token where token = :delToken")
-                                .setParameter("delToken", tkn.getToken())
-                                .executeUpdate());
+                .map(tkn -> (Consumer<Session>) session -> session.delete(tkn));
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
         log.info("All tokens '{}' removed into DB", listTokens);
     }
