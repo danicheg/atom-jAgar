@@ -3,7 +3,7 @@ package database;
 import dao.TokenDao;
 import dao.UserDao;
 import entities.token.Token;
-import entities.user.User;
+import entities.user.UserEntity;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,9 +21,9 @@ public class TokenDaoTest {
     private Token secondToken;
     private Token thirdToken;
 
-    private User user1;
-    private User user2;
-    private User user3;
+    private UserEntity user1;
+    private UserEntity user2;
+    private UserEntity user3;
 
     @Before
     public void setUp() {
@@ -31,9 +31,9 @@ public class TokenDaoTest {
         tokenDao = new TokenDao();
         userDao = new UserDao();
 
-        user1 = new User("userOne", "password");
-        user2 = new User("userTwo", "password");
-        user3 = new User("userThree", "password");
+        user1 = new UserEntity("userOne", "password");
+        user2 = new UserEntity("userTwo", "password");
+        user3 = new UserEntity("userThree", "password");
 
         firstToken = new Token(0L, user1);
         secondToken = new Token(1L, user2);
@@ -55,7 +55,7 @@ public class TokenDaoTest {
                 .hasSize(initialSize + 1)
                 .extracting(Token::getToken, Token::getDate, Token::getUser)
                 .contains(tuple(0L, LocalDate.now(), user1));
-        assertThat(userDao.getAll()).extracting(User::getToken).contains(firstToken);
+        assertThat(userDao.getAll()).extracting(UserEntity::getToken).contains(firstToken);
         tokenDao.delete(firstToken);
         userDao.delete(user1);
     }

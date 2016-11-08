@@ -11,7 +11,6 @@ import org.glassfish.jersey.servlet.ServletContainer;
 import org.h2.server.web.WebServlet;
 import org.jetbrains.annotations.NotNull;
 
-
 public class AccountServer extends Service {
 
     private final static @NotNull Logger log = LogManager.getLogger(AccountServer.class);

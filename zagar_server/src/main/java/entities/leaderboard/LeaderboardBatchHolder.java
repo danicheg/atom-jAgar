@@ -1,4 +1,4 @@
-package entities.user;
+package entities.leaderboard;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserBatchHolder {
+public class LeaderboardBatchHolder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -16,22 +16,21 @@ public class UserBatchHolder {
         MAPPER.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
     }
 
-    private List<UserEntity> users = new ArrayList<>();
+    private List<Leaderboard> leaders = new ArrayList<>();
 
-    public UserBatchHolder(List<UserEntity> users) {
-        this.users = users;
+    public LeaderboardBatchHolder(List<Leaderboard> users) {
+        this.leaders = users;
     }
 
-    public List<UserEntity> getUsers() {
-        return users;
+    public List<Leaderboard> getUsers() {
+        return leaders;
     }
 
-    public static UserBatchHolder readJson(String json) throws IOException {
-        return MAPPER.readValue(json, UserBatchHolder.class);
+    public static LeaderboardBatchHolder readJson(String json) throws IOException {
+        return MAPPER.readValue(json, LeaderboardBatchHolder.class);
     }
 
     public String writeJson() throws JsonProcessingException {
         return MAPPER.writeValueAsString(this);
     }
-
 }

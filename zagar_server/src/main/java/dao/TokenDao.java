@@ -72,16 +72,15 @@ public class TokenDao implements Dao<Token> {
         log.info("Token '{}' removed into DB", deleteToken);
     }
 
-    //now works atomicity
     @Override
     public void deleteAll(Token... deleteTokens) {
         List<Token> listTokens = Arrays.asList(deleteTokens);
         Stream<Consumer<Session>> tasks = listTokens.parallelStream()
                 .map(tkn -> (Consumer<Session>) session ->
                         session.createQuery("delete Token where token = :delToken")
-                        .setParameter("delToken", tkn.getToken())
-                        .executeUpdate());
+                                .setParameter("delToken", tkn.getToken())
+                                .executeUpdate());
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
-        log.info("All tokens '{}' removed into DB", deleteTokens);
+        log.info("All tokens '{}' removed into DB", listTokens);
     }
 }

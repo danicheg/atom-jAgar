@@ -1,9 +1,14 @@
 package entities.token;
 
-import entities.user.User;
+import entities.user.UserEntity;
 import org.jetbrains.annotations.NotNull;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
@@ -22,16 +27,16 @@ public class Token {
     @OneToOne
     @JoinColumn(name = "fk_user_id", referencedColumnName = "user_id")
     @NotNull
-    private User user;
+    private UserEntity user;
 
     /*
     Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
     javax.persistence.PersistenceException: org.hibernate.InstantiationException:
-        No default constructor for entity:  : entities.user.User
+        No default constructor for entity:  : entities.user.UserEntity
     */
     public Token(){}
 
-    public Token(@NotNull Long token, @NotNull User user) {
+    public Token(@NotNull Long token, @NotNull UserEntity user) {
         this.token = token;
         date = LocalDate.now();
         this.user = user;
@@ -56,11 +61,11 @@ public class Token {
     }
 
     @NotNull
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
     }
 

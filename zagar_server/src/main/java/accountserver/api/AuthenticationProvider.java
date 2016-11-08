@@ -1,13 +1,18 @@
 package accountserver.api;
 
+import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import accountserver.auth.Authorized;
 import entities.token.Token;
 import dao.DatabaseAccessLayer;
-import entities.user.User;
 
-import javax.ws.rs.*;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.HeaderParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
 @Path("/auth")
@@ -37,7 +42,7 @@ public class AuthenticationProvider {
             return Response.status(Response.Status.NOT_ACCEPTABLE).build();
         }
 
-        User user = new User(name, password);
+        UserEntity user = new UserEntity(name, password);
         DatabaseAccessLayer.insertUser(user);
 
         log.info("New user registered with login {}", name);
@@ -67,7 +72,7 @@ public class AuthenticationProvider {
             }
 
             Token token = DatabaseAccessLayer.issueToken(user);
-            log.info("User '{}' successfully logged in", user);
+            log.info("UserEntity '{}' successfully logged in", user);
             return Response.ok(Long.toString(token.getToken())).build();
 
         } catch (Exception e) {
@@ -91,9 +96,9 @@ public class AuthenticationProvider {
             if (!DatabaseAccessLayer.contains(token)) {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             } else {
-                User user = DatabaseAccessLayer.getUser(token);
+                UserEntity user = DatabaseAccessLayer.getUser(token);
                 DatabaseAccessLayer.removeToken(token);
-                log.info("User '{}' logout successfully", user.getName());
+                log.info("UserEntity '{}' logout successfully", user.getName());
                 return Response.ok(user.getName() + " successfully logout!").build();
             }
 

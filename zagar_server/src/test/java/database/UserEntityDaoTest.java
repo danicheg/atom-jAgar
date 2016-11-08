@@ -1,7 +1,7 @@
 package database;
 
 import dao.UserDao;
-import entities.user.User;
+import entities.user.UserEntity;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,19 +10,19 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-public class UserDaoTest {
+public class UserEntityDaoTest {
 
     private UserDao userDao;
-    private User firstTestUser;
-    private User secondTestUser;
-    private User thirdTestUser;
+    private UserEntity firstTestUser;
+    private UserEntity secondTestUser;
+    private UserEntity thirdTestUser;
 
     @Before
     public void setUp() {
         userDao = new UserDao();
-        firstTestUser = new User("TestName", "TestPassword");
-        secondTestUser = new User("user", "pass");
-        thirdTestUser = new User("Jegor", "dmonelove");
+        firstTestUser = new UserEntity("TestName", "TestPassword");
+        secondTestUser = new UserEntity("user", "pass");
+        thirdTestUser = new UserEntity("Jegor", "dmonelove");
     }
 
     @Test
@@ -36,7 +36,7 @@ public class UserDaoTest {
         userDao.insert(firstTestUser);
         assertThat(userDao.getAll())
                 .hasSize(initialSize + 1)
-                .extracting(User::getName, User::getRegistrationDate)
+                .extracting(UserEntity::getName, UserEntity::getRegistrationDate)
                 .contains(tuple("TestName", LocalDate.now()));
         userDao.delete(firstTestUser);
     }

@@ -1,35 +1,40 @@
 package entities.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import entities.token.Token;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.annotations.Type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Null;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
-@Table(name = "user", uniqueConstraints = {
+@Table(name = "userEntity", uniqueConstraints = {
         @UniqueConstraint(columnNames = "name"),
         @UniqueConstraint(columnNames = "email")
 })
-public class User {
+public class UserEntity {
 
     @NotNull
     private static final Logger log = LogManager.getLogger(Player.class);
 
     @Id
-    @GeneratedValue
-    @Column(name = "user_id", columnDefinition = "uuid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    @JsonIgnore
     @NotNull
-    private UUID userID;
+    private Long userID;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    @JsonIgnore
     @Nullable
     private Token token;
 
@@ -38,6 +43,7 @@ public class User {
     private String name;
 
     @Column(name = "password", nullable = false)
+    @JsonIgnore
     @NotNull
     private String password;
 
@@ -46,18 +52,19 @@ public class User {
     private String email;
 
     @Column(name = "registration_date")
+    @JsonIgnore
     @NotNull
     private LocalDate registrationDate;
 
     /*
     Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
     javax.persistence.PersistenceException: org.hibernate.InstantiationException:
-        No default constructor for entity:  : entities.user.User
+        No default constructor for entity:  : entities.user.UserEntity
     */
-    public User() {}
+    public UserEntity() {}
 
-    public User(@NotNull String name, @NotNull String password) {
-        this.userID = UUID.randomUUID();
+    public UserEntity(@NotNull String name, @NotNull String password) {
+        this.userID = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.name = name;
         this.password = password;
         registrationDate = LocalDate.now();
@@ -99,7 +106,7 @@ public class User {
     }
 
     @NotNull
-    public UUID getUserID(){
+    public Long getUserID(){
         return userID;
     }
 
@@ -119,7 +126,7 @@ public class User {
     public boolean equals(Object that) {
         if (that == null || that.getClass() != getClass()) return false;
         if (this == that) return true;
-        User newUser = (User) that;
+        UserEntity newUser = (UserEntity) that;
         return this.userID.equals(newUser.userID);
     }
 
@@ -130,7 +137,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity{" +
                 "userID=" + userID +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
