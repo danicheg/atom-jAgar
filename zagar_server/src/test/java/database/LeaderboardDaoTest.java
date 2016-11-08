@@ -76,7 +76,7 @@ public class LeaderboardDaoTest {
         assertNotNull(leaderboardDao.getAll().size());
         assertEquals(
                 firstTestLeader,
-                leaderboardDao.getAllWhere(String.format("user_id = '%s'",firstTestLeader.getUser()))
+                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUser()))
                 .stream()
                 .findFirst()
                 .orElse(null)
@@ -93,7 +93,7 @@ public class LeaderboardDaoTest {
         leaderboardDao.update(secondTestLeader);
         assertNotEquals(
                 secondTestLeader,
-                leaderboardDao.getAllWhere(String.format("user_id = '%s'",firstTestLeader.getUser()))
+                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUser()))
                         .stream()
                         .findFirst()
                         .orElse(null)

@@ -4,15 +4,15 @@ import java.util.UUID;
 
 public class Leaderboard {
 
-    private UUID user_id;
+    private Long user_id;
     private Integer score;
 
-    public Leaderboard(UUID user_id, Integer score) {
+    public Leaderboard(Long user_id, Integer score) {
         this.user_id = user_id;
         this.score = score;
     }
 
-    public UUID getUser() {
+    public Long getUser() {
         return this.user_id;
     }
 

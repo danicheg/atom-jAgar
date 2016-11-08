@@ -50,13 +50,11 @@ public class DbConnector {
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
             String query = "DROP TABLE IF EXISTS leaderboard;" +
-                    "SET FOREIGN_KEY_CHECKS = 0;" +
                     "CREATE TABLE IF NOT EXISTS leaderboard (" +
-                    "user_id uuid," +
+                    "user_id bigint," +
                     "score int not null," +
-                    "    CONSTRAINT FK_leader FOREIGN KEY (user_id) REFERENCES user(user_id)" +
-                    ");" +
-                    "SET FOREIGN_KEY_CHECKS = 1;";
+                    "    CONSTRAINT FK_leader FOREIGN KEY (user_id) REFERENCES userentity(user_id)" +
+                    ");";
             stm.execute(query);
         } catch (SQLException e) {
             log.error("Failed to create a table.", e);

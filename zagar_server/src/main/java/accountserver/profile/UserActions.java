@@ -48,7 +48,7 @@ public class UserActions {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
             UserEntity user = DatabaseAccessLayer.getUser(token);
-            UUID userId = user.getUserID();
+            Long userId = user.getUserID();
             LeaderboardDao ldao = new LeaderboardDao();
             Leaderboard leader = ldao.getAllWhere(String.format("user_id = '%s'", userId))
                     .stream()

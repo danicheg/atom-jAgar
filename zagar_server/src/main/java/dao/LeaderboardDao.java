@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class LeaderboardDao implements Dao<Leaderboard> {
 
@@ -57,7 +58,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
         try (Connection con = DbConnector.getConnection();
              PreparedStatement stm = con.prepareStatement(INSERT_LEADER_TEMPLATE)) {
             stm.setInt(2, leaderboard.getScore());
-            stm.setString(1, leaderboard.getUser().toString());
+            stm.setLong(1, leaderboard.getUser());
             stm.executeUpdate();
             //stm.execute(String.format(INSERT_LEADER_TEMPLATE, leaderboard.getUser(), leaderboard.getScore()));
         } catch (SQLException e) {
@@ -74,14 +75,15 @@ public class LeaderboardDao implements Dao<Leaderboard> {
 
     @Override
     public void delete(Leaderboard leaderboard) {
-        PreparedStatement stm = null;
-        try (Connection con = DbConnector.getConnection()) {
-            List<Leaderboard> leader = getData(SELECT_LEADERS_WHERE,String.format("user_id = '%s'", leaderboard.getUser()));
+        //PreparedStatement stm = null;
+        try (Connection con = DbConnector.getConnection();
+            PreparedStatement stm = con.prepareStatement(DELETE_LEADER_TEMPLATE)) {
+            List<Leaderboard> leader = getData(SELECT_LEADERS_WHERE,String.format("user_id = %d", leaderboard.getUser()));
             if (leader.isEmpty()) {
                 throw new Exception("There is no such leader!");
             } else {
-                stm = con.prepareStatement(DELETE_LEADER_TEMPLATE);
-                stm.setString(1,leaderboard.getUser().toString());
+                //stm = con.prepareStatement(DELETE_LEADER_TEMPLATE);
+                stm.setLong(1,leaderboard.getUser());
                 Integer rowsUpdated = stm.executeUpdate();
                 if (rowsUpdated != 1) {
                     throw new Exception("Nothing has been deleted!");
@@ -108,17 +110,17 @@ public class LeaderboardDao implements Dao<Leaderboard> {
     public void update(Leaderboard leaderboard) {
         PreparedStatement stm = null;
         try (Connection con = DbConnector.getConnection()) {
-            List<Leaderboard> leader = getData(SELECT_LEADERS_WHERE,String.format("user_id = '%s'", leaderboard.getUser()));
+            List<Leaderboard> leader = getData(SELECT_LEADERS_WHERE,String.format("user_id = %d", leaderboard.getUser()));
             if (leader.isEmpty()) {
                 stm = con.prepareStatement(INSERT_LEADER_TEMPLATE);
                 stm.setInt(2, leaderboard.getScore());
-                stm.setString(1, leaderboard.getUser().toString());
+                stm.setLong(1, leaderboard.getUser());
                 log.info(stm);
                 stm.executeUpdate();
             } else {
                 stm = con.prepareStatement(UPDATE_LEADER_TEMPLATE);
                 stm.setInt(1,leaderboard.getScore());
-                stm.setString(2,leaderboard.getUser().toString());
+                stm.setLong(2,leaderboard.getUser());
                 log.info(stm);
                 Integer rowsUpdated = stm.executeUpdate();
                 if (rowsUpdated != 1) {
@@ -135,7 +137,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
 
     @NotNull
     private static Leaderboard mapToLeaderboard(@NotNull ResultSet rs) throws SQLException {
-        return new Leaderboard(UUID.fromString(rs.getString("user_id")), rs.getInt("score"));
+        return new Leaderboard(rs.getLong("user_id"), rs.getInt("score"));
     }
 
     private List<Leaderboard> getData(String query, Object input) {

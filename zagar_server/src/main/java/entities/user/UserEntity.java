@@ -5,20 +5,16 @@ import entities.token.Token;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.annotations.Type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
 @Table(name = "userEntity", uniqueConstraints = {
@@ -31,11 +27,11 @@ public class UserEntity {
     private static final Logger log = LogManager.getLogger(Player.class);
 
     @Id
-    @GeneratedValue
-    @Column(name = "user_id", columnDefinition = "uuid")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     @JsonIgnore
     @NotNull
-    private UUID userID;
+    private Long userID;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
     @JsonIgnore
@@ -68,7 +64,7 @@ public class UserEntity {
     public UserEntity() {}
 
     public UserEntity(@NotNull String name, @NotNull String password) {
-        this.userID = UUID.randomUUID();
+        this.userID = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
         this.name = name;
         this.password = password;
         registrationDate = LocalDate.now();
@@ -110,7 +106,7 @@ public class UserEntity {
     }
 
     @NotNull
-    public UUID getUserID(){
+    public Long getUserID(){
         return userID;
     }
 
