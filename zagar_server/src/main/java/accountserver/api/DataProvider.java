@@ -64,9 +64,9 @@ public class DataProvider {
         if (n != null) {
             Integer param = Integer.parseInt(n);
             List<Long> list = new LeaderboardDao().getNLeaders(param)
-                    .stream().map(Leaderboard::getUser)
+                    .stream().map(Leaderboard::getUserId)
                     .collect(Collectors.toList());
-            List<UserEntity> users = DatabaseAccessLayer.getUserList();
+            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
             List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
                     .map(UserEntity::getName)
                     .collect(Collectors.toList());
@@ -75,9 +75,9 @@ public class DataProvider {
                     .build();
         } else {
             List<Long> list = new LeaderboardDao().getAll()
-                    .stream().map(Leaderboard::getUser)
+                    .stream().map(Leaderboard::getUserId)
                     .collect(Collectors.toList());
-            List<UserEntity> users = DatabaseAccessLayer.getUserList();
+            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
             List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
                     .map(UserEntity::getName)
                     .collect(Collectors.toList());

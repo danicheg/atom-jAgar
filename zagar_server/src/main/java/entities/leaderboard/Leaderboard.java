@@ -12,8 +12,10 @@ public class Leaderboard {
         this.score = score;
     }
 
+    public Leaderboard() {}
 
-    public Long getUser() {
+
+    public Long getUserId() {
         return this.user_id;
     }
 

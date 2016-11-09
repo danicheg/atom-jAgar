@@ -49,7 +49,7 @@ public class LeaderboardDaoTest {
         leaderboardDao.insert(firstTestLeader);
         assertThat(leaderboardDao.getAll())
                 .hasSize(initialSize + 1)
-                .extracting(Leaderboard::getUser, Leaderboard::getScore)
+                .extracting(Leaderboard::getUserId, Leaderboard::getScore)
                 .contains(tuple(firstTestUser.getUserID(), 0));
         leaderboardDao.delete(firstTestLeader);
     }
@@ -64,7 +64,7 @@ public class LeaderboardDaoTest {
         leaderboardDao.update(firstTestLeader);
         assertThat(leaderboardDao.getAll())
                 .hasSize(initialSize + 1)
-                .extracting(Leaderboard::getUser, Leaderboard::getScore)
+                .extracting(Leaderboard::getUserId, Leaderboard::getScore)
                 .contains(tuple(firstTestUser.getUserID(), newMark));
         leaderboardDao.delete(firstTestLeader);
     }
@@ -76,7 +76,7 @@ public class LeaderboardDaoTest {
         assertNotNull(leaderboardDao.getAll().size());
         assertEquals(
                 firstTestLeader,
-                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUser()))
+                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUserId()))
                 .stream()
                 .findFirst()
                 .orElse(null)
@@ -93,7 +93,7 @@ public class LeaderboardDaoTest {
         leaderboardDao.update(secondTestLeader);
         assertNotEquals(
                 secondTestLeader,
-                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUser()))
+                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUserId()))
                         .stream()
                         .findFirst()
                         .orElse(null)

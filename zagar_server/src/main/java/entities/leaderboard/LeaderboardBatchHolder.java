@@ -22,6 +22,8 @@ public class LeaderboardBatchHolder {
         this.leaders = users;
     }
 
+    public LeaderboardBatchHolder() {}
+
     public List<Leaderboard> getUsers() {
         return leaders;
     }
@@ -36,5 +38,9 @@ public class LeaderboardBatchHolder {
 
     public static String writeJsonNames(List<String> m) throws JsonProcessingException {
         return MAPPER.writeValueAsString(m);
+    }
+
+    public static String[] readJsonNames(String m) throws IOException {
+        return MAPPER.readValue(m, String[].class);
     }
 }
