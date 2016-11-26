@@ -50,7 +50,6 @@ public class DbConnector {
     public static void initialise() {
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            System.out.println("dasdad af asdfa");
             String query = "" +
                     "DROP TABLE IF EXISTS leaderboard;" +
                     "CREATE TABLE IF NOT EXISTS leaderboard (" +

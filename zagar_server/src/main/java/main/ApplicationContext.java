@@ -23,7 +23,7 @@ public class ApplicationContext {
         log.info(ApplicationContext.class.getName() + " initialized");
     }
 
-    public static @NotNull ApplicationContext instance() {
+    public static ApplicationContext instance() {
         if (instance == null) {
             synchronized (ApplicationContext.class) {
                 if (instance == null) {
@@ -35,6 +35,7 @@ public class ApplicationContext {
     }
 
     public void put(@NotNull Class clazz, @NotNull Object object) {
+        log.info("Put " + clazz);
         contextMap.put(clazz, object);
     }
 

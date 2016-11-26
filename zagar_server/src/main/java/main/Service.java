@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
  * Created by apomosov on 15.05.16.
  */
 public abstract class Service extends Thread implements Abonent {
+
     @NotNull
     private static final Logger log = LogManager.getLogger(Service.class);
     @NotNull
@@ -33,4 +34,5 @@ public abstract class Service extends Thread implements Abonent {
     public String toString() {
         return address.toString();
     }
+
 }
