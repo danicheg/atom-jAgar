@@ -27,11 +27,13 @@ import java.util.concurrent.TimeUnit;
 
 @WebSocket(maxTextMessageSize = 1024)
 public class ServerConnectionSocket {
+
     @NotNull
     private static final Logger log = LogManager.getLogger("<<<");
 
     @NotNull
     private final CountDownLatch closeLatch;
+
     @NotNull
     public Session session;
 
@@ -52,9 +54,7 @@ public class ServerConnectionSocket {
     @OnWebSocketConnect
     public void onConnect(@NotNull Session session) throws IOException {
         this.session = session;
-
         log.info("Connected!");
-
         new PacketAuth(Game.login, Game.serverToken).write();
         Game.spawnPlayer = 100;
         long oldTime = 0;

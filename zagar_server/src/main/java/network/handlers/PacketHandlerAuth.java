@@ -16,15 +16,20 @@ import utils.JSONHelper;
 import java.io.IOException;
 
 public class PacketHandlerAuth {
+
     public PacketHandlerAuth(@NotNull Session session, @NotNull String json) throws Exception {
+
         CommandAuth commandAuth;
+
         try {
             commandAuth = JSONHelper.fromJSON(json, CommandAuth.class);
         } catch (JSONDeserializationException e) {
             e.printStackTrace();
             return;
         }
+
         if (!DatabaseAccessLayer.validateToken(commandAuth.getToken())) {
+
             try {
                 new PacketAuthFail(
                         commandAuth.getLogin(), commandAuth.getToken(),
@@ -33,7 +38,9 @@ public class PacketHandlerAuth {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         } else {
+
             try {
                 Player player = new Player(Player.idGenerator.next(), commandAuth.getLogin());
                 ApplicationContext.instance().get(ClientConnections.class).registerConnection(player, session);
@@ -42,6 +49,7 @@ public class PacketHandlerAuth {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 }

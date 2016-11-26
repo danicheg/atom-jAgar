@@ -7,6 +7,7 @@ import utils.JSONDeserializationException;
 import utils.JSONHelper;
 
 public class PacketHandlerMove {
+
     public PacketHandlerMove(@NotNull Session session, @NotNull String json) {
         CommandMove commandMove;
         try {

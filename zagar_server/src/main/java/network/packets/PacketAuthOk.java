@@ -10,6 +10,7 @@ import utils.JSONHelper;
 import java.io.IOException;
 
 public class PacketAuthOk {
+
     @NotNull
     private static final Logger log = LogManager.getLogger(PacketAuthOk.class);
 
@@ -21,4 +22,5 @@ public class PacketAuthOk {
         log.info("Sending [" + msg + "]");
         session.getRemote().sendString(msg);
     }
+
 }

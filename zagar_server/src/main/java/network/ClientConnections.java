@@ -9,11 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * @author Alpi
- * @since 31.10.16
- */
 public class ClientConnections {
+
     private final static Logger log = LogManager.getLogger(ClientConnections.class);
 
     private final ConcurrentHashMap<Player, Session> connections = new ConcurrentHashMap<>();
@@ -31,4 +28,5 @@ public class ClientConnections {
     public Set<Map.Entry<Player, Session>> getConnections() {
         return connections.entrySet();
     }
+
 }

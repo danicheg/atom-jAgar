@@ -10,6 +10,7 @@ import utils.JSONHelper;
 import java.io.IOException;
 
 public class PacketAuthFail {
+
     @NotNull
     private static final Logger log = LogManager.getLogger(PacketAuthFail.class);
     @NotNull
@@ -30,4 +31,5 @@ public class PacketAuthFail {
         log.info("Sending [" + msg + "]");
         session.getRemote().sendString(msg);
     }
+
 }

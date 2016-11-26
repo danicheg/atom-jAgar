@@ -7,6 +7,7 @@ import utils.JSONDeserializationException;
 import utils.JSONHelper;
 
 public class PacketHandlerEjectMass {
+
     public PacketHandlerEjectMass(@NotNull Session session, @NotNull String json) {
         CommandEjectMass commandEjectMass;
         try {

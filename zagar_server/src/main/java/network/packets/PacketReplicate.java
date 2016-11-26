@@ -12,6 +12,7 @@ import utils.JSONHelper;
 import java.io.IOException;
 
 public class PacketReplicate {
+
     @NotNull
     private static final Logger log = LogManager.getLogger(PacketReplicate.class);
     @NotNull
@@ -29,4 +30,5 @@ public class PacketReplicate {
         log.info("Sending [" + msg + "]");
         session.getRemote().sendString(msg);
     }
+
 }

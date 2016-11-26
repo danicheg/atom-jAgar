@@ -15,6 +15,7 @@ import utils.JSONHelper;
 import java.util.Map;
 
 public class ClientConnectionHandler extends WebSocketAdapter {
+
     private final static @NotNull Logger log = LogManager.getLogger(ClientConnectionHandler.class);
 
     @Override
@@ -64,4 +65,5 @@ public class ClientConnectionHandler extends WebSocketAdapter {
                 break;
         }
     }
+
 }

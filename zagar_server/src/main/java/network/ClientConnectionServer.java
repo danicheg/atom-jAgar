@@ -11,10 +11,8 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Created by apomosov on 13.06.16.
- */
 public class ClientConnectionServer extends Service {
+
     @NotNull
     private final static Logger log = LogManager.getLogger(MasterServer.class);
     private final int port;

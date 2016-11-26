@@ -29,7 +29,12 @@ public class MasterServer {
 
         for (Class service : MasterServerConfiguration.SERVICES_ARRAY) {
             try {
-                ApplicationContext.instance().put(service, service.newInstance());
+                final Class[] parentInterfaces = service.getInterfaces();
+                if (parentInterfaces.length == 0) {
+                    ApplicationContext.instance().put(service, service.newInstance());
+                } else {
+                    ApplicationContext.instance().put(service.getInterfaces()[0], service.newInstance());
+                }
             } catch (InstantiationException | IllegalAccessException e) {
                 log.error("Can't create instance of class " + service);
             }

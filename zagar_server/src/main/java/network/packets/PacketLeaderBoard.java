@@ -10,6 +10,7 @@ import utils.JSONHelper;
 import java.io.IOException;
 
 public class PacketLeaderBoard {
+
     @NotNull
     private static final Logger log = LogManager.getLogger(PacketLeaderBoard.class);
     @NotNull
@@ -24,4 +25,5 @@ public class PacketLeaderBoard {
         log.info("Sending [" + msg + "]");
         session.getRemote().sendString(msg);
     }
+
 }

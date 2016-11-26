@@ -7,6 +7,7 @@ import utils.JSONDeserializationException;
 import utils.JSONHelper;
 
 public class PacketHandlerSplit {
+
     public PacketHandlerSplit(@NotNull Session session, @NotNull String json) {
         CommandSplit commandSplit;
         try {
