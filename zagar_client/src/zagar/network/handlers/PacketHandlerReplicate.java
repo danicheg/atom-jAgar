@@ -1,42 +1,39 @@
 package zagar.network.handlers;
 
-import java.nio.ByteBuffer;
-import java.util.Collections;
-
-import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import protocol.CommandLeaderBoard;
+import org.jetbrains.annotations.NotNull;
 import protocol.CommandReplicate;
+import zagar.Game;
 import zagar.util.JSONDeserializationException;
 import zagar.util.JSONHelper;
 import zagar.view.Cell;
-import zagar.Game;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Collections;
 
 public class PacketHandlerReplicate {
-  @NotNull
-  private static final Logger log = LogManager.getLogger(PacketHandlerReplicate.class);
+    @NotNull
+    private static final Logger log = LogManager.getLogger(PacketHandlerReplicate.class);
 
-  public PacketHandlerReplicate(@NotNull String json) {
-    CommandReplicate commandReplicate;
-    try {
-      commandReplicate = JSONHelper.fromJSON(json, CommandReplicate.class);
-    } catch (JSONDeserializationException e) {
-      e.printStackTrace();
-      return;
-    }
-    Cell[] gameCells = new Cell[commandReplicate.getCells().length];
-    for (int i = 0; i < commandReplicate.getCells().length; i++) {
-      protocol.model.Cell c = commandReplicate.getCells()[i];
-      gameCells[i] = new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus());
-    }
+    public PacketHandlerReplicate(@NotNull String json) {
+        CommandReplicate commandReplicate;
+        try {
+            commandReplicate = JSONHelper.fromJSON(json, CommandReplicate.class);
+        } catch (JSONDeserializationException e) {
+            e.printStackTrace();
+            return;
+        }
+        Cell[] gameCells = new Cell[commandReplicate.getCells().length];
+        for (int i = 0; i < commandReplicate.getCells().length; i++) {
+            protocol.model.Cell c = commandReplicate.getCells()[i];
+            gameCells[i] = new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus());
+        }
 
-    Game.player.clear();
-    Collections.addAll(Game.player, gameCells);
-    Game.cells = gameCells;
+        Game.player.clear();
+        Collections.addAll(Game.player, gameCells);
+        Game.cells = gameCells;
 
-    //TODO
+        //TODO
 /*    if (b == null) return;
     b.order(ByteOrder.LITTLE_ENDIAN);
     short destroy = b.getShort(1);
@@ -82,7 +79,7 @@ public class PacketHandlerReplicate {
       }
       offset += 4;
     }*/
-  }
+    }
 
   /*private int addCell(int offset, @NotNull ByteBuffer b) {
     int cellID = b.getInt(offset);

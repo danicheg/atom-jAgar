@@ -22,12 +22,12 @@ public class UserBatchHolder {
         this.users = users;
     }
 
-    public List<UserEntity> getUsers() {
-        return users;
-    }
-
     public static UserBatchHolder readJson(String json) throws IOException {
         return MAPPER.readValue(json, UserBatchHolder.class);
+    }
+
+    public List<UserEntity> getUsers() {
+        return users;
     }
 
     public String writeJson() throws JsonProcessingException {

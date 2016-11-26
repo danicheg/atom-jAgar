@@ -12,21 +12,21 @@ import utils.JSONHelper;
 import java.io.IOException;
 
 public class PacketReplicate {
-  @NotNull
-  private static final Logger log = LogManager.getLogger(PacketReplicate.class);
-  @NotNull
-  private final Cell[] cells;
-  @NotNull
-  private final Food[] food;
+    @NotNull
+    private static final Logger log = LogManager.getLogger(PacketReplicate.class);
+    @NotNull
+    private final Cell[] cells;
+    @NotNull
+    private final Food[] food;
 
-  public PacketReplicate(@NotNull Cell[] cells, @NotNull Food[] food) {
-    this.cells = cells;
-    this.food = food;
-  }
+    public PacketReplicate(@NotNull Cell[] cells, @NotNull Food[] food) {
+        this.cells = cells;
+        this.food = food;
+    }
 
-  public void write(@NotNull Session session) throws IOException {
-    String msg = JSONHelper.toJSON(new CommandReplicate(food, cells));
-    log.info("Sending [" + msg + "]");
-    session.getRemote().sendString(msg);
-  }
+    public void write(@NotNull Session session) throws IOException {
+        String msg = JSONHelper.toJSON(new CommandReplicate(food, cells));
+        log.info("Sending [" + msg + "]");
+        session.getRemote().sendString(msg);
+    }
 }

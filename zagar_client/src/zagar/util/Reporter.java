@@ -21,11 +21,4 @@ public class Reporter {
                 title,
                 JOptionPane.WARNING_MESSAGE);
     }
-  public static void reportInfo(@NotNull String title, @NotNull String message) {
-      JOptionPane.showMessageDialog(null,
-              message,
-              title,
-              JOptionPane.OK_OPTION);
-  }
-
 }

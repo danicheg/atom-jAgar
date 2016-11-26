@@ -34,7 +34,8 @@ public class Token {
     javax.persistence.PersistenceException: org.hibernate.InstantiationException:
         No default constructor for entity:  : entities.user.UserEntity
     */
-    public Token(){}
+    public Token() {
+    }
 
     public Token(@NotNull Long token, @NotNull UserEntity user) {
         this.token = token;

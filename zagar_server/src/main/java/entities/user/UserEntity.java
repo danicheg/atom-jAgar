@@ -5,15 +5,20 @@ import entities.token.Token;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.annotations.Type;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import java.time.LocalDate;
 import java.util.Objects;
-import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Entity
@@ -61,7 +66,8 @@ public class UserEntity {
     javax.persistence.PersistenceException: org.hibernate.InstantiationException:
         No default constructor for entity:  : entities.user.UserEntity
     */
-    public UserEntity() {}
+    public UserEntity() {
+    }
 
     public UserEntity(@NotNull String name, @NotNull String password) {
         this.userID = ThreadLocalRandom.current().nextLong(Long.MAX_VALUE);
@@ -105,14 +111,15 @@ public class UserEntity {
         return token;
     }
 
-    @NotNull
-    public Long getUserID(){
-        return userID;
-    }
-
     public void setToken(@Nullable Token token) {
         this.token = token;
     }
+
+    @NotNull
+    public Long getUserID() {
+        return userID;
+    }
+
     public boolean checkPassword(@NotNull String pass) {
         return password.equals(pass);
     }

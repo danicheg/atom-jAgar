@@ -22,18 +22,11 @@ public class LeaderboardBatchHolder {
         this.leaders = users;
     }
 
-    public LeaderboardBatchHolder() {}
-
-    public List<Leaderboard> getUsers() {
-        return leaders;
+    public LeaderboardBatchHolder() {
     }
 
     public static LeaderboardBatchHolder readJson(String json) throws IOException {
         return MAPPER.readValue(json, LeaderboardBatchHolder.class);
-    }
-
-    public String writeJson() throws JsonProcessingException {
-        return MAPPER.writeValueAsString(this);
     }
 
     public static String writeJsonNames(List<String> m) throws JsonProcessingException {
@@ -42,5 +35,13 @@ public class LeaderboardBatchHolder {
 
     public static String[] readJsonNames(String m) throws IOException {
         return MAPPER.readValue(m, String[].class);
+    }
+
+    public List<Leaderboard> getUsers() {
+        return leaders;
+    }
+
+    public String writeJson() throws JsonProcessingException {
+        return MAPPER.writeValueAsString(this);
     }
 }

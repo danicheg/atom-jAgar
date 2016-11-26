@@ -1,7 +1,5 @@
 package entities.leaderboard;
 
-import java.util.UUID;
-
 public class Leaderboard {
 
     private Long user_id;
@@ -12,8 +10,8 @@ public class Leaderboard {
         this.score = score;
     }
 
-    public Leaderboard() {}
-
+    public Leaderboard() {
+    }
 
     public Long getUserId() {
         return this.user_id;
@@ -31,8 +29,7 @@ public class Leaderboard {
     public boolean equals(Object object) {
         if (object.getClass() != Leaderboard.class) return false;
         Leaderboard leader = (Leaderboard) object;
-        if (this.user_id.equals(leader.user_id) && this.score == leader.score) return true;
-        return false;
+        return this.user_id.equals(leader.user_id) && this.score.equals(leader.score);
     }
 
     @Override

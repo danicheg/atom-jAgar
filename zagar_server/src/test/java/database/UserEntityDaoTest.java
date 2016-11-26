@@ -43,7 +43,7 @@ public class UserEntityDaoTest {
                 .hasSize(initialSize + 1)
                 .extracting(UserEntity::getName, UserEntity::getRegistrationDate)
                 .contains(tuple("TestName", LocalDate.now()));
-        //userDao.delete(firstTestUser);
+        userDao.delete(firstTestUser);
     }
 
     @Test

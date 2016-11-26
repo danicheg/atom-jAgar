@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DbConnector {
+
     private static final Logger log = LogManager.getLogger(DbConnector.class);
 
     private static final String URL_TEMPLATE = "jdbc:h2:./%s";
@@ -24,7 +25,7 @@ public class DbConnector {
 
     private static final String URL;
     private static final String HOST = "127.0.0.1";
-    private static final int PORT = 5432;
+    private static final int PORT = 8080;
 
 
     static {
@@ -46,13 +47,15 @@ public class DbConnector {
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
-    public static void Initiliaze() {
+    public static void initialise() {
         try (Connection con = DbConnector.getConnection();
              Statement stm = con.createStatement()) {
-            String query = "DROP TABLE IF EXISTS leaderboard;" +
+            System.out.println("dasdad af asdfa");
+            String query = "" +
+                    "DROP TABLE IF EXISTS leaderboard;" +
                     "CREATE TABLE IF NOT EXISTS leaderboard (" +
-                    "user_id bigint," +
-                    "score int not null," +
+                        "user_id bigint," +
+                        "score int not null," +
                     "    CONSTRAINT FK_leader FOREIGN KEY (user_id) REFERENCES userentity(user_id)" +
                     ");";
             stm.execute(query);
@@ -61,5 +64,6 @@ public class DbConnector {
         }
     }
 
-    private DbConnector() { }
+    private DbConnector() {}
+
 }

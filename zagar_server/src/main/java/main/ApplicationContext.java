@@ -17,7 +17,6 @@ public class ApplicationContext {
 
     private static final @NotNull Logger log = LogManager.getLogger(ApplicationContext.class);
     private static volatile @Nullable ApplicationContext instance;
-
     private final @NotNull Map<Class, Object> contextMap = new ConcurrentHashMap<>();
 
     private ApplicationContext() {
