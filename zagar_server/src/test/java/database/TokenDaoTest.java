@@ -84,7 +84,7 @@ public class TokenDaoTest {
     public void deleteAllTest(){
         tokenDao.insertAll(firstToken, secondToken, thirdToken);
         userDao.insertAll(user1, user2, user3);
-        final int initialSize = tokenDao.getAll().size();
+        assertThat(tokenDao.getAll()).hasSize(3);
         tokenDao.deleteAll(firstToken, secondToken, thirdToken);
         userDao.deleteAll(user1, user2, user3);
         assertThat(tokenDao.getAll()).hasSize(0);

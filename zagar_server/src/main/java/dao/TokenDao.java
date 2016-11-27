@@ -29,18 +29,17 @@ public class TokenDao implements Dao<Token> {
     @Override
     public List<Token> getAllWhere(String... conditions) {
         String totalCondition = Joiner.on(" and ").join(Arrays.asList(conditions));
-        /*final List<Token> result = Database.selectTransactional(session ->
+        final List<Token> result = Database.selectTransactional(session ->
                 session.createQuery("from Token where " + totalCondition, Token.class).list());
         log.info("Successfully retrieved tokens from DB: '{}' that satisfied conditions: '{}'",
-                result, totalCondition);*/
-        return Database.selectTransactional(session ->
-                session.createQuery("from Token where " + totalCondition, Token.class).list());
+                result, totalCondition);
+        return result;
     }
 
     @Override
     public void insert(Token token) {
         token.getUser().setToken(token);
-        //Database.doTransactional((Function<Session, ?>) session -> session.save(token));
+        Database.doTransactional((Function<Session, ?>) session -> session.save(token));
         log.info("Token '{}' inserted into DB", token);
     }
 
@@ -49,9 +48,9 @@ public class TokenDao implements Dao<Token> {
     public void insertAll(Token... tokens) {
         List<Token> listTokens = Arrays.asList(tokens);
         listTokens.forEach(tkn -> tkn.getUser().setToken(tkn));
-        /*Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
+        Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
                 .map(tkn -> session -> session.save(tkn));
-        Database.doTransactional(tasks.collect(Collectors.toList()));*/
+        Database.doTransactional(tasks.collect(Collectors.toList()));
         log.info("All tokens: '{}' inserted into DB", listTokens);
     }
 

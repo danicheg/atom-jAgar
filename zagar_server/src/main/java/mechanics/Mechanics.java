@@ -11,9 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import ticker.Tickable;
 import ticker.Ticker;
 
-/**
- * Created by apomosov on 14.05.16.
- */
 public class Mechanics extends Service implements Tickable {
 
     @NotNull

@@ -57,8 +57,6 @@ public class DatabaseAccessLayer {
     public static Token parse(String rawToken) {
         Long longToken = Long.parseLong(rawToken.substring("Bearer".length()).trim());
         final String findByTokenCondition = "token=" + longToken;
-        /*final Token result = tokenDao.getAllWhere(findByTokenCondition).get(0);
-        log.info("Result of finding token: {}", result);*/
         return tokenDao.getAllWhere(findByTokenCondition).get(0);
     }
 
