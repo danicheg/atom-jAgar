@@ -8,6 +8,9 @@ import entities.user.UserEntity;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.junit.Assert.assertEquals;
@@ -22,8 +25,8 @@ public class LeaderboardDaoTest {
     private UserEntity firstTestUser;
     private UserEntity secondTestUser;
 
-    private Leaderboard firstTestLeader;
-    private Leaderboard secondTestLeader;
+    private Leaderboard leaderboardOne;
+    private Leaderboard leaderboardTwo;
 
     @Before
     public void setUp() {
@@ -33,8 +36,8 @@ public class LeaderboardDaoTest {
         firstTestUser = new UserEntity("TestName", "TestPassword");
         secondTestUser = new UserEntity("user", "pass");
 
-        firstTestLeader = new Leaderboard(firstTestUser.getUserID(),0);
-        secondTestLeader = new Leaderboard(secondTestUser.getUserID(),0);
+        leaderboardOne = new Leaderboard();
+        leaderboardTwo = new Leaderboard(secondTestUser);
     }
 
     @Test
@@ -44,77 +47,49 @@ public class LeaderboardDaoTest {
     }
 
     @Test
-    public void insertUserTest() {
+    public void insertLeaderboardTest() {
         final int initialSize = leaderboardDao.getAll().size();
-        leaderboardDao.insert(firstTestLeader);
+        leaderboardDao.insert(leaderboardOne);
         assertThat(leaderboardDao.getAll())
-                .hasSize(initialSize + 1)
-                .extracting(Leaderboard::getUserId, Leaderboard::getScore)
-                .contains(tuple(firstTestUser.getUserID(), 0));
-        leaderboardDao.delete(firstTestLeader);
+                .hasSize(initialSize + 1);
+        leaderboardDao.delete(leaderboardOne);
     }
 
     @Test
     public void updateLeaderTest() {
         final int initialSize = leaderboardDao.getAll().size();
-        leaderboardDao.update(firstTestLeader);
-        Integer oldMark = firstTestLeader.getScore();
-        Integer newMark = oldMark + 20;
-        firstTestLeader.addScore(20);
-        leaderboardDao.update(firstTestLeader);
+        leaderboardDao.insert(leaderboardOne);
+        leaderboardOne.addUser(firstTestUser);
+        leaderboardDao.update(leaderboardOne);
+        leaderboardOne.updateUser(firstTestUser,20);
         assertThat(leaderboardDao.getAll())
                 .hasSize(initialSize + 1)
-                .extracting(Leaderboard::getUserId, Leaderboard::getScore)
-                .contains(tuple(firstTestUser.getUserID(), newMark));
-        leaderboardDao.delete(firstTestLeader);
+                .extracting(Leaderboard::getUsers)
+                .hasSize(1);
+        leaderboardDao.delete(leaderboardOne);
     }
 
     @Test
-    public void insertLeaderTest() {
-        userDao.insert(firstTestUser);
-        leaderboardDao.insert(firstTestLeader);
-        assertNotNull(leaderboardDao.getAll().size());
-        assertEquals(
-                firstTestLeader,
-                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUserId()))
-                .stream()
-                .findFirst()
-                .orElse(null)
-                );
-        leaderboardDao.delete(firstTestLeader);
-        userDao.delete(firstTestUser);
-    }
-
-    @Test
-    public void compareTwoLeadersTest() {
-        userDao.insert(firstTestUser);
-        userDao.insert(secondTestUser);
-        leaderboardDao.update(firstTestLeader);
-        leaderboardDao.update(secondTestLeader);
-        assertNotEquals(
-                secondTestLeader,
-                leaderboardDao.getAllWhere(String.format("user_id = %s",firstTestLeader.getUserId()))
-                        .stream()
-                        .findFirst()
-                        .orElse(null)
-        );
-        leaderboardDao.delete(firstTestLeader);
-        leaderboardDao.delete(secondTestLeader);
-        userDao.delete(firstTestUser);
-        userDao.delete(secondTestUser);
+    public void checkLeaderboardHasUniqueMemberTest() {
+        leaderboardOne.addUser(secondTestUser); //second leaderboard had this User before
+        leaderboardDao.insert(leaderboardOne);
+        Leaderboard lb = leaderboardDao.getById(leaderboardOne.getLeaderboardID());
+        System.out.print(lb);
+        if (lb != null) {
+            List<UserEntity> users = lb.getUsers();
+            System.out.print(users);
+            assertThat(users).hasSize(2);
+        }
+        leaderboardDao.delete(leaderboardOne);
     }
 
     @Test
     public void NLeadersTest() {
         final int initialSize = leaderboardDao.getAll().size();
-        userDao.insert(firstTestUser);
-        userDao.insert(secondTestUser);
-        leaderboardDao.update(firstTestLeader);
-        leaderboardDao.update(secondTestLeader);
-        assertThat(leaderboardDao.getNLeaders(10)).hasSize(initialSize + 2);
-        leaderboardDao.delete(firstTestLeader);
-        leaderboardDao.delete(secondTestLeader);
-        userDao.delete(firstTestUser);
-        userDao.delete(secondTestUser);
+        leaderboardOne.addUser(firstTestUser);
+        leaderboardOne.addUser(secondTestUser);
+        leaderboardDao.insert(leaderboardOne);
+        assertThat(leaderboardDao.getNLeaders(leaderboardOne, 3)).hasSize(initialSize + 2);
+        leaderboardDao.delete(leaderboardOne);
     }
 }

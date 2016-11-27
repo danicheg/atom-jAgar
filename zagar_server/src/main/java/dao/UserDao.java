@@ -24,7 +24,7 @@ public class UserDao implements Dao<UserEntity> {
                 session.createQuery("from UserEntity", UserEntity.class).list());
     }
 
-    public List<UserEntity> getAllLoginUsers() {
+    public static List<UserEntity> getAllLoginUsers() {
         return Database.selectTransactional(session ->
                 session.createQuery("SELECT u FROM UserEntity u " +
                         "INNER JOIN Token t " +

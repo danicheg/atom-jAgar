@@ -48,24 +48,11 @@ public class UserActions {
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
             UserEntity user = DatabaseAccessLayer.getUser(token);
-            Long userId = user.getUserID();
-            LeaderboardDao ldao = new LeaderboardDao();
-            Leaderboard leader = ldao.getAllWhere(String.format("user_id = '%s'", userId))
-                    .stream()
-                    .findFirst()
-                    .orElse(null);
-            Integer oldScore;
-            Integer scoreInt = Integer.parseInt(score);
-            if (leader != null) {
-                oldScore = leader.getScore();
-                leader.addScore(scoreInt);
-            } else {
-                oldScore = 0;
-                leader = new Leaderboard(userId, scoreInt);
-            }
-            ldao.update(leader);
-            log.info("UserEntity increased its score from {} to {}", oldScore, leader.getScore());
-            return Response.ok("Your score successfully increased up to " + leader.getScore()).build();
+            Integer oldScore = user.getScore();
+            user.updateScore(20);
+            Integer newScore = user.getScore();
+            log.info("UserEntity increased its score from {} to {}", oldScore, newScore);
+            return Response.ok("Your score successfully increased up to " + newScore).build();
         } catch (Exception e) {
             return Response.ok(e.toString()).build();
         }

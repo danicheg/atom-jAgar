@@ -1,22 +1,17 @@
 package entities.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import entities.leaderboard.Leaderboard;
 import entities.token.Token;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.annotations.LazyToOne;
+import org.hibernate.annotations.LazyToOneOption;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -60,6 +55,15 @@ public class UserEntity {
     @JsonIgnore
     @NotNull
     private LocalDate registrationDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leaderboard_id", foreignKey = @ForeignKey(name="leaderboardFK"))
+    @JsonIgnore
+    @Nullable
+    private Leaderboard leaderboard;
+
+    @Column(name = "score")
+    private Integer score;
 
     /*
     Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
@@ -115,6 +119,15 @@ public class UserEntity {
         this.token = token;
     }
 
+    @Nullable
+    public Leaderboard getLeaderboard() {
+        return leaderboard;
+    }
+
+    public void setLeaderboard(@Nullable Leaderboard leaderboard) {
+        this.leaderboard = leaderboard;
+    }
+
     @NotNull
     public Long getUserID() {
         return userID;
@@ -127,6 +140,19 @@ public class UserEntity {
     @NotNull
     public LocalDate getRegistrationDate() {
         return registrationDate;
+    }
+
+    @NotNull
+    public Integer getScore() {
+        return this.score;
+    }
+
+    public void setScore(@NotNull Integer newScore) {
+        this.score = newScore;
+    }
+
+    public void updateScore(@NotNull Integer newScore) {
+        this.score += newScore;
     }
 
     @Override

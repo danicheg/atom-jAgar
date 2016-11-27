@@ -6,8 +6,8 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+import entities.leaderboard.LeaderBatchHolder;
 import entities.leaderboard.Leaderboard;
-import entities.leaderboard.LeaderboardBatchHolder;
 import entities.user.UserBatchHolder;
 import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
@@ -145,7 +145,7 @@ public class RestClientImpl implements RestClient {
     }
 
     @Override
-    public List<Leaderboard> getNLeaders(Integer input) {
+    public List<UserEntity> getNLeaders(Integer input) {
         String requestUrl = SERVICE_URL + String.format("/data/leaderboard?amount=%d", input);
         Request request = new Request.Builder()
                 .url(requestUrl)
@@ -157,7 +157,7 @@ public class RestClientImpl implements RestClient {
             if (response.code() == 200) {
                 String leadersJson = response.body().string();
                 log.info("Json string - {}", leadersJson);
-                return LeaderboardBatchHolder.readJson(leadersJson).getUsers();
+                return LeaderBatchHolder.readJson(leadersJson).getUsers();
             } else {
                 log.warn("Something is here.");
                 return null;
@@ -210,7 +210,7 @@ public class RestClientImpl implements RestClient {
             if (response.code() == 200) {
                 String leadersJson = response.body().string();
                 log.info("Json string - {}", leadersJson);
-                return LeaderboardBatchHolder.readJsonNames(leadersJson);
+                return LeaderBatchHolder.readJsonNames(leadersJson);
             } else {
                 log.warn("Something is here.");
                 return null;

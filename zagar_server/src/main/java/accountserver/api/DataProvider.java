@@ -2,8 +2,8 @@ package accountserver.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dao.LeaderboardDao;
+import entities.leaderboard.LeaderBatchHolder;
 import entities.leaderboard.Leaderboard;
-import entities.leaderboard.LeaderboardBatchHolder;
 import entities.user.UserEntity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,11 +44,11 @@ public class DataProvider {
         log.info("Batch of leaders requested.");
         if (n != null) {
             Integer param = Integer.parseInt(n);
-            return Response.ok(new LeaderboardBatchHolder(new LeaderboardDao().getNLeaders(param))
+            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getNLeaders(new Leaderboard(), param))
                     .writeJson())
                     .build();
         } else {
-            return Response.ok(new LeaderboardBatchHolder(new LeaderboardDao().getAll())
+            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getById(new Leaderboard().getLeaderboardID()).getUsers())
                     .writeJson())
                     .build();
         }
@@ -61,28 +61,38 @@ public class DataProvider {
     @Produces("application/json")
     public Response getNLeaderNames(@QueryParam("amount") String n) throws JsonProcessingException {
         log.info("Batch of leaders requested.");
+//        if (n != null) {
+//            Integer param = Integer.parseInt(n);
+//            List<Long> list = new LeaderboardDao().getNLeaders(param)
+//                    .stream().map(Leaderboard::getUserId)
+//                    .collect(Collectors.toList());
+//            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
+//            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
+//                    .map(UserEntity::getName)
+//                    .collect(Collectors.toList());
+//            return Response.ok(LeaderboardBatchHolder
+//                    .writeJsonNames(usersList))
+//                    .build();
+//        } else {
+//            List<Long> list = new LeaderboardDao().getAll()
+//                    .stream().map(Leaderboard::getUserId)
+//                    .collect(Collectors.toList());
+//            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
+//            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
+//                    .map(UserEntity::getName)
+//                    .collect(Collectors.toList());
+//            return Response.ok(LeaderboardBatchHolder
+//                    .writeJsonNames(usersList))
+//                    .build();
+//        }
         if (n != null) {
             Integer param = Integer.parseInt(n);
-            List<Long> list = new LeaderboardDao().getNLeaders(param)
-                    .stream().map(Leaderboard::getUserId)
-                    .collect(Collectors.toList());
-            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
-            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
-                    .map(UserEntity::getName)
-                    .collect(Collectors.toList());
-            return Response.ok(LeaderboardBatchHolder
-                    .writeJsonNames(usersList))
+            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getNLeaders(new Leaderboard(), param))
+                    .writeJson())
                     .build();
         } else {
-            List<Long> list = new LeaderboardDao().getAll()
-                    .stream().map(Leaderboard::getUserId)
-                    .collect(Collectors.toList());
-            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
-            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
-                    .map(UserEntity::getName)
-                    .collect(Collectors.toList());
-            return Response.ok(LeaderboardBatchHolder
-                    .writeJsonNames(usersList))
+            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getById(new Leaderboard().getLeaderboardID()).getUsers())
+                    .writeJson())
                     .build();
         }
     }

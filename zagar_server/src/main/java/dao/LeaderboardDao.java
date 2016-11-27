@@ -1,174 +1,107 @@
 package dao;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import entities.leaderboard.Leaderboard;
+import entities.user.UserEntity;
 import jersey.repackaged.com.google.common.base.Joiner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jetbrains.annotations.NotNull;
+import org.hibernate.Session;
+import org.jetbrains.annotations.Nullable;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.OneToOne;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+/**
+ * Created by Егор on 27.11.2016.
+ */
 public class LeaderboardDao implements Dao<Leaderboard> {
 
-    private static final Logger log = LogManager.getLogger(LeaderboardDao.class);
-
-    private static final String SELECT_ALL_LEADERS =
-            "SELECT * FROM leaderboard ORDER BY score DESC;";
-    private static final String SELECT_N_LEADERS =
-            "SELECT * FROM leaderboard ORDER BY score DESC LIMIT %d;";
-    private static final String SELECT_LEADERS_WHERE =
-            "SELECT * FROM leaderboard WHERE %s";
-    private static final String UPDATE_LEADER_TEMPLATE =
-            "UPDATE leaderboard SET score = ? WHERE user_id = ?";
-    private static final String INSERT_LEADER_TEMPLATE =
-            "INSERT INTO leaderboard (user_id, score) VALUES (?, ?)";
-    private static final String DELETE_LEADER_TEMPLATE =
-            "DELETE FROM leaderboard WHERE user_id = ?";
-    private static final String DELETE_ALL_LEADERS =
-            "DELETE FROM leaderboard";
+    private static final Logger log = LogManager.getLogger(UserEntity.class);
 
     @Override
     public List<Leaderboard> getAll() {
-        return getData(SELECT_ALL_LEADERS, null);
+        log.info("All leaders successfully obtained from db");
+        return Database.selectTransactional(session ->
+                session.createQuery("from Leaderboard", Leaderboard.class).list());
     }
+
 
     @Override
-    public List<Leaderboard> getAllWhere(String ... conditions) {
+    public List<Leaderboard> getAllWhere(String... conditions) {
         String totalCondition = Joiner.on(" and ").join(Arrays.asList(conditions));
-        log.info(totalCondition);
-        return getData(SELECT_LEADERS_WHERE, totalCondition);
+        return Database.selectTransactional(session ->
+                session.createQuery("from Leaderboard where " + totalCondition, Leaderboard.class).list());
     }
 
-    public List<Leaderboard> getNLeaders(Integer n) {
-        return getData(SELECT_N_LEADERS, n);
+    @Nullable
+    public Leaderboard getById(Integer id) {
+        return this.getAllWhere("leaderboard_id = " + id.toString()).stream().findFirst().orElse(null);
+    }
+
+    public List<Leaderboard> getAllIn(String leaderboard) {
+        log.info("All leaders in {} successfully obtained from db", leaderboard);
+        return Database.selectTransactional(session ->
+                session.createQuery("from Leaderboard lb " +
+                        "inner join UserEntity ue " +
+                        "on ue.leaderboard.leaderboardID = lb.leaderboardID " +
+                        "where lb.leaderboardID = " + leaderboard, Leaderboard.class).list());
+    }
+
+    public List<UserEntity> getNLeaders(Leaderboard leaderboard, Integer amount) {
+        Leaderboard lb = this.getById(leaderboard.getLeaderboardID());
+        List<UserEntity> users = null;
+        if (lb != null) {
+            users = lb.getUsers().stream().sorted(Leaderboard::compareTo).limit(amount).collect(Collectors.toList());
+        }
+        return users;
     }
 
     @Override
     public void insert(Leaderboard leaderboard) {
-        try (Connection con = DbConnector.getConnection();
-             PreparedStatement stm = con.prepareStatement(INSERT_LEADER_TEMPLATE)) {
-            stm.setInt(2, leaderboard.getScore());
-            stm.setLong(1, leaderboard.getUserId());
-            stm.executeUpdate();
-            //stm.execute(String.format(INSERT_LEADER_TEMPLATE, leaderboard.getUserId(), leaderboard.getScore()));
-        } catch (SQLException e) {
-            log.error("Failed to insert.", e);
-        }
+        Database.doTransactional((Function<Session, ?>) session -> session.save(leaderboard));
+        log.info("Leaderboard {} inserted into db", leaderboard);
     }
 
     @Override
-    public void insertAll(Leaderboard... leaderboard) {
-        for (Leaderboard elem : leaderboard) {
-            insert(elem);
-        }
-    }
-
-    @Override
-    public void delete(Leaderboard leaderboard) {
-        //PreparedStatement stm = null;
-        try (Connection con = DbConnector.getConnection();
-            PreparedStatement stm = con.prepareStatement(DELETE_LEADER_TEMPLATE)) {
-            List<Leaderboard> leader = getData(SELECT_LEADERS_WHERE,String.format("user_id = %d", leaderboard.getUserId()));
-            if (leader.isEmpty()) {
-                throw new Exception("There is no such leader!");
-            } else {
-                //stm = con.prepareStatement(DELETE_LEADER_TEMPLATE);
-                stm.setLong(1,leaderboard.getUserId());
-                Integer rowsUpdated = stm.executeUpdate();
-                if (rowsUpdated != 1) {
-                    throw new Exception("Nothing has been deleted!");
-                }
-            }
-        } catch (SQLException e) {
-            log.error("Failed to update.", e);
-        } catch (Exception e) {
-            log.error("Failed to update.", e);
-        }
-    }
-
-    @Override
-    public void deleteAll(Leaderboard... leaderboard) {
-        try (Connection con = DbConnector.getConnection();
-             Statement stm = con.createStatement()) {
-            stm.execute(DELETE_ALL_LEADERS);
-        } catch (SQLException e) {
-            log.error("Failed to update.", e);
-        }
+    public void insertAll(Leaderboard... leaderboards) {
+        List<Leaderboard> listTokens = Arrays.asList(leaderboards);
+        Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
+                .map(ldr -> session -> session.save(ldr));
+        Database.doTransactional(tasks.collect(Collectors.toList()));
+        log.info("All leaderboards: '{}' inserted into DB", listTokens);
     }
 
     @Override
     public void update(Leaderboard leaderboard) {
-        PreparedStatement stm = null;
-        try (Connection con = DbConnector.getConnection()) {
-            List<Leaderboard> leader = getData(SELECT_LEADERS_WHERE,String.format("user_id = %d", leaderboard.getUserId()));
-            if (leader.isEmpty()) {
-                stm = con.prepareStatement(INSERT_LEADER_TEMPLATE);
-                stm.setInt(2, leaderboard.getScore());
-                stm.setLong(1, leaderboard.getUserId());
-                log.info(stm);
-                stm.executeUpdate();
-            } else {
-                stm = con.prepareStatement(UPDATE_LEADER_TEMPLATE);
-                stm.setInt(1,leaderboard.getScore());
-                stm.setLong(2,leaderboard.getUserId());
-                log.info(stm);
-                Integer rowsUpdated = stm.executeUpdate();
-                if (rowsUpdated != 1) {
-                    throw new Exception("Nothing has been updated!");
-                }
-                //stm.execute(String.format(UPDATE_LEADER_TEMPLATE, leaderboard.getScore(),leaderboard.getUserId()));
-            }
-        } catch (SQLException e) {
-            log.error("Failed to update.", e);
-        } catch (Exception e) {
-            log.error("Failed to update.", e);
-        }
+        Database.doTransactional((Consumer<Session>) session -> session.update(leaderboard));
+        log.info("Leaderboard {} successfully updated", leaderboard);
     }
 
-    @NotNull
-    private static Leaderboard mapToLeaderboard(@NotNull ResultSet rs) throws SQLException {
-        return new Leaderboard(rs.getLong("user_id"), rs.getInt("score"));
+    @Override
+    public void delete(Leaderboard deleteLeaderboard) {
+        Database.doTransactional(
+                (Consumer<Session>) session -> session.delete(deleteLeaderboard)
+        );
+        log.info("Leaderboard '{}' was removed from DB", deleteLeaderboard);
     }
 
-    private List<Leaderboard> getData(String query, Object input) {
-        List<Leaderboard> leaders = new ArrayList<>();
-        try (Connection con = DbConnector.getConnection();
-             Statement stm = con.createStatement()) {
-            ResultSet rs;
-            if (input != null) {
-                if (input instanceof String) {
-                    String parameter = (String) input;
-                    rs = stm.executeQuery(String.format(query, parameter));
-                } else if (input instanceof Integer) {
-                    Integer parameter = (Integer) input;
-                    rs = stm.executeQuery(String.format(query, parameter));
-                } else {
-                    throw new Exception("The class of the input is not valid!");
-                }
-            } else {
-                rs = stm.executeQuery(query);
-            }
-            if (rs != null) {
-                while (rs.next()) {
-                    leaders.add(mapToLeaderboard(rs));
-                }
-            }
-        } catch (SQLException e) {
-            log.error("Failed to get.", e);
-            return Collections.emptyList();
-        } catch (Exception e) {
-            log.error("Failed to get.", e);
-            return Collections.emptyList();
-        }
-        return leaders;
+    //now works atomicity
+    @Override
+    public void deleteAll(Leaderboard... deleteLeaderboards) {
+        List<Leaderboard> listTokens = Arrays.asList(deleteLeaderboards);
+        Stream<Consumer<Session>> tasks = listTokens.parallelStream()
+                .map(usr -> (Consumer<Session>) session -> session.delete(usr));
+        Database.doTransactionalList(tasks.collect(Collectors.toList()));
+        log.info("All leaderboards'{}' removed into DB", (Object[]) deleteLeaderboards);
     }
 
 }

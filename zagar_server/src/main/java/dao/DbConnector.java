@@ -41,6 +41,21 @@ public class DbConnector {
 
         //URL = String.format(URL_TEMPLATE, HOST,PORT, DB_NAME);
         log.info("Success. DbConnector init.");
+
+        try (Connection con = DbConnector.getConnection();
+             Statement stm = con.createStatement()) {
+            String query = "" +
+                    "DROP TABLE IF EXISTS leaderboard;" +
+                    "CREATE TABLE IF NOT EXISTS leaderboard (" +
+                    "user_id bigint," +
+                    "score int not null," +
+                    "    CONSTRAINT FK_leader FOREIGN KEY (user_id) REFERENCES userentity(user_id)" +
+                    ");";
+            stm.execute(query);
+            log.info("Successfully created DB");
+        } catch (SQLException e) {
+            log.error("Failed to create a table.", e);
+        }
     }
 
     static Connection getConnection() throws SQLException {
@@ -58,6 +73,7 @@ public class DbConnector {
                     "    CONSTRAINT FK_leader FOREIGN KEY (user_id) REFERENCES userentity(user_id)" +
                     ");";
             stm.execute(query);
+            log.info("Successfully created DB");
         } catch (SQLException e) {
             log.error("Failed to create a table.", e);
         }

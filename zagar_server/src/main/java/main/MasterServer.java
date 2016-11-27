@@ -18,7 +18,7 @@ public class MasterServer {
 
     public static void main(@NotNull String[] args) throws InterruptedException {
         Database.openSession();
-        DbConnector.initialise();
+        //DbConnector.initialise();
         MasterServer server = new MasterServer();
         server.start();
     }
