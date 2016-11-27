@@ -276,7 +276,7 @@ public class Game {
                 y += (float) ((GameFrame.mouseY - GameFrame.size.height / 2) / zoom);
                 followX = x;
                 followY = y;
-                (new PacketMove(x, y)).write(socket.session);
+                new PacketMove(x, y).write(socket.session);
 
                 if (rapidEject) {
                     new PacketEjectMass().write();
@@ -299,7 +299,7 @@ public class Game {
     }
 
     private enum AuthOption {
-        REGISTER, LOGIN;
+        REGISTER, LOGIN
     }
 
     public enum GameState {

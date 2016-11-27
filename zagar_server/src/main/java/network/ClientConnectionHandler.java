@@ -5,6 +5,8 @@ import main.ApplicationContext;
 import model.Player;
 import network.handlers.PacketHandlerAuth;
 import network.handlers.PacketHandlerEjectMass;
+import network.handlers.PacketHandlerMove;
+import network.handlers.PacketHandlerSplit;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -12,6 +14,8 @@ import org.eclipse.jetty.websocket.api.WebSocketAdapter;
 import org.jetbrains.annotations.NotNull;
 import protocol.CommandAuth;
 import protocol.CommandEjectMass;
+import protocol.CommandMove;
+import protocol.CommandSplit;
 import utils.JSONHelper;
 
 import java.util.Map;
@@ -54,7 +58,7 @@ public class ClientConnectionHandler extends WebSocketAdapter {
         cause.printStackTrace(System.err);
     }
 
-    public void handlePacket(@NotNull String msg) {
+    private void handlePacket(@NotNull String msg) {
         JsonObject json = JSONHelper.getJSONObject(msg);
         String name = json.get("command").getAsString();
         switch (name) {
@@ -71,6 +75,21 @@ public class ClientConnectionHandler extends WebSocketAdapter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
+            case CommandMove.NAME:
+                try {
+                    new PacketHandlerMove(getSession(), msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case CommandSplit.NAME:
+                try {
+                    new PacketHandlerSplit(getSession(), msg);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
         }
     }
 

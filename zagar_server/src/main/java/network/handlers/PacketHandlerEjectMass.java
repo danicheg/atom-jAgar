@@ -3,10 +3,9 @@ package network.handlers;
 import main.ApplicationContext;
 import mechanics.Mechanics;
 import messageSystem.Abonent;
-import messageSystem.Address;
 import messageSystem.Message;
 import messageSystem.MessageSystem;
-import network.ClientConnections;
+import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
@@ -32,16 +31,13 @@ public class PacketHandlerEjectMass {
         }
 
         final MessageSystem messageSystem = ApplicationContext.instance().get(MessageSystem.class);
-        final ClientConnections clientConnections = ApplicationContext.instance().get(ClientConnections.class);
+        final ClientConnectionServer client = messageSystem.getService(ClientConnectionServer.class);
         final Mechanics mechanicsService = messageSystem.getService(Mechanics.class);
 
-        messageSystem.sendMessage(new Message(
-                new Address(clientConnections.toString()),
-                new Address(mechanicsService.toString())
-        ) {
+        messageSystem.sendMessage(new Message(client.getAddress() , mechanicsService.getAddress()) {
             @Override
             public void exec(Abonent abonent) {
-                log.info(commandEjectMass);
+                log.info("Recieved command " + commandEjectMass.getCommand());
             }
         });
 
