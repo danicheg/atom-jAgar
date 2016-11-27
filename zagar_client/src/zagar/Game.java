@@ -163,7 +163,7 @@ public class Game {
                     Reporter.reportFail("Register failed", "Register failed");
                 }
             } else {
-                serverToken = authClient.login(Game.login, password);
+                serverToken = "Bearer " + authClient.login(Game.login, password);
                 if (serverToken == null) {
                     Reporter.reportWarn("Login failed", "Login failed");
                 }

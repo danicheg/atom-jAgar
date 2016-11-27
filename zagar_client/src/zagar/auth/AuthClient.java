@@ -44,7 +44,13 @@ public class AuthClient {
         try {
             OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
-            return response.isSuccessful();
+            final boolean result = response.isSuccessful();
+            if (result) {
+                log.info("You have been registered.");
+            } else {
+                log.warn("You can't be registered with such values.");
+            }
+            return result;
         } catch (IOException e) {
             log.warn("Something went wrong in register.", e);
             return false;
@@ -69,6 +75,7 @@ public class AuthClient {
         try {
             Response response = client.newCall(request).execute();
             if (response.isSuccessful()) {
+                log.info("You have been logged in.");
                 return response.body().string();
             } else return null;
         } catch (IOException e) {
