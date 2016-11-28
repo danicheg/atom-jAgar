@@ -1,6 +1,5 @@
 package dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import entities.leaderboard.Leaderboard;
 import entities.user.UserEntity;
 import jersey.repackaged.com.google.common.base.Joiner;
@@ -9,20 +8,13 @@ import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.jetbrains.annotations.Nullable;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.OneToOne;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-/**
- * Created by Егор on 27.11.2016.
- */
 public class LeaderboardDao implements Dao<Leaderboard> {
 
     private static final Logger log = LogManager.getLogger(UserEntity.class);
@@ -43,8 +35,8 @@ public class LeaderboardDao implements Dao<Leaderboard> {
     }
 
     @Nullable
-    public Leaderboard getById(Integer id) {
-        return this.getAllWhere("leaderboard_id = " + id.toString()).stream().findFirst().orElse(null);
+    public Leaderboard getById(Long id) {
+        return getAllWhere("leaderboard_id = " + id).stream().findFirst().orElse(null);
     }
 
     public List<Leaderboard> getAllIn(String leaderboard) {
@@ -60,7 +52,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
         Leaderboard lb = this.getById(leaderboard.getLeaderboardID());
         List<UserEntity> users = null;
         if (lb != null) {
-            users = lb.getUsers().stream().sorted(Leaderboard::compareTo).limit(amount).collect(Collectors.toList());
+            users = lb.getUsers().stream().sorted(UserEntity::compareTo).limit(amount).collect(Collectors.toList());
         }
         return users;
     }

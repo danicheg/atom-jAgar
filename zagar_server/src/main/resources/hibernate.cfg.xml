@@ -34,6 +34,8 @@
         <!-- Drop and re-create the database schema on startup -->
         <property name="hbm2ddl.auto">create</property>
 
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
+
         <!-- Names the annotated entity class -->
         <mapping class="entities.user.UserEntity"/>
         <mapping class="entities.token.Token"/>

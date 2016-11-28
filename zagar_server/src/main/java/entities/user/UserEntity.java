@@ -21,13 +21,13 @@ import java.util.concurrent.ThreadLocalRandom;
         @UniqueConstraint(columnNames = "name"),
         @UniqueConstraint(columnNames = "email")
 })
-public class UserEntity {
+public class UserEntity implements Comparable<UserEntity> {
 
     @NotNull
     private static final Logger log = LogManager.getLogger(Player.class);
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
     @JsonIgnore
     @NotNull
@@ -57,13 +57,14 @@ public class UserEntity {
     private LocalDate registrationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "leaderboard_id", foreignKey = @ForeignKey(name="leaderboardFK"))
+    @JoinColumn(name = "fk_leaderboard_id")
     @JsonIgnore
     @Nullable
     private Leaderboard leaderboard;
 
     @Column(name = "score")
-    private Integer score;
+    @NotNull
+    private Integer score = 16;
 
     /*
     Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
@@ -133,10 +134,6 @@ public class UserEntity {
         return userID;
     }
 
-    public boolean checkPassword(@NotNull String pass) {
-        return password.equals(pass);
-    }
-
     @NotNull
     public LocalDate getRegistrationDate() {
         return registrationDate;
@@ -169,6 +166,11 @@ public class UserEntity {
     }
 
     @Override
+    public int compareTo(@NotNull UserEntity other) {
+        return other.getScore() - this.score; // descending order
+    }
+
+    @Override
     public String toString() {
         return "UserEntity{" +
                 "userID=" + userID +
@@ -176,6 +178,8 @@ public class UserEntity {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", registrationDate=" + registrationDate +
+                ", score=" + score +
                 '}';
     }
+
 }

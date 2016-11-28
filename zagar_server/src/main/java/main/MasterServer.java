@@ -2,7 +2,6 @@ package main;
 
 import accountserver.AccountServer;
 import dao.Database;
-import dao.DbConnector;
 import main.config.MasterServerConfiguration;
 import mechanics.Mechanics;
 import messageSystem.MessageSystem;
@@ -18,7 +17,6 @@ public class MasterServer {
 
     public static void main(@NotNull String[] args) throws InterruptedException {
         Database.openSession();
-        //DbConnector.initialise();
         MasterServer server = new MasterServer();
         server.start();
     }
