@@ -79,9 +79,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
 
     @Override
     public void delete(Leaderboard deleteLeaderboard) {
-        Database.doTransactional(
-                (Consumer<Session>) session -> session.delete(deleteLeaderboard)
-        );
+        Database.doTransactional((Consumer<Session>) session -> session.delete(deleteLeaderboard));
         log.info("Leaderboard '{}' was removed from DB", deleteLeaderboard);
     }
 

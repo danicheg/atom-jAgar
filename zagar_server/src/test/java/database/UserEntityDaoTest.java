@@ -1,7 +1,12 @@
 package database;
 
+import dao.Database;
+import dao.TokenDao;
 import dao.UserDao;
+import entities.token.Token;
 import entities.user.UserEntity;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +37,21 @@ public class UserEntityDaoTest {
 
     @Test
     public void getAllLoginUsersTest() {
-        assertThat(userDao.getAllLoginUsers()).hasSize(0);
+
+        assertThat(UserDao.getAllLoginUsers()).hasSize(0);
+
+        try (Session session = Database.openSession()) {
+
+            Transaction txn = session.beginTransaction();
+            session.save(firstTestUser);
+            Token token = new Token(523432L, firstTestUser);
+            session.save(token);
+            txn.commit();
+
+        }
+
+        assertThat(UserDao.getAllLoginUsers()).hasSize(1);
+
     }
 
     @Test
