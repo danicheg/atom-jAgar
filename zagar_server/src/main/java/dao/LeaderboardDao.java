@@ -76,7 +76,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
         Database.doTransactional((Consumer<Session>) session -> session.delete(deleteLeaderboard));
         log.info("Leaderboard '{}' was removed from DB", deleteLeaderboard);
     }
-    
+
     @Override
     public void deleteAll(Leaderboard... deleteLeaderboards) {
         List<Leaderboard> listTokens = Arrays.asList(deleteLeaderboards);
