@@ -41,7 +41,6 @@ public class LeaderboardDaoTest {
 
     @Test
     public void returnEmptyLeaderboardListOnStart() {
-        leaderboardDao.deleteAll();
         assertThat(leaderboardDao.getAll()).hasSize(0);
     }
 
@@ -111,22 +110,44 @@ public class LeaderboardDaoTest {
 
     @Test
     public void checkLeaderboardHasUniqueMemberTest() {
+        leaderboardDao.insert(leaderboardTwo);
         leaderboardDao.insert(leaderboardOne);
         leaderboardOne.addUser(secondTestUser);
         leaderboardDao.update(leaderboardOne);
         userDao.update(secondTestUser);
-        System.out.println(secondTestUser.getLeaderboard());
-        System.out.println(leaderboardDao.getById(1L));
+        assertThat(leaderboardDao.getById(leaderboardTwo.getLeaderboardID()))
+                .extracting(Leaderboard::getUsers)
+                .doesNotContain(secondTestUser);
+        userDao.delete(secondTestUser);
         leaderboardDao.delete(leaderboardOne);
+        leaderboardDao.delete(leaderboardTwo);
     }
 
     @Test
     public void NLeadersTest() {
-        final int initialSize = leaderboardDao.getAll().size();
-        leaderboardOne.addUser(firstTestUser);
-        leaderboardOne.addUser(secondTestUser);
-        leaderboardDao.insert(leaderboardOne);
-        assertThat(leaderboardDao.getNLeaders(leaderboardOne, 3)).hasSize(initialSize + 2);
-        leaderboardDao.delete(leaderboardOne);
+
+        try (Session session = Database.openSession()) {
+
+            final int initialSize = leaderboardDao.getAll().size();
+
+            Transaction txn = session.beginTransaction();
+            leaderboardOne.addUser(firstTestUser);
+            leaderboardOne.addUser(secondTestUser);
+            session.save(firstTestUser);
+            session.save(secondTestUser);
+            session.save(leaderboardOne);
+            txn.commit();
+
+            assertThat(leaderboardDao.getNLeaders(leaderboardOne, 2))
+                    .hasSize(initialSize + 2);
+
+            txn = session.beginTransaction();
+            firstTestUser.setLeaderboard(null);
+            session.delete(leaderboardOne);
+            session.delete(firstTestUser);
+            session.delete(secondTestUser);
+            txn.commit();
+
+        }
     }
 }

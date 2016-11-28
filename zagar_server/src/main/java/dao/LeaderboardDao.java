@@ -39,22 +39,21 @@ public class LeaderboardDao implements Dao<Leaderboard> {
         return getAllWhere("leaderboard_id = " + id).stream().findFirst().orElse(null);
     }
 
-    public List<Leaderboard> getAllIn(String leaderboard) {
+    public List<UserEntity> getAllIn(String leaderboard) {
         log.info("All leaders in {} successfully obtained from db", leaderboard);
         return Database.selectTransactional(session ->
-                session.createQuery("from Leaderboard lb " +
-                        "inner join UserEntity ue " +
+                session.createQuery("from UserEntity ue " +
+                        "inner join Leaderboard lb " +
                         "on ue.leaderboard.leaderboardID = lb.leaderboardID " +
-                        "where lb.leaderboardID = " + leaderboard, Leaderboard.class).list());
+                        "where lb.leaderboardID = " + leaderboard, UserEntity.class).list());
     }
 
     public List<UserEntity> getNLeaders(Leaderboard leaderboard, Integer amount) {
         Leaderboard lb = this.getById(leaderboard.getLeaderboardID());
-        List<UserEntity> users = null;
         if (lb != null) {
-            users = lb.getUsers().stream().sorted(UserEntity::compareTo).limit(amount).collect(Collectors.toList());
+            return lb.getUsers().stream().sorted(UserEntity::compareTo).limit(amount).collect(Collectors.toList());
         }
-        return users;
+        return null;
     }
 
     @Override
@@ -91,7 +90,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
     public void deleteAll(Leaderboard... deleteLeaderboards) {
         List<Leaderboard> listTokens = Arrays.asList(deleteLeaderboards);
         Stream<Consumer<Session>> tasks = listTokens.parallelStream()
-                .map(usr -> (Consumer<Session>) session -> session.delete(usr));
+                .map(ldr -> (Consumer<Session>) session -> session.delete(ldr));
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
         log.info("All leaderboards'{}' removed into DB", (Object[]) deleteLeaderboards);
     }
