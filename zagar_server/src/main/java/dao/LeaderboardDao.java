@@ -39,19 +39,13 @@ public class LeaderboardDao implements Dao<Leaderboard> {
         return getAllWhere("leaderboard_id = " + id).stream().findFirst().orElse(null);
     }
 
-    public List<UserEntity> getAllIn(Leaderboard leaderboard) {
-        log.info("All leaders in {} successfully obtained from db", leaderboard);
-        return Database.selectTransactional(session ->
-                session.createQuery("select ue from UserEntity ue " +
-                        "inner join Leaderboard lb " +
-                        "on ue.leaderboard.leaderboardID = lb.leaderboardID " +
-                        "where lb.leaderboardID = " + leaderboard.getLeaderboardID(), UserEntity.class).list());
-    }
-
     public List<UserEntity> getNLeaders(Leaderboard leaderboard, Integer amount) {
         Leaderboard lb = this.getById(leaderboard.getLeaderboardID());
         if (lb != null) {
-            return lb.getUsers().stream().sorted(UserEntity::compareTo).limit(amount).collect(Collectors.toList());
+            return lb.getUsers().stream()
+                    .sorted(UserEntity::compareTo)
+                    .limit(amount)
+                    .collect(Collectors.toList());
         }
         return null;
     }
@@ -82,8 +76,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
         Database.doTransactional((Consumer<Session>) session -> session.delete(deleteLeaderboard));
         log.info("Leaderboard '{}' was removed from DB", deleteLeaderboard);
     }
-
-    //now works atomicity
+    
     @Override
     public void deleteAll(Leaderboard... deleteLeaderboards) {
         List<Leaderboard> listTokens = Arrays.asList(deleteLeaderboards);

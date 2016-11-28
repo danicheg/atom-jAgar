@@ -41,12 +41,10 @@ public class UserEntityDaoTest {
         assertThat(UserDao.getAllLoginUsers()).hasSize(0);
         Token token = new Token(523432L, firstTestUser);
         try (Session session = Database.openSession()) {
-
             Transaction txn = session.beginTransaction();
             session.save(firstTestUser);
             session.save(token);
             txn.commit();
-
         }
 
         assertThat(UserDao.getAllLoginUsers()).hasSize(1);
