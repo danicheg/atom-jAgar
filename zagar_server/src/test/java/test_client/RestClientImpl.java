@@ -145,8 +145,8 @@ public class RestClientImpl implements RestClient {
     }
 
     @Override
-    public List<UserEntity> getNLeaders(Integer input) {
-        String requestUrl = SERVICE_URL + String.format("/data/leaderboard?amount=%d", input);
+    public List<UserEntity> getNLeaders(Integer input, Leaderboard leaderboard) {
+        String requestUrl = SERVICE_URL + String.format("/data/leaderboard?amount=%d&leaderboard=%d", input,leaderboard.getLeaderboardID());
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .get()
@@ -198,8 +198,8 @@ public class RestClientImpl implements RestClient {
     }
 
     @Override
-    public String[] getNLeaderNames(Integer input) {
-        String requestUrl = SERVICE_URL + String.format("/data/leadernames?amount=%d", input);
+    public String[] getNLeaderNames(Integer input, Leaderboard leaderboard) {
+        String requestUrl = SERVICE_URL + "/data/leadernames?amount=" + input.toString() + "&leaderboard=" + leaderboard.getLeaderboardID().toString();
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .get()

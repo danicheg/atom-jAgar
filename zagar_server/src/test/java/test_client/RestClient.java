@@ -13,7 +13,7 @@ public interface RestClient {
     boolean changePlayerName(Long token, String newName);
     boolean changePlayerPassword(Long token, String newName);
     boolean changePlayerEmail(Long token, String newName);
-    List<UserEntity> getNLeaders(Integer input);
-    String[] getNLeaderNames(Integer input);
+    List<UserEntity> getNLeaders(Integer input, Leaderboard leaderboard);
+    String[] getNLeaderNames(Integer input, Leaderboard leaderboard);
     boolean addScore(Long token, Integer input);
 }

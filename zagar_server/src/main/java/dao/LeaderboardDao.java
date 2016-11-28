@@ -39,13 +39,13 @@ public class LeaderboardDao implements Dao<Leaderboard> {
         return getAllWhere("leaderboard_id = " + id).stream().findFirst().orElse(null);
     }
 
-    public List<UserEntity> getAllIn(String leaderboard) {
+    public List<UserEntity> getAllIn(Leaderboard leaderboard) {
         log.info("All leaders in {} successfully obtained from db", leaderboard);
         return Database.selectTransactional(session ->
-                session.createQuery("from UserEntity ue " +
+                session.createQuery("select ue from UserEntity ue " +
                         "inner join Leaderboard lb " +
                         "on ue.leaderboard.leaderboardID = lb.leaderboardID " +
-                        "where lb.leaderboardID = " + leaderboard, UserEntity.class).list());
+                        "where lb.leaderboardID = " + leaderboard.getLeaderboardID(), UserEntity.class).list());
     }
 
     public List<UserEntity> getNLeaders(Leaderboard leaderboard, Integer amount) {

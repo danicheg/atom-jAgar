@@ -2,6 +2,7 @@ package accountserver.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dao.LeaderboardDao;
+import dao.UserDao;
 import entities.leaderboard.LeaderBatchHolder;
 import entities.leaderboard.Leaderboard;
 import entities.user.UserEntity;
@@ -40,60 +41,77 @@ public class DataProvider {
     @GET
     @Path("/leaderboard")
     @Produces("application/json")
-    public Response getNLeaders(@QueryParam("amount") String n) throws JsonProcessingException {
+    public Response getNLeaders(@QueryParam("amount") String n, @QueryParam("leaderboard") String leaderID) throws JsonProcessingException {
         log.info("Batch of leaders requested.");
-        if (n != null) {
-            Integer param = Integer.parseInt(n);
-            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getNLeaders(new Leaderboard(), param))
-                    .writeJson())
-                    .build();
+
+        if (leaderID != null) {
+            if (n != null) {
+                Integer param = Integer.parseInt(n);
+                Leaderboard leaderboard = new LeaderboardDao().getById(Long.parseLong(leaderID));
+                return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getNLeaders(leaderboard, param))
+                        .writeJson())
+                        .build();
+            } else {
+                Leaderboard leaderboard = new LeaderboardDao().getById(Long.parseLong(leaderID));
+                if (leaderboard != null) {
+                    return Response.ok(new LeaderBatchHolder(leaderboard.getUsers())
+                            .writeJson())
+                            .build();
+                } else {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+            }
         } else {
-            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getById(new Leaderboard().getLeaderboardID()).getUsers())
-                    .writeJson())
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 
     /*curl -X GET
-     "http://localhost:8080/data/leaderboard"*/
+     "http://localhost:8080/data/leadernames"*/
     @GET
     @Path("/leadernames")
     @Produces("application/json")
-    public Response getNLeaderNames(@QueryParam("amount") String n) throws JsonProcessingException {
+    public Response getNLeaderNames(@QueryParam("amount") String n, @QueryParam("leaderboard") String leaderboardID) throws JsonProcessingException {
         log.info("Batch of leaders requested.");
-//        if (n != null) {
-//            Integer param = Integer.parseInt(n);
-//            List<Long> list = new LeaderboardDao().getNLeaders(param)
-//                    .stream().map(Leaderboard::getUserId)
-//                    .collect(Collectors.toList());
-//            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
-//            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
-//                    .map(UserEntity::getName)
-//                    .collect(Collectors.toList());
-//            return Response.ok(LeaderboardBatchHolder
-//                    .writeJsonNames(usersList))
-//                    .build();
-//        } else {
-//            List<Long> list = new LeaderboardDao().getAll()
-//                    .stream().map(Leaderboard::getUserId)
-//                    .collect(Collectors.toList());
-//            List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
-//            List<String> usersList = users.stream().filter(usr -> list.contains(usr.getUserID()))
-//                    .map(UserEntity::getName)
-//                    .collect(Collectors.toList());
-//            return Response.ok(LeaderboardBatchHolder
-//                    .writeJsonNames(usersList))
-//                    .build();
-//        }
-        if (n != null) {
-            Integer param = Integer.parseInt(n);
-            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getNLeaders(new Leaderboard(), param))
-                    .writeJson())
-                    .build();
+        if (leaderboardID != null) {
+            if (n != null) {
+                Leaderboard leaderboard = new LeaderboardDao().getById(Long.parseLong(leaderboardID));
+                Integer param = Integer.parseInt(n);
+                List<UserEntity> users = UserDao.getAllLoginUsers();
+                List<UserEntity> userEntities = new LeaderboardDao().getNLeaders(leaderboard, 5);
+                if ( userEntities != null) {
+                    List<String> userNames = userEntities.stream()
+                            .map(UserEntity::getName)
+                            .collect(Collectors.toList());
+                    List<String> usersList = users.stream().filter(usr -> userNames.contains(usr.getName()))
+                            .map(UserEntity::getName)
+                            .collect(Collectors.toList());
+                    return Response.ok(LeaderBatchHolder
+                            .writeJsonNames(usersList))
+                            .build();
+                } else {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+            } else {
+                List<UserEntity> users = DatabaseAccessLayer.getLoginUserList();
+                Leaderboard leaderboard = new LeaderboardDao().getById(Long.parseLong(leaderboardID));
+                if (leaderboard != null) {
+                    List<String> userNames = leaderboard.getUsers().
+                            stream()
+                            .map(UserEntity::getName)
+                            .collect(Collectors.toList());
+                    List<String> usersList = users.stream().filter(usr -> userNames.contains(usr.getName()))
+                            .map(UserEntity::getName)
+                            .collect(Collectors.toList());
+                    return Response.ok(LeaderBatchHolder
+                            .writeJsonNames(usersList))
+                            .build();
+                } else {
+                    return Response.status(Response.Status.BAD_REQUEST).build();
+                }
+            }
         } else {
-            return Response.ok(new LeaderBatchHolder(new LeaderboardDao().getById(new Leaderboard().getLeaderboardID()).getUsers())
-                    .writeJson())
-                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 }

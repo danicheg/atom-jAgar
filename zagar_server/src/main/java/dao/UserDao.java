@@ -28,8 +28,7 @@ public class UserDao implements Dao<UserEntity> {
         return Database.selectTransactional(session ->
                 session.createQuery("SELECT u FROM UserEntity u " +
                         "INNER JOIN Token t " +
-                        "ON t.user.userID = u.userID " +
-                        "WHERE t.user is not null", UserEntity.class).list());
+                        "ON t.user.userID = u.userID ", UserEntity.class).list());
     }
 
     @Override

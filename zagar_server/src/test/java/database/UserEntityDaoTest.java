@@ -39,19 +39,25 @@ public class UserEntityDaoTest {
     public void getAllLoginUsersTest() {
 
         assertThat(UserDao.getAllLoginUsers()).hasSize(0);
-
+        Token token = new Token(523432L, firstTestUser);
         try (Session session = Database.openSession()) {
 
             Transaction txn = session.beginTransaction();
             session.save(firstTestUser);
-            Token token = new Token(523432L, firstTestUser);
             session.save(token);
             txn.commit();
 
         }
 
         assertThat(UserDao.getAllLoginUsers()).hasSize(1);
+        try (Session session = Database.openSession()) {
 
+            Transaction txn = session.beginTransaction();
+            session.delete(firstTestUser);
+            session.delete(token);
+            txn.commit();
+
+        }
     }
 
     @Test
