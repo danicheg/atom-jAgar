@@ -9,14 +9,10 @@ public class GameThread extends Thread implements Runnable {
     @Override
     public void run() {
         while (true) {
-            long preTickTime = System.nanoTime();
-            try {
-                Main.updateGame();
-            } catch (Throwable e) {
-                System.err.println(e);
-            }
-            if (System.nanoTime() % 100 == 0) {
-                Game.fps = 1000 / (System.nanoTime() - preTickTime);
+            long preTickTime = System.currentTimeMillis();
+            Main.updateGame();
+            if (System.currentTimeMillis() % 100 == 0) {
+                Game.fps = 1000 / (System.currentTimeMillis() - preTickTime);
                 Main.frame.setTitle("· zAgar · " + Game.fps + "fps");
             }
         }

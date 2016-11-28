@@ -109,7 +109,7 @@ public class LeaderboardDaoTest {
     }
 
     @Test
-    public void checkLeaderboardHasUniqueMemberTest() {
+    public void checkLeaderboardHasUniqueMember() {
         leaderboardDao.insert(leaderboardTwo);
         leaderboardDao.insert(leaderboardOne);
         leaderboardOne.addUser(secondTestUser);
@@ -124,7 +124,7 @@ public class LeaderboardDaoTest {
     }
 
     @Test
-    public void NLeadersTest() {
+    public void returnOnlyNLeadersFromLeaderboard() {
 
         try (Session session = Database.openSession()) {
 

@@ -1,7 +1,9 @@
 package accountserver;
 
 import accountserver.auth.AuthenticationFilter;
+import main.ApplicationContext;
 import main.Service;
+import messageSystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -19,7 +21,6 @@ public class AccountServer extends Service {
     public AccountServer(int port) {
         super("account_server");
         this.port = port;
-        startApi();
     }
 
     private void startApi() {
@@ -50,6 +51,18 @@ public class AccountServer extends Service {
         try {
             server.start();
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void run() {
+        startApi();
+        try {
+            while (true) {
+                ApplicationContext.instance().get(MessageSystem.class).execOneForService(this, 100);
+            }
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

@@ -61,8 +61,6 @@ public class Game {
     @NotNull
     public static String login = DEFAULT_LOGIN;
 
-    public static int spawnPlayer = -1;
-
     @NotNull
     public static HashMap<Integer, String> cellNames = new HashMap<>();
 
@@ -90,10 +88,8 @@ public class Game {
 
         authenticate();
 
-        this.spawnPlayer = 100;
-
         final WebSocketClient client = new WebSocketClient();
-        this.socket = new ServerConnectionSocket();
+        socket = new ServerConnectionSocket();
         new Thread(() -> {
             try {
                 client.start();
@@ -109,7 +105,7 @@ public class Game {
         }).start();
     }
 
-    public static void sortCells() {
+    private static void sortCells() {
         Arrays.sort(cells, (o1, o2) -> {
             if (o1 == null && o2 == null) {
                 return 0;
@@ -124,12 +120,6 @@ public class Game {
         });
     }
 
-    public static void respawn() {
-        if (spawnPlayer == -1) {
-            spawnPlayer = 100;
-        }
-    }
-
     private void authenticate() {
         while (serverToken == null) {
 
@@ -138,7 +128,7 @@ public class Game {
                 return;
             }
 
-            this.login = JOptionPane.showInputDialog(
+            login = JOptionPane.showInputDialog(
                     null,
                     "Login",
                     DEFAULT_LOGIN
@@ -196,24 +186,8 @@ public class Game {
     }
 
     public void tick() throws IOException {
-        System.out.println("CELLS:\n" + Arrays.toString(Game.cells));
-        if (socket != null && socket.session != null && socket.session.isOpen()) {
-            if (spawnPlayer != -1) {
-                spawnPlayer--;
-            }
 
-            if (spawnPlayer == 0) {
-                log.info("Resetting level (death)");
-            }
-            if (Game.player.size() == 0) {
-                if (socket.session.isOpen() && spawnPlayer == -1) {
-                    score = 0;
-                    Game.player.clear();
-                    Game.cells = new Cell[Game.cells.length];
-                    cellNames.clear();
-                }
-            }
-        }
+        log.info("[TICK]");
 
         ArrayList<Integer> toRemove = new ArrayList<>();
 
@@ -284,9 +258,9 @@ public class Game {
             }
         }
 
-        for (int i = 0; i < cells.length; i++) {
-            if (cells[i] != null) {
-                cells[i].tick();
+        for (Cell cell : cells) {
+            if (cell != null) {
+                cell.tick();
             }
         }
 

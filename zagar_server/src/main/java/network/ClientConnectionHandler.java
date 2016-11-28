@@ -45,7 +45,7 @@ public class ClientConnectionHandler extends WebSocketAdapter {
         log.info("Socket closed: [" + statusCode + "] " + reason);
         ClientConnections clientConnections = ApplicationContext.instance().get(ClientConnections.class);
         for (Map.Entry<Player, Session> connection : clientConnections.getConnections()) {
-            if (connection.getValue().equals(getSession())) {
+            if (!connection.getValue().isOpen()) {
                 clientConnections.removeConnection(connection.getKey());
             }
         }
