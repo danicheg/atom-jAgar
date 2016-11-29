@@ -1,8 +1,8 @@
 {
-  "command":"replicate",
-  "food":[
-    {"x":23,"y":43},
-    {"x":21,"y":45}
-  ],
-  "cells":[]
+  "command":"cells",
+  "food":[],
+  "cells":[
+    {"cellId":21, "playerId":45, "isVirus": "false", "size": 145.56, "x": 147, "y": 84},
+    {"cellId":11, "playerId":15, "isVirus": "false", "size": 65.16, "x": 27, "y": 24}
+  ]
 }
