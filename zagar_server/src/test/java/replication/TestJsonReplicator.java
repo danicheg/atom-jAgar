@@ -18,7 +18,7 @@ public class TestJsonReplicator implements Replicator {
     static {
         try {
             json = new String(Files.readAllBytes(
-                    Paths.get("", "zagar_server", "target", "classes", "replic.json")))
+                    Paths.get("", "target", "test-classes", "replic.json")))
                     .replace("\n", "").replace("\r", "");
         }
         catch (IOException e) {

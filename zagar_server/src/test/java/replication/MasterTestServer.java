@@ -1,8 +1,8 @@
-package main;
+package replication;
 
 import accountserver.AccountServer;
-import dao.Database;
-import main.config.MasterTestServerConfiguration;
+import main.ApplicationContext;
+import main.Service;
 import mechanics.Mechanics;
 import messageSystem.MessageSystem;
 import network.ClientConnectionServer;
@@ -11,16 +11,11 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 public class MasterTestServer {
+
     @NotNull
     private final static Logger log = LogManager.getLogger(MasterTestServer.class);
 
-    public static void main(@NotNull String[] args) throws InterruptedException {
-        Database.openSession();
-        MasterTestServer server = new MasterTestServer();
-        server.start();
-    }
-
-    private void start() throws InterruptedException {
+    public void start() throws InterruptedException {
 
         log.info("MasterTestServer started");
 

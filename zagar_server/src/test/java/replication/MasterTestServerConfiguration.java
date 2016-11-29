@@ -1,4 +1,4 @@
-package main.config;
+package replication;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,8 +11,9 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 public class MasterTestServerConfiguration {
+
     @NotNull
-    private final static Logger log = LogManager.getLogger(MasterServerConfiguration.class);
+    private final static Logger log = LogManager.getLogger(MasterTestServerConfiguration.class);
     public static int ACCOUNT_PORT = 0;
     public static int CLIENT_PORT = 0;
     public static Class[] SERVICES_ARRAY = null;
@@ -22,7 +23,7 @@ public class MasterTestServerConfiguration {
         Properties props = new Properties();
 
         try (InputStream input = new FileInputStream(
-                Paths.get("", "zagar_server", "target", "classes", "testconfiguration.ini")
+                Paths.get("", "target", "test-classes", "test_replication_config.ini")
                         .toAbsolutePath()
                         .toFile()
         )) {
@@ -42,7 +43,8 @@ public class MasterTestServerConfiguration {
             }
 
         } catch (IOException e) {
-            log.error("File configuration.ini not found");
+            e.printStackTrace();
+            log.error("File test_replication_config.ini not found");
         }
 
     }
