@@ -26,4 +26,4 @@
  
 3. Тестирование:
  - [x] Репликации
- - [ ] Leaderboard
+ - [x] Leaderboard
