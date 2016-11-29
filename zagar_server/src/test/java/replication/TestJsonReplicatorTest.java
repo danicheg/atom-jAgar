@@ -1,9 +1,8 @@
 package replication;
 
-import main.MasterTestServer;
 import org.junit.Test;
 
-public class JsonReplicatorTest {
+public class TestJsonReplicatorTest {
 
     @Test
     public void trySendJsonViaReplicator() {
@@ -14,7 +13,7 @@ public class JsonReplicatorTest {
             e.printStackTrace();
         }*/
 
-        JsonReplicator jsonReplicator = new JsonReplicator();
+        TestJsonReplicator jsonReplicator = new TestJsonReplicator();
         jsonReplicator.replicate();
     }
 }
