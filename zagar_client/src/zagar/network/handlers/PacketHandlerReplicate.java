@@ -29,6 +29,8 @@ public class PacketHandlerReplicate {
             gameCells[i] = new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.isVirus());
         }
 
+        log.info("Get message {}", commandReplicate);
+
         Game.player.clear();
         Collections.addAll(Game.player, gameCells);
         Game.cells = gameCells;

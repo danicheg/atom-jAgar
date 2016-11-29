@@ -1,4 +1,4 @@
-package replication;
+package replication.leaderboard;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,10 +10,10 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-public class MasterTestServerConfiguration {
+public class MasterTestLeaderServerConfiguration {
 
     @NotNull
-    private final static Logger log = LogManager.getLogger(MasterTestServerConfiguration.class);
+    private final static Logger log = LogManager.getLogger(replication.json.MasterTestServerConfiguration.class);
     public static int ACCOUNT_PORT = 0;
     public static int CLIENT_PORT = 0;
     public static Class[] SERVICES_ARRAY = null;
@@ -23,7 +23,7 @@ public class MasterTestServerConfiguration {
         Properties props = new Properties();
 
         try (InputStream input = new FileInputStream(
-                Paths.get("", "target", "test-classes", "test_replication_config.ini")
+                Paths.get("", "target", "test-classes", "test_replication_leaderboard_config.ini")
                         .toAbsolutePath()
                         .toFile()
         )) {

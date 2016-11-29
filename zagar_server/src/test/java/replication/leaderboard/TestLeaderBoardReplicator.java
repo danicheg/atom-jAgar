@@ -1,28 +1,29 @@
-package replication;
+package replication.leaderboard;
 
 import main.ApplicationContext;
 import network.ClientConnections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import replication.Replicator;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class TestJsonReplicator implements Replicator {
+public class TestLeaderBoardReplicator implements Replicator {
 
-    private static final Logger log = LogManager.getLogger(TestJsonReplicator.class);
+    private static final Logger log = LogManager.getLogger(TestLeaderBoardReplicator.class);
 
     private static String json;
 
     static {
         try {
             json = new String(Files.readAllBytes(
-                    Paths.get("", "target", "test-classes", "replic.json")))
+                    Paths.get("", "target", "test-classes", "leaderboard.json")))
                     .replace("\n", "").replace("\r", "");
         } catch (IOException e) {
             json = null;
-            log.error("Can not find or open replic.json");
+            log.error("Can not find or open leaderboard.json");
         }
     }
 
@@ -30,7 +31,7 @@ public class TestJsonReplicator implements Replicator {
     public void replicate() {
         if (json == null) return;
 
-        log.info("Sending test replic {}", json);
+        log.info("Sending test leaderboard {}", json);
 
         try {
             ApplicationContext.instance().get(ClientConnections.class)

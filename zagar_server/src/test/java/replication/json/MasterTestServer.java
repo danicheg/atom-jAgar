@@ -1,4 +1,4 @@
-package replication;
+package replication.json;
 
 import accountserver.AccountServer;
 import main.ApplicationContext;
@@ -17,7 +17,7 @@ public class MasterTestServer {
 
     public void start() throws InterruptedException {
 
-        log.info("MasterTestServer started");
+        log.info("MasterTestLeaderServer started");
 
         for (Class service : MasterTestServerConfiguration.SERVICES_ARRAY) {
             try {
