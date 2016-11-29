@@ -1,0 +1,8 @@
+{
+  "command":"replicate",
+  "food":[
+    {"x":23,"y":43},
+    {"x":21,"y":45}
+  ],
+  "cells":[]
+}
