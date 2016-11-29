@@ -20,8 +20,7 @@ public class TestJsonReplicator implements Replicator {
             json = new String(Files.readAllBytes(
                     Paths.get("", "target", "test-classes", "replic.json")))
                     .replace("\n", "").replace("\r", "");
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             json = null;
             log.error("Can not find or open replic.json");
         }
