@@ -23,7 +23,7 @@ public class PacketMove {
         this.y = y;
     }
 
-    public void write(@NotNull Session s) throws IOException {
+    public void write() throws IOException {
         String msg = JSONHelper.toJSON(new CommandMove(x, y));
         log.info("Sending [" + msg + "]");
         Game.socket.session.getRemote().sendString(msg);
