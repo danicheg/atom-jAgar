@@ -17,7 +17,7 @@ public class MasterTestServer {
 
     public void start() throws InterruptedException {
 
-        log.info("MasterTestLeaderServer started");
+        log.info("MasterTestServer started");
 
         for (Class service : MasterTestServerConfiguration.SERVICES_ARRAY) {
             try {

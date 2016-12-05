@@ -7,7 +7,7 @@ import org.junit.Test;
 public class TestJsonReplicatorTest {
 
     @Test
-    //@Ignore
+    @Ignore
     public void trySendJsonViaReplicator() throws InterruptedException {
         Database.openSession();
         MasterTestServer server = new MasterTestServer();

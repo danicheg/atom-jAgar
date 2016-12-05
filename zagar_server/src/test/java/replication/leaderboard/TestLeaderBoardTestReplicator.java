@@ -7,7 +7,7 @@ import org.junit.Test;
 public class TestLeaderBoardTestReplicator {
 
     @Test
-    //@Ignore
+    @Ignore
     public void trySendLeaderBoardJsonViaReplicator() throws InterruptedException {
         Database.openSession();
         MasterTestLeaderServer server = new MasterTestLeaderServer();

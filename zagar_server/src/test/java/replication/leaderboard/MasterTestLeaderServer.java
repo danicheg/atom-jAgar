@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class MasterTestLeaderServer {
 
     @NotNull
-    private final static Logger log = LogManager.getLogger(replication.json.MasterTestServer.class);
+    private final static Logger log = LogManager.getLogger(MasterTestLeaderServer.class);
 
     public void start() throws InterruptedException {
 
