@@ -60,26 +60,22 @@ public class GameCanvas extends JPanel {
 
             g.setStroke(new BasicStroke(2));
 
-            double range = Double.min(
-                    (GameFrame.size.width / 2) / Game.zoom,
-                    Double.max(avgX - Game.minSizeX, Game.maxSizeX - avgX)
-            );
-
-            for (double i = avgX - range; i < avgX + range; i += 100) {
-                i = (int) (i / 100) * 100;
-                int x = (int) ((i - avgX) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
-                g.drawLine(x, (int) Game.minSizeY, x, (int) Game.maxSizeY);
+            Double displacement = (GameFrame.size.width / 2) / Game.zoom;
+            if (!(displacement.equals(Double.POSITIVE_INFINITY) || displacement.equals(Double.NEGATIVE_INFINITY))) {
+                for (double i = avgX - displacement; i < avgX + displacement; i += 100) {
+                    i = (int) (i / 100) * 100;
+                    int x = (int) ((i - avgX) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
+                    g.drawLine(x, (int) Game.minSizeY, x, (int) Game.maxSizeY);
+                }
             }
 
-            range = Double.min(
-                    (GameFrame.size.width / 2) / Game.zoom,
-                    Double.max(avgY - Game.minSizeY, Game.maxSizeY - avgY)
-            );
-
-            for (double i = avgY - range; i < avgY + range; i += 100) {
-                i = (int) (i / 100) * 100;
-                int y = (int) ((i - avgY) * Game.zoom) + GameFrame.size.height / 2 - size / 2;
-                g.drawLine((int) Game.minSizeX, y, (int) Game.maxSizeX, y);
+            displacement = (GameFrame.size.height / 2) / Game.zoom;
+            if (!(displacement.equals(Double.POSITIVE_INFINITY) || displacement.equals(Double.NEGATIVE_INFINITY))) {
+                for (double i = avgY - displacement; i < avgY + displacement; i += 100) {
+                    i = (int) (i / 100) * 100;
+                    int y = (int) ((i - avgY) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
+                    g.drawLine((int) Game.minSizeX, y, (int) Game.maxSizeX, y);
+                }
             }
 
         }

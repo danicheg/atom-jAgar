@@ -71,20 +71,15 @@ public class Game {
     public static GameState state = GameState.NOT_AUTHORIZED;
 
     @NotNull
-    public String gameServerUrl;
+    private String gameServerUrl = "ws://127.0.0.1:7000";
 
     @NotNull
-    public AuthClient authClient = new AuthClient();
+    private AuthClient authClient = new AuthClient();
 
     private double zoomm = -1;
     private int sortTimer;
 
     public Game() {
-        this.gameServerUrl = "ws://" + (JOptionPane.showInputDialog(
-                null,
-                "Host",
-                DEFAULT_GAME_SERVER_HOST + ":" + DEFAULT_GAME_SERVER_PORT)
-        );
 
         authenticate();
 
