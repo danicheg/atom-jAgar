@@ -60,6 +60,11 @@ public class GameCanvas extends JPanel {
 
             g.setStroke(new BasicStroke(2));
 
+            Game.maxSizeX = GameFrame.size.width;
+            Game.minSizeX = 0;
+            Game.maxSizeY = GameFrame.size.height;
+            Game.minSizeY = 0;
+
             Double displacement = (GameFrame.size.width / 2) / Game.zoom;
             if (!(displacement.equals(Double.POSITIVE_INFINITY) || displacement.equals(Double.NEGATIVE_INFINITY))) {
                 for (double i = avgX - displacement; i < avgX + displacement; i += 100) {
@@ -73,7 +78,7 @@ public class GameCanvas extends JPanel {
             if (!(displacement.equals(Double.POSITIVE_INFINITY) || displacement.equals(Double.NEGATIVE_INFINITY))) {
                 for (double i = avgY - displacement; i < avgY + displacement; i += 100) {
                     i = (int) (i / 100) * 100;
-                    int y = (int) ((i - avgY) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
+                    int y = (int) ((i - avgY) * Game.zoom) + GameFrame.size.height / 2 - size / 2;
                     g.drawLine((int) Game.minSizeX, y, (int) Game.maxSizeX, y);
                 }
             }
