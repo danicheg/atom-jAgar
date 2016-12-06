@@ -6,15 +6,13 @@ package protocol.model;
 public final class Cell {
     private final int cellId;
     private final int playerId;
-    private final boolean isVirus;
     private final float size;
     private int x;
     private int y;
 
-    public Cell(int cellId, int playerId, boolean isVirus, float size, int x, int y) {
+    public Cell(int cellId, int playerId, float size, int x, int y) {
         this.cellId = cellId;
         this.playerId = playerId;
-        this.isVirus = isVirus;
         this.size = size;
         this.x = x;
         this.y = y;
@@ -22,10 +20,6 @@ public final class Cell {
 
     public int getPlayerId() {
         return playerId;
-    }
-
-    public boolean isVirus() {
-        return isVirus;
     }
 
     public int getX() {
