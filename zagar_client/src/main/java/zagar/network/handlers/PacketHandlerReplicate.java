@@ -8,14 +8,17 @@ import zagar.Game;
 import zagar.util.JSONDeserializationException;
 import zagar.util.JSONHelper;
 import zagar.view.Cell;
+import zagar.view.Virus;
 
 import java.util.Collections;
 
 public class PacketHandlerReplicate {
+
     @NotNull
     private static final Logger log = LogManager.getLogger(PacketHandlerReplicate.class);
 
     public PacketHandlerReplicate(@NotNull String json) {
+
         CommandReplicate commandReplicate;
         try {
             commandReplicate = JSONHelper.fromJSON(json, CommandReplicate.class);
@@ -23,17 +26,26 @@ public class PacketHandlerReplicate {
             e.printStackTrace();
             return;
         }
+
+        log.info("Get message {}", commandReplicate);
+
         Cell[] gameCells = new Cell[commandReplicate.getCells().length];
         for (int i = 0; i < commandReplicate.getCells().length; i++) {
             protocol.model.Cell c = commandReplicate.getCells()[i];
             gameCells[i] = new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId());
         }
 
-        log.info("Get message {}", commandReplicate);
-
         Game.player.clear();
         Collections.addAll(Game.player, gameCells);
         Game.cells = gameCells;
+
+        Virus[] gameViruses = new Virus[commandReplicate.getViruses().length];
+        for (int i = 0; i < commandReplicate.getViruses().length; i++) {
+            protocol.model.Virus v = commandReplicate.getViruses()[i];
+            gameViruses[i] = new Virus(v.getX(), v.getY(), v.getSize(), v.getVirusId());
+        }
+
+        Game.viruses = gameViruses;
 
         //TODO
 /*    if (b == null) return;

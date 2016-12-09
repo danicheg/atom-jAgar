@@ -13,6 +13,7 @@ import zagar.network.packets.PacketMove;
 import zagar.util.Reporter;
 import zagar.view.Cell;
 import zagar.view.GameFrame;
+import zagar.view.Virus;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -37,12 +38,18 @@ public class Game {
     public static volatile Cell[] cells = new Cell[0];
 
     @NotNull
+    public static volatile Virus[] viruses = new Virus[0];
+
+    @NotNull
     public static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
 
     @NotNull
     public static String[] leaderBoard = new String[10];
 
-    public static double maxSizeX, maxSizeY, minSizeX, minSizeY;
+    public static double maxSizeX = GameFrame.size.width;
+    public static double maxSizeY = GameFrame.size.height;
+    public static double minSizeX = 0;
+    public static double minSizeY = 0;
 
     @NotNull
     public static ArrayList<Integer> playerID = new ArrayList<>();
@@ -256,6 +263,12 @@ public class Game {
         for (Cell cell : cells) {
             if (cell != null) {
                 cell.tick();
+            }
+        }
+
+        for (Virus virus : viruses) {
+            if (virus != null) {
+                virus.tick();
             }
         }
 

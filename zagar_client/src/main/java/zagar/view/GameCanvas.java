@@ -60,11 +60,6 @@ public class GameCanvas extends JPanel {
 
             g.setStroke(new BasicStroke(2));
 
-            Game.maxSizeX = GameFrame.size.width;
-            Game.minSizeX = 0;
-            Game.maxSizeY = GameFrame.size.height;
-            Game.minSizeY = 0;
-
             Double displacement = (GameFrame.size.width / 2) / Game.zoom;
             if (!(displacement.equals(Double.POSITIVE_INFINITY) || displacement.equals(Double.NEGATIVE_INFINITY))) {
                 for (double i = avgX - displacement; i < avgX + displacement; i += 100) {
@@ -94,6 +89,13 @@ public class GameCanvas extends JPanel {
                 if (cell.mass > 9) {
                     cell.render(g, Math.max(1 - 1f / (cell.mass / 10f), 0.87f));
                 }
+            }
+        }
+
+        for (int i3 = 0; i3 < Game.viruses.length; i3++) {
+            Virus virus = Game.viruses[i3];
+            if (virus != null) {
+                virus.render(g, 1);
             }
         }
 

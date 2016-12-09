@@ -14,7 +14,7 @@ public class Virus {
         public int id;
         public float size;
 
-        public float sizeRender;
+        private float sizeRender;
         public double xRender;
         public double yRender;
         public int mass;
@@ -84,7 +84,7 @@ public class Virus {
 
         @Override
         public String toString() {
-            return "Cell{" +
+            return "Virus{" +
                     "x=" + x +
                     ", y=" + y +
                     ", id=" + id +

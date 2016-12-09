@@ -16,7 +16,7 @@ public class Cell {
     @NotNull
     public String name = "";
 
-    public float sizeRender;
+    private float sizeRender;
     public double xRender;
     public double yRender;
     public int mass;

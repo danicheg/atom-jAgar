@@ -2,7 +2,10 @@
   "command":"cells",
   "food":[],
   "cells":[
-    {"cellId":21, "playerId":45, "isVirus": "false", "size": 145.56, "x": 147, "y": 84},
-    {"cellId":11, "playerId":15, "isVirus": "false", "size": 65.16, "x": 27, "y": 24}
+    {"cellId":21, "playerId":45, "size": 145.56, "x": 147, "y": 84},
+    {"cellId":11, "playerId":15, "size": 65.16, "x": -274, "y": 24}
+  ],
+  "viruses":[
+    {"virusId":1, "size":15, "x": 654, "y": -245}
   ]
 }

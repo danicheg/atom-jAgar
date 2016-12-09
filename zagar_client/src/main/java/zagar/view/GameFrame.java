@@ -39,7 +39,6 @@ public class GameFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("· zAgar ·");
-        //setCursor(getToolkit().createCustomCursor(new BufferedImage(3, 3, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "null"));
         pack();
         setVisible(true);
     }
@@ -47,7 +46,8 @@ public class GameFrame extends JFrame {
     public void render() {
         log.info("[RENDER]");
         log.info("CELLS:\n" + Arrays.toString(Game.cells));
-        log.info("PLAYER CELLS SIZE: " + Game.player.size());
+        log.info("VIRUSES:\n" + Arrays.toString(Game.viruses));
+        log.info("PLAYER'S CELLS AMOUNT: " + Game.player.size());
         log.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
         Point mouseP = getMouseLocation();
         mouseX = mouseP.getX();
