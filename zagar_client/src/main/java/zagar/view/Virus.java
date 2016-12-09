@@ -18,7 +18,6 @@ public class Virus {
         public double xRender;
         public double yRender;
         public int mass;
-        private int r, g, b;
         private float rotation = 0;
 
         public Virus(double x, double y, float size, int id) {
@@ -40,6 +39,7 @@ public class Virus {
         }
 
         public void render(@NotNull Graphics2D g, float scale) {
+
                 g.setColor(Color.GREEN);
                 int size = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
 

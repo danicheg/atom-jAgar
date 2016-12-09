@@ -47,6 +47,7 @@ public class GameFrame extends JFrame {
         log.info("[RENDER]");
         log.info("CELLS:\n" + Arrays.toString(Game.cells));
         log.info("VIRUSES:\n" + Arrays.toString(Game.viruses));
+        log.info("FOODS:\n" + Arrays.toString(Game.foods));
         log.info("PLAYER'S CELLS AMOUNT: " + Game.player.size());
         log.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
         Point mouseP = getMouseLocation();

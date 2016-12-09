@@ -12,6 +12,7 @@ import zagar.network.packets.PacketEjectMass;
 import zagar.network.packets.PacketMove;
 import zagar.util.Reporter;
 import zagar.view.Cell;
+import zagar.view.Food;
 import zagar.view.GameFrame;
 import zagar.view.Virus;
 
@@ -39,6 +40,9 @@ public class Game {
 
     @NotNull
     public static volatile Virus[] viruses = new Virus[0];
+
+    @NotNull
+    public static volatile Food[] foods = new Food[0];
 
     @NotNull
     public static ConcurrentLinkedDeque<Cell> player = new ConcurrentLinkedDeque<>();
