@@ -14,12 +14,14 @@ import java.util.List;
  * @author apomosov
  */
 public class GameSessionImpl implements GameSession {
+
     private static final IDGenerator idGenerator = new SequentialIDGenerator();
+
     private final int id = idGenerator.next();
     @NotNull
-    private final Field field = new Field();
+    private final Field field;
     @NotNull
-    private final List<Player> players = new ArrayList<>();
+    private final List<Player> players;
     @NotNull
     private final FoodGenerator foodGenerator;
     @NotNull
@@ -33,6 +35,8 @@ public class GameSessionImpl implements GameSession {
         this.foodGenerator = foodGenerator;
         this.playerPlacer = playerPlacer;
         this.virusGenerator = virusGenerator;
+        field = new Field();
+        players = new ArrayList<>();
         virusGenerator.generate();
     }
 
@@ -52,6 +56,7 @@ public class GameSessionImpl implements GameSession {
         return new ArrayList<>(players);
     }
 
+    @NotNull
     @Override
     public Field getField() {
         return field;
@@ -63,4 +68,5 @@ public class GameSessionImpl implements GameSession {
                 "id=" + id +
                 '}';
     }
+    
 }

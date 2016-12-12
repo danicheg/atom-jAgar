@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -47,7 +48,7 @@ public class LeaderboardDao implements Dao<Leaderboard> {
                     .limit(amount)
                     .collect(Collectors.toList());
         }
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

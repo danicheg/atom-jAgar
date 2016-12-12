@@ -1,8 +1,6 @@
 package accountserver.profile;
 
 import accountserver.auth.Authorized;
-import dao.LeaderboardDao;
-import entities.leaderboard.Leaderboard;
 import entities.token.Token;
 import dao.DatabaseAccessLayer;
 import entities.user.UserEntity;
@@ -16,7 +14,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.util.UUID;
 
 @Path("actions")
 public class UserActions {
@@ -37,7 +34,7 @@ public class UserActions {
     public Response addUserScore(@HeaderParam("Authorization") String rawToken,
                                          @FormParam("score") String score) {
         try {
-            if (score == null || score.equals("")) {
+            if (score == null || "".equals(score)) {
                 log.warn("Wrong value - " + score);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }

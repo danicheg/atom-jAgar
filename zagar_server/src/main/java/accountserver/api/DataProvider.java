@@ -71,12 +71,12 @@ public class DataProvider {
     @GET
     @Path("/leadernames")
     @Produces("application/json")
-    public Response getNLeaderNames(@QueryParam("amount") String n, @QueryParam("leaderboard") String leaderboardID) throws JsonProcessingException {
+    public Response getNLeaderNames(@QueryParam("amount") String n,
+                                    @QueryParam("leaderboard") String leaderboardID) throws JsonProcessingException {
         log.info("Batch of leaders requested.");
         if (leaderboardID != null) {
             if (n != null) {
                 Leaderboard leaderboard = new LeaderboardDao().getById(Long.parseLong(leaderboardID));
-                Integer param = Integer.parseInt(n);
                 List<UserEntity> users = UserDao.getAllLoginUsers();
                 List<UserEntity> userEntities = new LeaderboardDao().getNLeaders(leaderboard, 5);
                 if ( userEntities != null) {

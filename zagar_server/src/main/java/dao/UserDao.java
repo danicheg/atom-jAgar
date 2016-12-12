@@ -17,18 +17,18 @@ public class UserDao implements Dao<UserEntity> {
 
     private static final Logger log = LogManager.getLogger(UserEntity.class);
 
-    @Override
-    public List<UserEntity> getAll() {
-        log.info("All users successfully obtained from db");
-        return Database.selectTransactional(session ->
-                session.createQuery("from UserEntity", UserEntity.class).list());
-    }
-
     public static List<UserEntity> getAllLoginUsers() {
         return Database.selectTransactional(session ->
                 session.createQuery("SELECT u FROM UserEntity u " +
                         "INNER JOIN Token t " +
                         "ON t.user.userID = u.userID ", UserEntity.class).list());
+    }
+
+    @Override
+    public List<UserEntity> getAll() {
+        log.info("All users successfully obtained from db");
+        return Database.selectTransactional(session ->
+                session.createQuery("from UserEntity", UserEntity.class).list());
     }
 
     @Override

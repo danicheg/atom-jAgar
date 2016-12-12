@@ -22,13 +22,15 @@ public class AuthClient {
     @NotNull
     private static final String SERVICE_URL = "http://" +
             DEFAULT_ACCOUNT_SERVER_HOST + ":" + DEFAULT_ACCOUNT_SERVER_PORT;
+    private static final String HEADER = "content-type";
+    private static final String HEADER_VALUE = "application/x-www-form-urlencoded";
 
     @NotNull
     private final OkHttpClient client = new OkHttpClient();
 
     public boolean register(@NotNull String user, @NotNull String password) {
         log.info("Trying to register user=" + user);
-        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        MediaType mediaType = MediaType.parse(HEADER_VALUE);
         RequestBody body = RequestBody.create(
                 mediaType,
                 String.format("user=%s&password=%s", user, password)
@@ -38,11 +40,10 @@ public class AuthClient {
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .post(body)
-                .addHeader("content-type", "application/x-www-form-urlencoded")
+                .addHeader(HEADER, HEADER_VALUE)
                 .build();
 
         try {
-            OkHttpClient client = new OkHttpClient();
             Response response = client.newCall(request).execute();
             final boolean result = response.isSuccessful();
             if (result) {
@@ -69,7 +70,7 @@ public class AuthClient {
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .post(body)
-                .addHeader("content-type", "application/x-www-form-urlencoded")
+                .addHeader(HEADER, HEADER_VALUE)
                 .build();
 
         try {
@@ -86,7 +87,7 @@ public class AuthClient {
 
     public boolean logout(@NotNull Long token) {
         log.info("Trying to logout user with token " + token);
-        MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+        MediaType mediaType = MediaType.parse(HEADER_VALUE);
         RequestBody body = RequestBody.create(
                 mediaType,
                 ""
@@ -95,7 +96,7 @@ public class AuthClient {
         Request request = new Request.Builder()
                 .url(requestUrl)
                 .post(body)
-                .addHeader("content-type", "application/x-www-form-urlencoded")
+                .addHeader(HEADER, HEADER_VALUE)
                 .addHeader("authorization", "Bearer " + token)
                 .build();
 

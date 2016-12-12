@@ -22,18 +22,18 @@ import java.util.Map;
 
 public class ClientConnectionHandler extends WebSocketAdapter {
 
-    private final static @NotNull Logger log = LogManager.getLogger(ClientConnectionHandler.class);
+    private static final Logger LOG = LogManager.getLogger(ClientConnectionHandler.class);
 
     @Override
     public void onWebSocketConnect(@NotNull Session sess) {
         super.onWebSocketConnect(sess);
-        log.info("Socket connected: " + sess);
+        LOG.info("Socket connected: " + sess);
     }
 
     @Override
     public void onWebSocketText(@NotNull String message) {
         super.onWebSocketText(message);
-        log.info("Received packet: " + message);
+        LOG.info("Received packet: " + message);
         if (getSession().isOpen()) {
             handlePacket(message);
         }
@@ -42,7 +42,7 @@ public class ClientConnectionHandler extends WebSocketAdapter {
     @Override
     public void onWebSocketClose(int statusCode, @NotNull String reason) {
         super.onWebSocketClose(statusCode, reason);
-        log.info("Socket closed: [" + statusCode + "] " + reason);
+        LOG.info("Socket closed: [" + statusCode + "] " + reason);
         ClientConnections clientConnections = ApplicationContext.instance().get(ClientConnections.class);
         for (Map.Entry<Player, Session> connection : clientConnections.getConnections()) {
             if (!connection.getValue().isOpen()) {
@@ -55,7 +55,7 @@ public class ClientConnectionHandler extends WebSocketAdapter {
     @Override
     public void onWebSocketError(@NotNull Throwable cause) {
         super.onWebSocketError(cause);
-        cause.printStackTrace(System.err);
+        LOG.error("WebSocket error: " + cause);
     }
 
     private void handlePacket(@NotNull String msg) {
@@ -90,6 +90,8 @@ public class ClientConnectionHandler extends WebSocketAdapter {
                     e.printStackTrace();
                 }
                 break;
+            default:
+                LOG.error("Not supported command received - " + name);
         }
     }
 

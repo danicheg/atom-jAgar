@@ -22,6 +22,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
@@ -56,7 +58,7 @@ public class Game {
     public static double minSizeY = 0;
 
     @NotNull
-    public static ArrayList<Integer> playerID = new ArrayList<>();
+    public static List<Integer> playerID = new ArrayList<>();
 
     public static float followX;
     public static float followY;
@@ -73,7 +75,7 @@ public class Game {
     public static String login = DEFAULT_LOGIN;
 
     @NotNull
-    public static HashMap<Integer, String> cellNames = new HashMap<>();
+    public static Map<Integer, String> cellNames = new HashMap<>();
 
     public static long fps = 60;
     public static boolean rapidEject;

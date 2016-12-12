@@ -6,8 +6,6 @@ import entities.token.Token;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +22,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class UserEntity implements Comparable<UserEntity> {
 
     @NotNull
-    private static final Logger log = LogManager.getLogger(Player.class);
+    private static final Logger LOG = LogManager.getLogger(Player.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -66,12 +64,8 @@ public class UserEntity implements Comparable<UserEntity> {
     @NotNull
     private Integer score = 16;
 
-    /*
-    Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
-    javax.persistence.PersistenceException: org.hibernate.InstantiationException:
-        No default constructor for entity:  : entities.user.UserEntity
-    */
     public UserEntity() {
+        //need for hibernate
     }
 
     public UserEntity(@NotNull String name, @NotNull String password) {
@@ -79,8 +73,8 @@ public class UserEntity implements Comparable<UserEntity> {
         this.name = name;
         this.password = password;
         registrationDate = LocalDate.now();
-        if (log.isInfoEnabled()) {
-            log.info(this + " created");
+        if (LOG.isInfoEnabled()) {
+            LOG.info(this + " created");
         }
     }
 
@@ -154,8 +148,12 @@ public class UserEntity implements Comparable<UserEntity> {
 
     @Override
     public boolean equals(Object that) {
-        if (that == null || that.getClass() != getClass()) return false;
-        if (this == that) return true;
+        if (that == null || that.getClass() != getClass()) {
+            return false;
+        }
+        if (this == that) {
+            return true;
+        }
         UserEntity newUser = (UserEntity) that;
         return this.userID.equals(newUser.userID);
     }
@@ -175,7 +173,6 @@ public class UserEntity implements Comparable<UserEntity> {
         return "UserEntity{" +
                 "userID=" + userID +
                 ", name='" + name + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", registrationDate=" + registrationDate +
                 ", score=" + score +

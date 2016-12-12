@@ -2,9 +2,9 @@ package network.handlers;
 
 import main.ApplicationContext;
 import mechanics.Mechanics;
-import messageSystem.Abonent;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Abonent;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +16,7 @@ import utils.JSONHelper;
 
 public class PacketHandlerMove {
 
-    @NotNull
-    private final static Logger log = LogManager.getLogger(Mechanics.class);
+    private static final Logger LOG = LogManager.getLogger(PacketHandlerMove.class);
 
     public PacketHandlerMove(@NotNull Session session, @NotNull String json) {
 
@@ -25,7 +24,7 @@ public class PacketHandlerMove {
         try {
             commandMove = JSONHelper.fromJSON(json, CommandMove.class);
         } catch (JSONDeserializationException e) {
-            e.printStackTrace();
+            LOG.error("CommandMove - JSONDeserializationException: " + e);
             return;
         }
 
@@ -36,7 +35,7 @@ public class PacketHandlerMove {
         messageSystem.sendMessage(new Message(client.getAddress() , mechanicsService.getAddress()) {
             @Override
             public void exec(Abonent abonent) {
-                log.info("Recieved command " + commandMove.getCommand());
+                LOG.info("Recieved command " + commandMove.getCommand());
             }
         });
 

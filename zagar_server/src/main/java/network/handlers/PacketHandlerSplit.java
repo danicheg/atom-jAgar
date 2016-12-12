@@ -2,9 +2,9 @@ package network.handlers;
 
 import main.ApplicationContext;
 import mechanics.Mechanics;
-import messageSystem.Abonent;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Abonent;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,8 +16,7 @@ import utils.JSONHelper;
 
 public class PacketHandlerSplit {
 
-    @NotNull
-    private final static Logger log = LogManager.getLogger(Mechanics.class);
+    private static final Logger LOG = LogManager.getLogger(PacketHandlerSplit.class);
 
     public PacketHandlerSplit(@NotNull Session session, @NotNull String json) {
 
@@ -37,7 +36,7 @@ public class PacketHandlerSplit {
         messageSystem.sendMessage(new Message(client.getAddress() , mechanicsService.getAddress()) {
             @Override
             public void exec(Abonent abonent) {
-                log.info("Recieved command " + commandSplit.getCommand());
+                LOG.info("Recieved command " + commandSplit.getCommand());
             }
         });
 

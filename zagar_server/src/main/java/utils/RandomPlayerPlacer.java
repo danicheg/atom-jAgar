@@ -11,16 +11,17 @@ import java.util.Random;
  * @author apomosov
  */
 public class RandomPlayerPlacer implements PlayerPlacer {
+
     @NotNull
     private final Field field;
 
-    public RandomPlayerPlacer(@NotNull Field field) {
-        this.field = field;
+    public RandomPlayerPlacer(@NotNull Field fieldToPlace) {
+        field = fieldToPlace;
     }
 
     @Override
     public void place(@NotNull Player player) {
-        assert (player.getCells().size() == 1);
+        assert player.getCells().size() == 1;
         Random random = new Random();
         for (PlayerCell playerCell : player.getCells()) {
             playerCell.setX(playerCell.getRadius() +
@@ -29,4 +30,5 @@ public class RandomPlayerPlacer implements PlayerPlacer {
                     random.nextInt(field.getHeight() - 2 * playerCell.getRadius()));
         }
     }
+
 }

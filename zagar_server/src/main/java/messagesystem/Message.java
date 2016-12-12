@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 /**
  * @author e.shubin

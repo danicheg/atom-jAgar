@@ -11,7 +11,8 @@ import java.util.concurrent.locks.LockSupport;
  * Created by apomosov on 14.05.16.
  */
 public class Ticker {
-    private final static Logger log = LogManager.getLogger(Ticker.class);
+
+    private static final Logger log = LogManager.getLogger(Ticker.class);
 
     private final long sleepTimeNanos;
     private final AtomicLong tickNumber;
@@ -38,4 +39,5 @@ public class Ticker {
             log.info(tickable + " <tick> " + tickNumber.incrementAndGet());
         }
     }
+
 }

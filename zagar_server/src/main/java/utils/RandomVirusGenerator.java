@@ -11,12 +11,12 @@ import java.util.Random;
  * @author apomosov
  */
 public class RandomVirusGenerator implements VirusGenerator {
-    @NotNull
-    private final Field field;
+
+    @NotNull private final Field field;
     private final int numberOfViruses;
 
-    public RandomVirusGenerator(@NotNull Field field, int numberOfViruses) {
-        this.field = field;
+    public RandomVirusGenerator(@NotNull Field fieldToPlace, int numberOfViruses) {
+        field = fieldToPlace;
         this.numberOfViruses = numberOfViruses;
     }
 
@@ -25,10 +25,11 @@ public class RandomVirusGenerator implements VirusGenerator {
         Random random = new Random();
         int virusRadius = (int) Math.sqrt(GameConstants.VIRUS_MASS / Math.PI);
         for (int i = 0; i < numberOfViruses; i++) {
-            Virus virus = new Virus(
+            new Virus(
                     virusRadius + random.nextInt(field.getWidth() - 2 * virusRadius),
                     virusRadius + random.nextInt(field.getHeight() - 2 * virusRadius)
             );
         }
     }
+
 }

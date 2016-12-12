@@ -11,20 +11,22 @@ import java.util.Random;
  * @author apomosov
  */
 public class SimplePlayerPlacer implements PlayerPlacer {
+
     @NotNull
     private final Field field;
 
-    public SimplePlayerPlacer(@NotNull Field field) {
-        this.field = field;
+    public SimplePlayerPlacer(@NotNull Field fieldToPlace) {
+        field = fieldToPlace;
     }
 
     @Override
     public void place(@NotNull Player player) {
-        assert (player.getCells().size() == 1);
+        assert player.getCells().size() == 1;
         Random random = new Random();
         for (PlayerCell playerCell : player.getCells()) {
             playerCell.setX(5);
             playerCell.setY(5);
         }
     }
+
 }

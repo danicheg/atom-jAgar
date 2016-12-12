@@ -2,12 +2,10 @@ package dao;
 
 import entities.token.Token;
 import jersey.repackaged.com.google.common.base.Joiner;
-import org.hibernate.Session;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;

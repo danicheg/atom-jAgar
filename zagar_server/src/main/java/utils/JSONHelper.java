@@ -10,7 +10,12 @@ import org.jetbrains.annotations.NotNull;
  * @author apomosov
  */
 public class JSONHelper {
-    private static @NotNull Gson gson = new GsonBuilder().create();
+
+    private static Gson gson = new GsonBuilder().create();
+
+    private JSONHelper() {
+        throw new IllegalAccessError(getClass() + " - utility class");
+    }
 
     @NotNull
     public static String toJSON(@NotNull Object object) {
@@ -26,7 +31,8 @@ public class JSONHelper {
         }
     }
 
-    public static @NotNull JsonObject getJSONObject(@NotNull String string) {
+    @NotNull
+    public static JsonObject getJSONObject(@NotNull String string) {
         return gson.fromJson(string, JsonObject.class);
     }
 }

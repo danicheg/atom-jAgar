@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 import main.Service;
 import org.apache.logging.log4j.LogManager;
@@ -19,10 +19,10 @@ import java.util.concurrent.TimeUnit;
  */
 public final class MessageSystem {
 
-    private final static Logger log = LogManager.getLogger(MessageSystem.class);
+    private static final Logger LOG = LogManager.getLogger(MessageSystem.class);
 
     private final Map<Address, Queue<Message>> messages = new HashMap<>();
-    private final @NotNull Map<Class<?>, Service> services = new ConcurrentHashMap<>();
+    @NotNull private final Map<Class<?>, Service> services = new ConcurrentHashMap<>();
 
     public MessageSystem() {
     }
@@ -30,7 +30,7 @@ public final class MessageSystem {
     public void registerService(Class<?> type, Service service) {
         services.put(type, service);
         messages.putIfAbsent(service.getAddress(), new LinkedBlockingQueue<>());
-        log.info(service + " registered");
+        LOG.info(service + " registered");
     }
 
     public <T> T getService(Class<T> type) {
@@ -62,10 +62,12 @@ public final class MessageSystem {
         execOneForService(service, timeout, TimeUnit.MILLISECONDS);
     }
 
-    public void execOneForService(Service service, long timeout, TimeUnit unit) throws InterruptedException {
+    private void execOneForService(Service service, long timeout, TimeUnit unit) throws InterruptedException {
         BlockingQueue<Message> queue = (BlockingQueue<Message>) messages.get(service.getAddress());
         final Message message = queue.poll(timeout, unit);
-        if (message == null) return;
+        if (message == null) {
+            return;
+        }
         message.exec(service);
     }
 

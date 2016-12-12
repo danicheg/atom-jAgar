@@ -1,10 +1,10 @@
-package messageSystem.messages;
+package messagesystem.messages;
 
 import main.ApplicationContext;
-import messageSystem.Abonent;
-import messageSystem.Address;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
+import messagesystem.Abonent;
+import messagesystem.Address;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

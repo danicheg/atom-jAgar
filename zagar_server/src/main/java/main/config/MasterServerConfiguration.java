@@ -20,33 +20,43 @@ public class MasterServerConfiguration {
 
         try (InputStream input = new FileInputStream(
                 Paths.get("", "zagar_server", "target", "classes", "configuration.ini")
-                        .toAbsolutePath()
-                        .toFile()
-        )) {
+                        .toAbsolutePath().toFile())
+        ) {
 
             props.load(input);
-
-            try {
-                ACCOUNT_PORT = Integer.valueOf(props.getProperty("accountServerPort"));
-                CLIENT_PORT = Integer.valueOf(props.getProperty("clientConnectionPort"));
-            } catch (NumberFormatException e) {
-                throw new WrongConfigBuildException("NumberFormatException " + e.getMessage());
-            }
+            getPortValues(props);
 
             final String[] services = props.getProperty("services").split(",");
             SERVICES_ARRAY = new Class[services.length];
             for (int i = 0; i < SERVICES_ARRAY.length; i++) {
-                try {
-                    SERVICES_ARRAY[i] = Class.forName(props.getProperty(services[i]));
-                } catch (ClassNotFoundException e) {
-                    throw new WrongConfigBuildException("ClassNotFoundException for class " + e.getMessage());
-                }
+                collectServices(props, services, i);
             }
 
         } catch (IOException e) {
-            throw new WrongConfigBuildException("File configuration.ini not found");
+            throw new WrongConfigBuildException("While trying opened configuration.ini being raised exception: " + e);
         }
 
+    }
+
+    private MasterServerConfiguration() {
+        throw new IllegalAccessError(getClass() + " - utility class");
+    }
+
+    private static void getPortValues(Properties props) {
+        try {
+            ACCOUNT_PORT = Integer.valueOf(props.getProperty("accountServerPort"));
+            CLIENT_PORT = Integer.valueOf(props.getProperty("clientConnectionPort"));
+        } catch (NumberFormatException e) {
+            throw new WrongConfigBuildException("NumberFormatException " + e.getMessage());
+        }
+    }
+
+    private static void collectServices(Properties props, String[] services, int i) {
+        try {
+            SERVICES_ARRAY[i] = Class.forName(props.getProperty(services[i]));
+        } catch (ClassNotFoundException e) {
+            throw new WrongConfigBuildException("ClassNotFoundException for class " + e);
+        }
     }
 
 }

@@ -11,7 +11,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class DatabaseAccessLayer {
 
-    private static final Logger log = LogManager.getLogger(DatabaseAccessLayer.class);
+    private static final Logger LOG = LogManager.getLogger(DatabaseAccessLayer.class);
+    private static final String TOKEN_PREPEND = "token=";
+
     private static UserDao userDao;
     private static TokenDao tokenDao;
 
@@ -20,9 +22,8 @@ public class DatabaseAccessLayer {
         tokenDao = new TokenDao();
     }
 
-    @NotNull
-    public static List<UserEntity> getUserList() {
-        return userDao.getAll();
+    private DatabaseAccessLayer() {
+        throw new IllegalAccessError(getClass() + " - utility class");
     }
 
     @NotNull
@@ -31,7 +32,7 @@ public class DatabaseAccessLayer {
     }
 
     public static boolean contains(@NotNull Token token) {
-        final String findByTokenCondition = "token=" + token.getToken();
+        final String findByTokenCondition = TOKEN_PREPEND + token.getToken();
         return !(tokenDao.getAllWhere(findByTokenCondition).isEmpty());
     }
 
@@ -49,14 +50,14 @@ public class DatabaseAccessLayer {
         token = new Token(ThreadLocalRandom.current().nextLong(), user);
         tokenDao.insert(token);
         userDao.update(user);
-        log.info("Generate new token {} for UserEntity with name {}", token, name);
+        LOG.info("Generate new token {} for UserEntity with name {}", token, name);
         return token;
     }
 
     @NotNull
     public static Token parse(String rawToken) {
         Long longToken = Long.parseLong(rawToken.substring("Bearer".length()).trim());
-        final String findByTokenCondition = "token=" + longToken;
+        final String findByTokenCondition = TOKEN_PREPEND + longToken;
         return tokenDao.getAllWhere(findByTokenCondition).get(0);
     }
 
@@ -65,7 +66,7 @@ public class DatabaseAccessLayer {
         if (!contains(token)) {
             throw new Exception("Token validation exception");
         }
-        log.info("Correct token from '{}'", getUser(token).getName());
+        LOG.info("Correct token from '{}'", getUser(token).getName());
     }
 
     public static Boolean validateToken(@NotNull String rawToken) throws Exception {
@@ -73,12 +74,12 @@ public class DatabaseAccessLayer {
         if (!contains(token)) {
             throw new Exception("Token validation exception");
         }
-        log.info("Correct token from '{}'", getUser(token).getName());
+        LOG.info("Correct token from '{}'", getUser(token).getName());
         return true;
     }
 
     public static UserEntity getUser(@NotNull Token token) {
-        final String findByTokenCondition = "token=" + token.getToken();
+        final String findByTokenCondition = TOKEN_PREPEND + token.getToken();
         return tokenDao.getAllWhere(findByTokenCondition).get(0).getUser();
     }
 

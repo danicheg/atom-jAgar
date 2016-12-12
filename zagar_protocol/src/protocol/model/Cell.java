@@ -4,6 +4,7 @@ package protocol.model;
  * @author apomosov
  */
 public final class Cell {
+
     private final int cellId;
     private final int playerId;
     private final float size;
@@ -37,4 +38,5 @@ public final class Cell {
     public float getSize() {
         return size;
     }
+    
 }

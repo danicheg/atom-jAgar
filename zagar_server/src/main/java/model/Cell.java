@@ -7,6 +7,7 @@ import utils.SequentialIDGenerator;
  * @author apomosov
  */
 public abstract class Cell {
+
     public static final IDGenerator idGenerator = new SequentialIDGenerator();
 
     private int x;
@@ -53,4 +54,5 @@ public abstract class Cell {
     private void updateRadius() {
         this.radius = (int) Math.sqrt(this.mass / Math.PI);
     }
+
 }

@@ -1,6 +1,7 @@
 package protocol.model;
 
 public class Virus {
+
     private final int virusId;
     private final float size;
     private int x;
@@ -28,4 +29,5 @@ public class Virus {
     public float getSize() {
         return size;
     }
+
 }

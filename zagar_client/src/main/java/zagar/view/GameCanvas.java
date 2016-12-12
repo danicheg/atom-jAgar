@@ -31,7 +31,7 @@ public class GameCanvas extends JPanel {
 
     public void render() {
         Graphics ggg = screen.getGraphics();
-        Graphics2D g = ((Graphics2D) ggg);
+        Graphics2D g = (Graphics2D) ggg;
         g.setColor(new Color(255, 255, 255));
         g.fillRect(0, 0, GameFrame.size.width, GameFrame.size.height);
         g.setColor(new Color(220, 220, 220));
@@ -42,7 +42,7 @@ public class GameCanvas extends JPanel {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         }
 
-        if (Game.player.size() > 0 && Game.zoom > 0.0) {
+        if (!Game.player.isEmpty() && Game.zoom > 0.0) {
 
             int size = 1;
             float avgX = 0;

@@ -29,12 +29,8 @@ public class Token {
     @NotNull
     private UserEntity user;
 
-    /*
-    Reason: ERROR [main] dao.Database (Database.java:34) - Transaction failed.
-    javax.persistence.PersistenceException: org.hibernate.InstantiationException:
-        No default constructor for entity:  : entities.user.UserEntity
-    */
     public Token() {
+        // need for hibernate
     }
 
     public Token(@NotNull Long token, @NotNull UserEntity user) {
@@ -72,9 +68,12 @@ public class Token {
 
     @Override
     public boolean equals(Object that) {
-        if (that == null || that.getClass() != getClass()) return false;
-        if (this == that) return true;
-
+        if (that == null || that.getClass() != getClass()) {
+            return false;
+        }
+        if (this == that) {
+            return true;
+        }
         Token castToken = (Token) that;
         return token.equals(castToken.getToken());
     }

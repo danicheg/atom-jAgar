@@ -110,10 +110,10 @@ public class AuthenticationProvider {
 
     }
 
-    private boolean authenticate(String name, String password) throws Exception {
+    private boolean authenticate(String name, String password) {
         final String findByNameCondition = "name=\'" + name + "\'";
         final String findByPassCondition = "password=\'" + password + "\'";
-        return (DatabaseAccessLayer.checkByCondition(findByNameCondition, findByPassCondition));
+        return DatabaseAccessLayer.checkByCondition(findByNameCondition, findByPassCondition);
     }
 
 }

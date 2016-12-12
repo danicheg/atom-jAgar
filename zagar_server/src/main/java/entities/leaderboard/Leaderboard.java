@@ -21,7 +21,9 @@ public class Leaderboard {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "leaderboard", cascade = CascadeType.PERSIST)
     private List<UserEntity> users = new ArrayList<>();
 
-    public Leaderboard() {}
+    public Leaderboard() {
+        //need for hibernate
+    }
 
     public Leaderboard(@NotNull UserEntity newUser) {
         this.users.add(newUser);

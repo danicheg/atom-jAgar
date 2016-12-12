@@ -1,4 +1,4 @@
-package messageSystem;
+package messagesystem;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -9,8 +9,8 @@ public final class Address {
     @NotNull
     private final String name;
 
-    public Address(@NotNull String name) {
-        this.name = name;
+    public Address(@NotNull String addressName) {
+        name = addressName;
     }
 
     @NotNull

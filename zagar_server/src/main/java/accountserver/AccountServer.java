@@ -3,7 +3,7 @@ package accountserver;
 import accountserver.auth.AuthenticationFilter;
 import main.ApplicationContext;
 import main.Service;
-import messageSystem.MessageSystem;
+import messagesystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.server.Server;
@@ -15,7 +15,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class AccountServer extends Service {
 
-    private final static @NotNull Logger log = LogManager.getLogger(AccountServer.class);
+    @NotNull
+    private static final Logger log = LogManager.getLogger(AccountServer.class);
     private final int port;
 
     public AccountServer(int port) {
@@ -51,7 +52,7 @@ public class AccountServer extends Service {
         try {
             server.start();
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Can't start server");
         }
     }
 

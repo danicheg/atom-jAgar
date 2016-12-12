@@ -4,7 +4,7 @@ import accountserver.AccountServer;
 import main.ApplicationContext;
 import main.Service;
 import mechanics.Mechanics;
-import messageSystem.MessageSystem;
+import messagesystem.MessageSystem;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

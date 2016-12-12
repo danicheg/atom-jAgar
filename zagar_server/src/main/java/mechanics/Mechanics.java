@@ -2,9 +2,9 @@ package mechanics;
 
 import main.ApplicationContext;
 import main.Service;
-import messageSystem.Message;
-import messageSystem.MessageSystem;
-import messageSystem.messages.ReplicateMsg;
+import messagesystem.Message;
+import messagesystem.MessageSystem;
+import messagesystem.messages.ReplicateMsg;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +13,7 @@ import ticker.Ticker;
 
 public class Mechanics extends Service implements Tickable {
 
-    @NotNull
-    private final static Logger log = LogManager.getLogger(Mechanics.class);
+    private static final Logger log = LogManager.getLogger(Mechanics.class);
 
     public Mechanics() {
         super("mechanics");
@@ -34,7 +33,6 @@ public class Mechanics extends Service implements Tickable {
         } catch (InterruptedException e) {
             log.error(e);
             Thread.currentThread().interrupt();
-            e.printStackTrace();
         }
 
         log.info("Start replication");

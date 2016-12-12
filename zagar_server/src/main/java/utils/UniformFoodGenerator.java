@@ -7,13 +7,14 @@ import org.jetbrains.annotations.NotNull;
  * @author apomosov
  */
 public class UniformFoodGenerator implements FoodGenerator {
+
     @NotNull
     private final Field field;
     private final int threshold;
     private final double foodPerSecond;
 
-    public UniformFoodGenerator(@NotNull Field field, double foodPerSecond, int threshold) {
-        this.field = field;
+    public UniformFoodGenerator(@NotNull Field fieldToPlace, double foodPerSecond, int threshold) {
+        field = fieldToPlace;
         this.threshold = threshold;
         this.foodPerSecond = foodPerSecond;
     }
@@ -24,4 +25,5 @@ public class UniformFoodGenerator implements FoodGenerator {
             int toGenerate = (int) Math.ceil(foodPerSecond * elapsedNanos / 1_000_000_000.);
         }
     }
+
 }

@@ -8,6 +8,11 @@ import javax.swing.*;
  * @author apomosov
  */
 public class Reporter {
+
+    private Reporter() {
+        throw new IllegalAccessError(getClass() + " - utility class");
+    }
+
     public static void reportFail(@NotNull String title, @NotNull String message) {
         JOptionPane.showMessageDialog(null,
                 message,
@@ -21,4 +26,5 @@ public class Reporter {
                 title,
                 JOptionPane.WARNING_MESSAGE);
     }
+
 }

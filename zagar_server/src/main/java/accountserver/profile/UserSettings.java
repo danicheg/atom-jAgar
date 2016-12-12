@@ -34,7 +34,7 @@ public class UserSettings {
                                      @FormParam("name") String name) {
         try {
 
-            if (name == null || name.equals("")) {
+            if (name == null || "".equals(name)) {
                 log.warn("Wrong name - " + name);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
@@ -80,7 +80,7 @@ public class UserSettings {
                                      @FormParam("password") String password) {
         try {
 
-            if (password == null || password.equals("")) {
+            if (password == null || "".equals(password)) {
                 log.warn("Wrong password - " + password);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
@@ -117,7 +117,7 @@ public class UserSettings {
                                          @FormParam("email") String email) {
         try {
 
-            if (email == null || email.equals("")) {
+            if (email == null || "".equals(email)) {
                 log.warn("Wrong email - " + email);
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }

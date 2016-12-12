@@ -5,21 +5,25 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author apomosov
  */
 public class Field {
+
     private final int width;
     private final int height;
     @NotNull
-    private final List<Virus> viruses = new ArrayList<>();
+    private final List<Virus> viruses;
     @NotNull
-    private final HashSet<Food> foods = new HashSet<>();
+    private final HashSet<Food> foods;
 
     public Field() {
-        this.width = GameConstants.FIELD_WIDTH;
-        this.height = GameConstants.FIELD_HEIGHT;
+        width = GameConstants.FIELD_WIDTH;
+        height = GameConstants.FIELD_HEIGHT;
+        viruses = new ArrayList<>();
+        foods = new HashSet<>();
     }
 
     @NotNull
@@ -28,7 +32,7 @@ public class Field {
     }
 
     @NotNull
-    public HashSet<Food> getFoods() {
+    public Set<Food> getFoods() {
         return foods;
     }
 
@@ -39,4 +43,5 @@ public class Field {
     public int getHeight() {
         return height;
     }
+
 }

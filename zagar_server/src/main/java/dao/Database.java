@@ -7,21 +7,20 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 public class Database {
 
-    private static final Logger log = LogManager.getLogger(Database.class);
-    private static final SessionFactory sessionFactory;
+    private static final Logger LOG = LogManager.getLogger(Database.class);
+    private static final SessionFactory SESSION_FACTORY;
+    private static final String ERROR_MESSAGE = "Transaction failed.";
 
     static {
-        sessionFactory = new Configuration().configure().buildSessionFactory();
-        log.info("Session factory configured.");
+        SESSION_FACTORY = new Configuration().configure().buildSessionFactory();
+        LOG.info("Session factory configured.");
     }
 
     private Database() {}
@@ -34,7 +33,7 @@ public class Database {
             ts = selectAction.apply(session);
             txn.commit();
         } catch (RuntimeException e) {
-            log.error("Transaction failed.", e);
+            LOG.error(ERROR_MESSAGE, e);
             if (txn != null && txn.isActive()) {
                 txn.rollback();
             }
@@ -49,7 +48,7 @@ public class Database {
             f.apply(session);
             txn.commit();
         } catch (RuntimeException e) {
-            log.error("Transaction failed.", e);
+            LOG.error(ERROR_MESSAGE, e);
             if (txn != null && txn.isActive()) {
                 txn.rollback();
             }
@@ -64,7 +63,7 @@ public class Database {
             tasks.forEach(func -> func.apply(session));
             txn.commit();
         } catch (RuntimeException e) {
-            log.error("Transaction failed.", e);
+            LOG.error(ERROR_MESSAGE, e);
             if (txn != null && txn.isActive()) {
                 txn.rollback();
             }
@@ -81,7 +80,7 @@ public class Database {
             tasks.forEach(func -> func.accept(session));
             txn.commit();
         } catch (RuntimeException e) {
-            log.error("Transaction failed.", e);
+            LOG.error(ERROR_MESSAGE, e);
             if (txn != null && txn.isActive()) {
                 txn.rollback();
             }
@@ -95,7 +94,7 @@ public class Database {
             f.accept(session);
             txn.commit();
         } catch (RuntimeException e) {
-            log.error("Transaction failed.", e);
+            LOG.error(ERROR_MESSAGE, e);
             if (txn != null && txn.isActive()) {
                 txn.rollback();
             }
@@ -103,7 +102,11 @@ public class Database {
     }
 
     public static Session openSession() {
-        return sessionFactory.openSession();
+        return SESSION_FACTORY.openSession();
+    }
+
+    public static void closeSession() {
+        SESSION_FACTORY.close();
     }
 
 }

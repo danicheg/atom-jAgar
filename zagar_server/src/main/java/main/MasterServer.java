@@ -4,28 +4,29 @@ import accountserver.AccountServer;
 import dao.Database;
 import main.config.MasterServerConfiguration;
 import mechanics.Mechanics;
-import messageSystem.MessageSystem;
+import messagesystem.MessageSystem;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.hibernate.Session;
 import org.jetbrains.annotations.NotNull;
 
 public class MasterServer {
 
-    @NotNull
-    private final static Logger log = LogManager.getLogger(MasterServer.class);
+    private static final Logger LOG = LogManager.getLogger(MasterServer.class);
 
     public static void main(@NotNull String[] args) throws InterruptedException {
-        Database.openSession();
-        MasterServer server = new MasterServer();
-        server.start();
+        try (Session session = Database.openSession()) {
+            MasterServer server = new MasterServer();
+            server.start();
+        }
     }
 
     private void start() throws InterruptedException {
 
-        log.info("MasterServer started");
+        LOG.info("MasterServer started");
 
-        for (Class service : MasterServerConfiguration.SERVICES_ARRAY) {
+        for (Class service : MasterServerConfiguration.servicesArray) {
             try {
                 final Class[] parentInterfaces = service.getInterfaces();
                 if (parentInterfaces.length == 0) {
@@ -34,7 +35,7 @@ public class MasterServer {
                     ApplicationContext.instance().put(service.getInterfaces()[0], service.newInstance());
                 }
             } catch (InstantiationException | IllegalAccessException e) {
-                log.error("Can't create instance of class " + service);
+                LOG.error("Can't create instance of class " + service + "because of" + e);
             }
         }
 
@@ -45,9 +46,9 @@ public class MasterServer {
 
         messageSystem.registerService(Mechanics.class, mechanics);
         messageSystem.registerService(AccountServer.class,
-                new AccountServer(MasterServerConfiguration.ACCOUNT_PORT));
+                new AccountServer(MasterServerConfiguration.accountPort));
         messageSystem.registerService(ClientConnectionServer.class,
-                new ClientConnectionServer(MasterServerConfiguration.CLIENT_PORT));
+                new ClientConnectionServer(MasterServerConfiguration.clientPort));
 
         messageSystem.getServices().forEach(Service::start);
 

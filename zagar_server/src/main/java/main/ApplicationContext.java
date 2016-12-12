@@ -15,12 +15,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ApplicationContext {
 
-    private static final @NotNull Logger log = LogManager.getLogger(ApplicationContext.class);
-    private static volatile @Nullable ApplicationContext instance;
-    private final @NotNull Map<Class, Object> contextMap = new ConcurrentHashMap<>();
+    private static final Logger LOG = LogManager.getLogger(ApplicationContext.class);
+    @Nullable private static volatile ApplicationContext instance;
+    @NotNull private final Map<Class, Object> contextMap = new ConcurrentHashMap<>();
 
     private ApplicationContext() {
-        log.info(ApplicationContext.class.getName() + " initialized");
+        LOG.info(ApplicationContext.class.getName() + " initialized");
     }
 
     public static ApplicationContext instance() {
@@ -35,7 +35,7 @@ public class ApplicationContext {
     }
 
     public void put(@NotNull Class clazz, @NotNull Object object) {
-        log.info("Put " + clazz);
+        LOG.info("Put " + clazz);
         contextMap.put(clazz, object);
     }
 

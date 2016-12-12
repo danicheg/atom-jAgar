@@ -11,20 +11,23 @@ import java.util.List;
  * @author apomosov
  */
 public class Player {
+
     public static final IDGenerator idGenerator = new SequentialIDGenerator();
+
     private final int id;
     @NotNull
-    private final List<PlayerCell> cells = new ArrayList<>();
+    private final List<PlayerCell> cells;
     @NotNull
     private String name;
 
-    public Player(int id, @NotNull String name) {
-        this.id = id;
-        this.name = name;
+    public Player(int playerId, @NotNull String playerName) {
+        id = playerId;
+        name = playerName;
+        cells = new ArrayList<>();
         addCell(new PlayerCell(Cell.idGenerator.next(), 0, 0));
     }
 
-    public void addCell(@NotNull PlayerCell cell) {
+    private void addCell(@NotNull PlayerCell cell) {
         cells.add(cell);
     }
 
@@ -52,8 +55,12 @@ public class Player {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Player player = (Player) o;
         return id == player.id;
     }
@@ -70,4 +77,5 @@ public class Player {
                 "name='" + name + '\'' +
                 '}';
     }
+
 }

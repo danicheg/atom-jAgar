@@ -7,6 +7,8 @@ import model.Player;
 import network.ClientConnections;
 import network.packets.PacketAuthFail;
 import network.packets.PacketAuthOk;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
 import protocol.CommandAuth;
@@ -17,6 +19,8 @@ import java.io.IOException;
 
 public class PacketHandlerAuth {
 
+    private static final Logger LOG = LogManager.getLogger(PacketHandlerAuth.class);
+
     public PacketHandlerAuth(@NotNull Session session, @NotNull String json) throws Exception {
 
         CommandAuth commandAuth;
@@ -24,7 +28,7 @@ public class PacketHandlerAuth {
         try {
             commandAuth = JSONHelper.fromJSON(json, CommandAuth.class);
         } catch (JSONDeserializationException e) {
-            e.printStackTrace();
+            LOG.error("CommandAuth - JSONDeserializationException: " + e);
             return;
         }
 
@@ -36,7 +40,7 @@ public class PacketHandlerAuth {
                         "Invalid user or password"
                 ).write(session);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Can't send PacketAuthFail because of: " + e);
             }
 
         } else {
@@ -47,7 +51,7 @@ public class PacketHandlerAuth {
                 new PacketAuthOk().write(session);
                 ApplicationContext.instance().get(MatchMaker.class).joinGame(player);
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error("Can't send PacketAuthOk because of: " + e);
             }
 
         }
