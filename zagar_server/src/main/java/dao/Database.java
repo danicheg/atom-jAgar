@@ -55,7 +55,6 @@ public class Database {
         }
     }
 
-    //TODO: refactoring signature of method to work as doTransactional(Function<Session, ?>... tasks)
     static void doTransactional(List<Function<Session, ?>> tasks) {
         Transaction txn = null;
         try (Session session = Database.openSession()) {
@@ -70,9 +69,6 @@ public class Database {
         }
     }
 
-    /*TODO: refactoring signature of method to work as doTransactional(Consumer<Session>... tasks)
-    NOTICE: cannot overload method doTransactional because type erasure
-    (List<Function<Session, ?>> and List<Consumer<Session>> have same types)*/
     static void doTransactionalList(List<Consumer<Session>> tasks) {
         Transaction txn = null;
         try (Session session = Database.openSession()) {
