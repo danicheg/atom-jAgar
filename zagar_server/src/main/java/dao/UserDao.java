@@ -67,7 +67,6 @@ public class UserDao implements Dao<UserEntity> {
         log.info("Token '{}' removed into DB", deleteUser.getName());
     }
 
-    //now works atomicity
     @Override
     public void deleteAll(UserEntity... deleteUsers) {
         List<UserEntity> listTokens = Arrays.asList(deleteUsers);
