@@ -2,6 +2,7 @@ package client;
 
 import org.eclipse.jetty.websocket.client.ClientUpgradeRequest;
 import org.eclipse.jetty.websocket.client.WebSocketClient;
+import org.junit.Ignore;
 import org.junit.Test;
 import zagar.Game;
 import zagar.auth.AuthClient;
@@ -20,6 +21,7 @@ public class SendingPacketsToServerTest {
     private AuthClient authClient = new AuthClient();
 
     @Test
+    @Ignore
     public void SendPackets() throws IOException, InterruptedException {
         authClient.register("test", "test");
         Game.serverToken = "Bearer " + authClient.login("test", "test");

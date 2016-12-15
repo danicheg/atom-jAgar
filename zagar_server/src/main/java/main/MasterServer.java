@@ -26,7 +26,7 @@ public class MasterServer {
 
         LOG.info("MasterServer started");
 
-        for (Class service : MasterServerConfiguration.servicesArray) {
+        for (Class service : MasterServerConfiguration.SERVICES_ARRAY) {
             try {
                 final Class[] parentInterfaces = service.getInterfaces();
                 if (parentInterfaces.length == 0) {
@@ -46,9 +46,9 @@ public class MasterServer {
 
         messageSystem.registerService(Mechanics.class, mechanics);
         messageSystem.registerService(AccountServer.class,
-                new AccountServer(MasterServerConfiguration.accountPort));
+                new AccountServer(MasterServerConfiguration.ACCOUNT_PORT));
         messageSystem.registerService(ClientConnectionServer.class,
-                new ClientConnectionServer(MasterServerConfiguration.clientPort));
+                new ClientConnectionServer(MasterServerConfiguration.CLIENT_PORT));
 
         messageSystem.getServices().forEach(Service::start);
 
