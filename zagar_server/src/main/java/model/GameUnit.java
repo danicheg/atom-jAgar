@@ -9,6 +9,8 @@ import static java.lang.Math.*;
 
 public class GameUnit {
     @NotNull
+    private int id;
+    @NotNull
     private Location location;
     @NotNull
     private Color color;
@@ -17,6 +19,7 @@ public class GameUnit {
     private int mass;
 
     public GameUnit(@NotNull Color color, @NotNull Location location, double speed, int mass) {
+        this.id = new Random().nextInt();
         this.speed = speed;
         this.color = color;
         this.location = location;
@@ -46,6 +49,9 @@ public class GameUnit {
         this.radius = calcRadius(mass);
     }
 
+    public int getId() {
+        return this.id;
+    }
     @NotNull
     public Location getLocation() {
         return this.location;

@@ -52,6 +52,8 @@ public class PacketHandlerMove {
                 }
             }
         });
+        //I can't say it improved the frequency of sending packet....
+        messageSystem.execForService(client);
 
     }
 

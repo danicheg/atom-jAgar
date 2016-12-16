@@ -38,7 +38,7 @@ public class FullStateReplicator implements Replicator {
             for (model.Food food_got : field.getFoods()) {
                 food[j] = new Food(food_got.getLocation().getX(),
                         food_got.getLocation().getY(),
-                        new Random().nextInt(),
+                        food_got.getId(),
                         food_got.getColor().getRed(),
                         food_got.getColor().getGreen(),
                         food_got.getColor().getBlue());
@@ -47,7 +47,7 @@ public class FullStateReplicator implements Replicator {
             Virus[] viruses = new Virus[field.getViruses().size()];
             int k = 0;
             for (model.Virus virus_got : field.getViruses()) {
-                viruses[k] = new Virus(new Random().nextInt(),
+                viruses[k] = new Virus(virus_got.getId(),
                         virus_got.getMass(),
                         virus_got.getLocation().getX(),
                         virus_got.getLocation().getY());

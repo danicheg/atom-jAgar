@@ -12,7 +12,7 @@ public final class Food {
     private int g;
     private int b;
 
-    public Food(int x, int y,int id,int r, int g, int b) {
+    public Food(int x, int y, int id,int r, int g, int b) {
         this.x = x;
         this.y = y;
         this.id = id;
