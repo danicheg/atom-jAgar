@@ -31,7 +31,7 @@ public class Food extends GameUnit {
     public boolean equals(@NotNull Object object) {
         if (object.getClass() != Food.class) return false;
         Food food = (Food) object;
-        return (this.getLocation() == food.getLocation());
+        return (this.getLocation().equals(food.getLocation()));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package network.handlers;
 
-import com.google.gson.JsonObject;
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
 import mechanics.Mechanics;
@@ -17,7 +16,6 @@ import protocol.CommandMove;
 import utils.JSONDeserializationException;
 import utils.JSONHelper;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class PacketHandlerMove {
@@ -56,36 +54,17 @@ public class PacketHandlerMove {
                             cell.setX(newX);
                             cell.setY(newY);
                         Set<Food> foods = player.getSession().getField().getFoods();
+                            Location first = new Location(Math.round(oldX),Math.round(oldY));
+                            Location second = new Location(Math.round(newX),Math.round(newY));
                         for (Food food : foods) {
                             float fX = food.getLocation().getX();
                             float fY = food.getLocation().getY();
-                            if (
-                                    (fX < oldX && fX > newX
-                                            ||
-                                            fX > oldX && fX < newX
-                                    )
-                                    ) {
-                                float a = (newY - oldY) / (newX - oldX);
-                                float b = (newX * oldY - newY * oldX) / (newX - oldX);
-                                float fYf = a * fX + b;
-                                if (
-                                        (
-                                                ((fY + food.getRadius()) <= fYf + cell.getRadius())
-                                                        ||
-                                                        (fYf + cell.getRadius() <= fYf - cell.getRadius())
-                                        )
-                                                &&
-                                                (
-                                                        ((fY - food.getRadius()) <= fYf + cell.getRadius())
-                                                                ||
-                                                                (fYf - cell.getRadius() <= fYf - cell.getRadius())
-                                                )
-                                        ) {
+                            Location food_center = new Location(Math.round(fX), Math.round(fY));
+                                if (checkDistance(first, second, food_center, food.getMass(), cell.getMass())) {
                                     cell.setMass(cell.getMass() + food.getMass());
                                     player.getSession().getField().getFoods().remove(food);
                                 }
                             }
-                        }
                         }
                     }
                 }
@@ -106,4 +85,32 @@ public class PacketHandlerMove {
         }
         return null;
     }
+
+    private boolean checkDistance(Location first, Location second, Location center_food, float food_l, float cell_l) {
+        Vector a = new Vector(second.getX() - first.getX(), second.getY() - first.getY());
+        Vector b = a.makeNormal()
+                .normalize();
+        Vector c = b.extend(food_l);
+        Vector d = b.extend(cell_l);
+
+        Location edge_up = c.getEnd(center_food);
+        Location edge_down = c.getStart(center_food);
+
+        Location center_cell_gone = d.intersectWith(a, first, center_food);
+        Location edge_up_cell = d.getEnd(center_cell_gone);
+        Location edge_down_cell = d.getStart(center_cell_gone);
+
+        float distanceOne = edge_down.distanceTo(edge_up_cell);
+        float distanceTwo = edge_up.distanceTo(edge_down_cell);
+        float length = 2 * d.length();
+        return ((distanceOne <  length) && (distanceTwo <  length));
+    }
+
+    //        if (fX < oldX && fX > newX
+//                ||
+//                fX > oldX && fX < newX) {
+//            float a = (newY - oldY) / (newX - oldX);
+//            float b = (newX * oldY - newY * oldX) / (newX - oldX);
+//            float fYf = a * fX + b;
+//        return (float) Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) *(y2 - y1));
 }

@@ -14,9 +14,9 @@ public class Location {
     public Location(int x, int y) {
         this.x = x;
         this.y = y;
-        if (log.isInfoEnabled()) {
-            log.info(toString() + " created");
-        }
+//        if (log.isInfoEnabled()) {
+//            log.info(toString() + " created");
+//        }
     }
 
     public Location() {
@@ -34,6 +34,10 @@ public class Location {
 
     public int getY() {
         return this.y;
+    }
+
+    public float distanceTo(Location other) {
+        return (float) Math.sqrt((other.getX() - x) * (other.getX() - x) + (other.getY() - y) *(other.getY() - y));
     }
 
     @Override
