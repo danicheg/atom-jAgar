@@ -17,6 +17,7 @@ import protocol.model.Food;
 import protocol.model.Virus;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -72,8 +73,15 @@ public class FullStateReplicator implements Replicator {
             }
 
             String[] leaders = new String[10];
-            for (int z = 0; z < 10; z++) {
-                leaders[z] = gameSession.toString();
+            List<Player> players = gameSession.getPlayers();
+            if (players.size() < 10) {
+                for (int z = 0; z < players.size(); z++) {
+                    leaders[z] = players.get(z).getName();
+                }
+            } else {
+                for (int z = 0; z < 10; z++) {
+                    leaders[z] = players.get(z).getName();
+                }
             }
             
             for (Map.Entry<Player, Session> connection

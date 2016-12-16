@@ -1,5 +1,6 @@
 package network.handlers;
 
+import com.google.gson.JsonObject;
 import main.ApplicationContext;
 import mechanics.Mechanics;
 import messagesystem.Abonent;
@@ -36,6 +37,9 @@ public class PacketHandlerMove {
             @Override
             public void exec(Abonent abonent) {
                 LOG.info("Recieved command " + commandMove.getCommand());
+                float dx = commandMove.getDx();
+                float dy = commandMove.getDy();
+
             }
         });
 
