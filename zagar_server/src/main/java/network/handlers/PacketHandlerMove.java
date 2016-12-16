@@ -60,9 +60,9 @@ public class PacketHandlerMove {
                             float fX = food.getLocation().getX();
                             float fY = food.getLocation().getY();
                             if (
-                                    (fX < oldX
-                                            &&
-                                            fX > cell.getX()
+                                    (fX < oldX && fX > newX
+                                            ||
+                                            fX > oldX && fX < newX
                                     )
                                     ) {
                                 float a = (newY - oldY) / (newX - oldX);
