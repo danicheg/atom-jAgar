@@ -11,11 +11,13 @@ public final class CommandMove extends Command {
 
     private final float dx;
     private final float dy;
+    private final String name;
 
-    public CommandMove(float dx, float dy) {
+    public CommandMove(float dx, float dy, String name) {
         super(NAME);
         this.dx = dx;
         this.dy = dy;
+        this.name = name;
     }
 
     public float getDx() {
@@ -24,5 +26,9 @@ public final class CommandMove extends Command {
 
     public float getDy() {
         return dy;
+    }
+
+    public String getName() {
+        return name;
     }
 }

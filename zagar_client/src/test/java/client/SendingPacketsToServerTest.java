@@ -44,7 +44,7 @@ public class SendingPacketsToServerTest {
         while (Game.socket == null || Game.socket.session == null || !Game.socket.session.isOpen()) {
             new PacketEjectMass().write();
             new PacketSplit().write();
-            new PacketMove(13.4f, 1.5f).write();
+            new PacketMove(13.4f, 1.5f, Game.login).write();
         }
     }
 

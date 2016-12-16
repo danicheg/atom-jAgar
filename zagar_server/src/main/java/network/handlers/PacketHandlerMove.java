@@ -2,10 +2,13 @@ package network.handlers;
 
 import com.google.gson.JsonObject;
 import main.ApplicationContext;
+import matchmaker.MatchMaker;
 import mechanics.Mechanics;
 import messagesystem.Abonent;
 import messagesystem.Message;
 import messagesystem.MessageSystem;
+import model.GameSession;
+import model.Player;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,9 +42,27 @@ public class PacketHandlerMove {
                 LOG.info("Recieved command " + commandMove.getCommand());
                 float dx = commandMove.getDx();
                 float dy = commandMove.getDy();
-
+                String name = commandMove.getName();
+                Player player = getPlayerByName(name);
+                if (player != null) {
+                    for (model.Cell cell : player.getCells()) {
+                        cell.setX(Math.round(cell.getX() + (dx - cell.getX())/cell.getRadius()));
+                        cell.setY(Math.round(cell.getY() + (dy - cell.getY())/cell.getRadius()));
+                    }
+                }
             }
         });
 
+    }
+
+    private Player getPlayerByName(String name) {
+        for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
+            for (Player player : gameSession.getPlayers()) {
+                if (player.getName().equals(name)) {
+                    return player;
+                }
+            }
+        }
+        return null;
     }
 }
