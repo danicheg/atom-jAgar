@@ -195,6 +195,14 @@ public class Game {
 
     public void tick() throws IOException {
 
+        // To decrease amount of packets to the server
+//        try {
+//            Thread.sleep(200);
+//        } catch (InterruptedException e) {
+//            log.error(e);
+//            Thread.currentThread().interrupt();
+//        }
+
         log.info("[TICK]");
 
         ArrayList<Integer> toRemove = new ArrayList<>();

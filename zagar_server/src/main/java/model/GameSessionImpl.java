@@ -43,12 +43,14 @@ public class GameSessionImpl implements GameSession {
     @Override
     public void join(@NotNull Player player) {
         players.add(player);
+        player.setSession(this);
         this.playerPlacer.place(player);
     }
 
     @Override
     public void leave(@NotNull Player player) {
         players.remove(player);
+        player.setSession(null);
     }
 
     @Override

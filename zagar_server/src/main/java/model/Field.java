@@ -1,5 +1,6 @@
 package model;
 
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,14 +19,14 @@ public class Field {
     @NotNull
     private List<Virus> viruses;
     @NotNull
-    private HashSet<Food> foods;
+    private ConcurrentHashSet<Food> foods;
 
     public Field() {
         viruses = new ArrayList<>();
-        foods = new HashSet<>();
+        foods = new ConcurrentHashSet<>();
     }
 
-    public Field(@NotNull HashSet<Food> foods, @NotNull ArrayList<Virus> viruses) {
+    public Field(@NotNull ConcurrentHashSet<Food> foods, @NotNull ArrayList<Virus> viruses) {
         this.viruses = viruses;
         this.foods = foods;
     }
@@ -52,7 +53,7 @@ public class Field {
         this.viruses = viruses;
     }
 
-    public void setFoods(@NotNull HashSet<Food> food) {
+    public void setFoods(@NotNull ConcurrentHashSet<Food> food) {
         this.foods = food;
     }
 
@@ -67,7 +68,7 @@ public class Field {
     public static Field generatePrimaryState() {
         Field field = new Field();
         int foodAmount = Field.getHeight() * Field.getWidth() / 100000;
-        HashSet<Food> foods = new HashSet<>();
+        ConcurrentHashSet<Food> foods = new ConcurrentHashSet<>();
         for (int i=0; i < foodAmount; i++) {
             foods.add(new Food(GameUnit.getRandomColor(), new Location()));
         }

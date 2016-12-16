@@ -1,6 +1,7 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import utils.IDGenerator;
 import utils.SequentialIDGenerator;
 
@@ -19,12 +20,23 @@ public class Player {
     private final List<PlayerCell> cells;
     @NotNull
     private String name;
+    @Nullable
+    private GameSession session;
 
     public Player(int playerId, @NotNull String playerName) {
         id = playerId;
         name = playerName;
         cells = new ArrayList<>();
         addCell(new PlayerCell(Cell.idGenerator.next(), 0, 0));
+    }
+
+    public void setSession(@Nullable GameSession session) {
+        this.session = session;
+    }
+
+    @Nullable
+    public GameSession getSession() {
+        return this.session;
     }
 
     private void addCell(@NotNull PlayerCell cell) {

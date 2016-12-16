@@ -7,7 +7,9 @@ import mechanics.Mechanics;
 import messagesystem.Abonent;
 import messagesystem.Message;
 import messagesystem.MessageSystem;
+import model.Food;
 import model.GameSession;
+import model.GameUnit;
 import model.Player;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +19,9 @@ import org.jetbrains.annotations.NotNull;
 import protocol.CommandMove;
 import utils.JSONDeserializationException;
 import utils.JSONHelper;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class PacketHandlerMove {
 
@@ -46,8 +51,41 @@ public class PacketHandlerMove {
                 Player player = getPlayerByName(name);
                 if (player != null) {
                     for (model.Cell cell : player.getCells()) {
-                        cell.setX(Math.round(cell.getX() + (dx - cell.getX())/cell.getRadius()));
-                        cell.setY(Math.round(cell.getY() + (dy - cell.getY())/cell.getRadius()));
+                        float oldX = cell.getX();
+                        float oldY = cell.getY();
+                        cell.setX(Math.round(oldX + (dx - oldX)/cell.getRadius()));
+                        cell.setY(Math.round(oldY + (dy - oldY)/cell.getRadius()));
+                        Set<Food> foods = player.getSession().getField().getFoods();
+                        for (Food food : foods) {
+                            float fX = food.getLocation().getX();
+                            float fY = food.getLocation().getY();
+                            if (
+                                    (fX < oldX
+                                            &&
+                                            fX > cell.getX()
+                                    )
+                                    ) {
+                                float a = (cell.getY() - oldY) / (cell.getX() - oldX);
+                                float b = (cell.getX() * oldY - cell.getY() * oldX) / (cell.getX() - oldX);
+                                float fYf = a * fX + b;
+                                if (
+                                        (
+                                                ((fY + food.getRadius()) <= fYf + cell.getRadius())
+                                                        ||
+                                                        (fYf + cell.getRadius() <= fYf - cell.getRadius())
+                                        )
+                                                &&
+                                                (
+                                                        ((fY - food.getRadius()) <= fYf + cell.getRadius())
+                                                                ||
+                                                                (fYf - cell.getRadius() <= fYf - cell.getRadius())
+                                                )
+                                        ) {
+                                    cell.setMass(cell.getMass() + food.getMass());
+                                    player.getSession().getField().getFoods().remove(food);
+                                }
+                            }
+                        }
                     }
                 }
             }
