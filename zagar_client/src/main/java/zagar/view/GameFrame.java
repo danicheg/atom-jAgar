@@ -40,7 +40,7 @@ public class GameFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("· zAgar ·");
         pack();
-        setVisible(true);
+        setVisible(false);
     }
 
     public void render() {
@@ -49,6 +49,8 @@ public class GameFrame extends JFrame {
         log.info("VIRUSES:\n" + Arrays.toString(Game.viruses));
         log.info("FOODS:\n" + Arrays.toString(Game.foods));
         log.info("PLAYER'S CELLS AMOUNT: " + Game.player.size());
+        log.info("VIRUSES AMOUNT: " + Game.foods.length);
+        log.info("FOOD AMOUNT: " + Game.viruses.length);
         log.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
         Point mouseP = getMouseLocation();
         mouseX = mouseP.getX();
@@ -71,4 +73,5 @@ public class GameFrame extends JFrame {
         int y = (MouseInfo.getPointerInfo().getLocation().y - getLocationOnScreen().y - 24);
         return new Point(x, y);
     }
+
 }

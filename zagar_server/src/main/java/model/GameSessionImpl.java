@@ -35,7 +35,7 @@ public class GameSessionImpl implements GameSession {
         this.foodGenerator = foodGenerator;
         this.playerPlacer = playerPlacer;
         this.virusGenerator = virusGenerator;
-        field = new Field();
+        field = Field.generatePrimaryState();
         players = new ArrayList<>();
         virusGenerator.generate();
     }

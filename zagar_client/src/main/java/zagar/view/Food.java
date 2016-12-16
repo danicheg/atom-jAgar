@@ -10,10 +10,10 @@ public class Food {
     private int x, y;
     private int id;
     private static float size = 20f;
-    private short r, g, b;
+    private int r, g, b;
 
 
-    public Food(int id, int x, int y, short r, short g, short b){
+    public Food(int id, int x, int y, int r, int g, int b){
         this.id = id;
         this.x = x;
         this.y = y;

@@ -2,10 +2,12 @@ package replication;
 
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
+import model.Field;
 import model.GameSession;
 import model.Player;
 import model.PlayerCell;
 import network.ClientConnections;
+import network.packets.PacketLeaderBoard;
 import network.packets.PacketReplicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +18,7 @@ import protocol.model.Virus;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @author Alpi
@@ -28,8 +31,27 @@ public class FullStateReplicator implements Replicator {
     @Override
     public void replicate() {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
-            Food[] food = new Food[0];//TODO food and viruses
-            Virus[] viruses = new Virus[0]; //TODO: viruses
+            Field field = gameSession.getField();
+            Food[] food = new Food[field.getFoods().size()];
+            int j = 0;
+            for (model.Food food_got : field.getFoods()) {
+                food[j] = new Food(food_got.getLocation().getX(),
+                        food_got.getLocation().getY(),
+                        new Random().nextInt(),
+                        food_got.getColor().getRed(),
+                        food_got.getColor().getGreen(),
+                        food_got.getColor().getBlue());
+                j++;
+            }
+            Virus[] viruses = new Virus[field.getViruses().size()];
+            int k = 0;
+            for (model.Virus virus_got : field.getViruses()) {
+                viruses[k] = new Virus(new Random().nextInt(),
+                        virus_got.getMass(),
+                        virus_got.getLocation().getX(),
+                        virus_got.getLocation().getY());
+                k++;
+            }
             int numberOfCellsInSession = 0;
             for (Player player : gameSession.getPlayers()) {
                 numberOfCellsInSession += player.getCells().size();
@@ -48,11 +70,18 @@ public class FullStateReplicator implements Replicator {
                     i++;
                 }
             }
+
+            String[] leaders = new String[10];
+            for (int z = 0; z < 10; z++) {
+                leaders[z] = gameSession.toString();
+            }
+            
             for (Map.Entry<Player, Session> connection
                     : ApplicationContext.instance().get(ClientConnections.class).getConnections()) {
                 if (gameSession.getPlayers().contains(connection.getKey()) && connection.getValue().isOpen()) {
                     try {
                         new PacketReplicate(cells, food, viruses).write(connection.getValue());
+                        new PacketLeaderBoard(leaders).write(connection.getValue());
                     } catch (IOException e) {
                         LOG.error("Exception in creating PacketReplicate: " + e);
                     }

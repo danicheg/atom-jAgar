@@ -1,6 +1,7 @@
 package messagesystem.messages;
 
 import main.ApplicationContext;
+import mechanics.Mechanics;
 import messagesystem.Abonent;
 import messagesystem.Address;
 import messagesystem.Message;
@@ -9,6 +10,7 @@ import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import replication.FullStateReplicator;
 import replication.Replicator;
 
 public class ReplicateMsg extends Message {
@@ -18,7 +20,7 @@ public class ReplicateMsg extends Message {
 
     public ReplicateMsg(Address from) {
         super(from, ApplicationContext.instance().get(MessageSystem.class).getService(
-                ClientConnectionServer.class).getAddress()
+                Mechanics.class).getAddress()
         );
     }
 

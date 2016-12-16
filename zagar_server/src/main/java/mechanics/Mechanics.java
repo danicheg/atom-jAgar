@@ -37,9 +37,8 @@ public class Mechanics extends Service implements Tickable {
 
         log.info("Start replication");
         @NotNull MessageSystem messageSystem = ApplicationContext.instance().get(MessageSystem.class);
-        Message message = new ReplicateMsg(this.getAddress());
-        messageSystem.sendMessage(message);
-
+        Message message_replicate = new ReplicateMsg(this.getAddress());
+        messageSystem.sendMessage(message_replicate);
         //execute all messages from queue
         messageSystem.execForService(this);
     }
