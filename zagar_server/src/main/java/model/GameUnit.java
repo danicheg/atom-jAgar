@@ -28,6 +28,7 @@ public class GameUnit {
     }
 
     public GameUnit(@NotNull Color color, @NotNull Location location, int mass) {
+        this.id = new Random().nextInt();
         this.color = color;
         this.location = location;
         this.mass = mass;
@@ -35,6 +36,7 @@ public class GameUnit {
     }
 
     public GameUnit(@NotNull Location location, double speed, int mass) {
+        this.id = new Random().nextInt();
         this.speed = speed;
         this.location = location;
         this.color = getRandomColor();
@@ -43,6 +45,7 @@ public class GameUnit {
     }
 
     public GameUnit(@NotNull Location location, int mass) {
+        this.id = new Random().nextInt();
         this.color = getRandomColor();
         this.location = location;
         this.mass = mass;
