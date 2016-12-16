@@ -7,10 +7,7 @@ import mechanics.Mechanics;
 import messagesystem.Abonent;
 import messagesystem.Message;
 import messagesystem.MessageSystem;
-import model.Food;
-import model.GameSession;
-import model.GameUnit;
-import model.Player;
+import model.*;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,8 +50,11 @@ public class PacketHandlerMove {
                     for (model.Cell cell : player.getCells()) {
                         float oldX = cell.getX();
                         float oldY = cell.getY();
-                        cell.setX(Math.round(oldX + (dx - oldX)/cell.getRadius()));
-                        cell.setY(Math.round(oldY + (dy - oldY)/cell.getRadius()));
+                        int newX = Math.round(oldX + (dx - oldX)/cell.getRadius());
+                        int newY = Math.round(oldY + (dy - oldY)/cell.getRadius());
+                        if (Math.abs(newX) < Field.getWidth() && Math.abs(newY) < Field.getHeight()) {
+                            cell.setX(newX);
+                            cell.setY(newY);
                         Set<Food> foods = player.getSession().getField().getFoods();
                         for (Food food : foods) {
                             float fX = food.getLocation().getX();
@@ -65,8 +65,8 @@ public class PacketHandlerMove {
                                             fX > cell.getX()
                                     )
                                     ) {
-                                float a = (cell.getY() - oldY) / (cell.getX() - oldX);
-                                float b = (cell.getX() * oldY - cell.getY() * oldX) / (cell.getX() - oldX);
+                                float a = (newY - oldY) / (newX - oldX);
+                                float b = (newX * oldY - newY * oldX) / (newX - oldX);
                                 float fYf = a * fX + b;
                                 if (
                                         (
@@ -85,6 +85,7 @@ public class PacketHandlerMove {
                                     player.getSession().getField().getFoods().remove(food);
                                 }
                             }
+                        }
                         }
                     }
                 }
