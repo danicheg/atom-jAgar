@@ -1,21 +1,22 @@
 package accountserver.api;
 
+import accountserver.auth.Authorized;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.LeaderboardDao;
 import dao.UserDao;
 import entities.leaderboard.LeaderBatchHolder;
 import entities.leaderboard.Leaderboard;
+import entities.token.Token;
 import entities.user.UserEntity;
+import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import dao.DatabaseAccessLayer;
 import entities.user.UserBatchHolder;
 import org.jetbrains.annotations.NotNull;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,6 +113,35 @@ public class DataProvider {
             }
         } else {
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+    }
+
+
+    /* curl -X POST
+         -H "Content-Type: application/x-www-form-urlencoded"
+         -H "Authorization: Bearer {token}"
+         -H "Host: localhost:8080
+    "http://localhost:8080/data/score"*/
+    @Authorized
+    @POST
+    @Path("/score")
+    @Consumes("application/x-www-form-urlencoded")
+    @Produces("text/plain")
+    public Response getUserScore(@HeaderParam("Authorization") String rawToken) {
+        try {
+            Token token = DatabaseAccessLayer.parse(rawToken);
+
+            if (!DatabaseAccessLayer.contains(token)) {
+                log.warn(token);
+                return Response.status(Response.Status.UNAUTHORIZED).build();
+            }
+            UserEntity user = DatabaseAccessLayer.getUser(token);
+            ObjectMapper MAPPER = new ObjectMapper();
+            int score = user.getScore();
+            log.info("UserEntity got hist score {}", user.getScore());
+            return Response.ok(MAPPER.writeValueAsString("{ user: " + score + "}")).build();
+        } catch (Exception e) {
+            return Response.ok(e.toString()).build();
         }
     }
 }

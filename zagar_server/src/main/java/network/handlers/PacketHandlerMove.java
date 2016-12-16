@@ -1,5 +1,6 @@
 package network.handlers;
 
+import dao.DatabaseAccessLayer;
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
 import mechanics.Mechanics;
@@ -63,6 +64,8 @@ public class PacketHandlerMove {
                                 if (checkDistance(first, second, food_center, food.getMass(), cell.getMass())) {
                                     cell.setMass(cell.getMass() + food.getMass());
                                     player.getSession().getField().getFoods().remove(food);
+                                    player.getUser().setScore(player.getScore());
+                                    DatabaseAccessLayer.updateUser(player.getUser());
                                 }
                             }
                         }

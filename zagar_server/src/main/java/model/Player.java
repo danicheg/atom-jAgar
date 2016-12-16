@@ -1,5 +1,6 @@
 package model;
 
+import entities.user.UserEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import utils.IDGenerator;
@@ -23,11 +24,21 @@ public class Player {
     @Nullable
     private GameSession session;
 
+    private UserEntity user;
+
     public Player(int playerId, @NotNull String playerName) {
         id = playerId;
         name = playerName;
         cells = new ArrayList<>();
         addCell(new PlayerCell(Cell.idGenerator.next(), 0, 0));
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public UserEntity getUser() {
+        return this.user;
     }
 
     public void setSession(@Nullable GameSession session) {
@@ -64,6 +75,14 @@ public class Player {
     public int getId() {
         return id;
     }
+
+    public int getScore() {
+        int newScore = 0;
+        for (Cell c : cells) {
+            newScore += (c.getMass() * c.getMass()) / 100;
+        }
+        return newScore;
+}
 
     @Override
     public boolean equals(Object o) {

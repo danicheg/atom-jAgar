@@ -1,6 +1,9 @@
 package network.handlers;
 
 import dao.DatabaseAccessLayer;
+import dao.TokenDao;
+import entities.token.Token;
+import entities.user.UserEntity;
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
 import model.Player;
@@ -31,7 +34,6 @@ public class PacketHandlerAuth {
             LOG.error("CommandAuth - JSONDeserializationException: " + e);
             return;
         }
-
         if (!DatabaseAccessLayer.validateToken(commandAuth.getToken())) {
 
             try {
@@ -47,6 +49,8 @@ public class PacketHandlerAuth {
 
             try {
                 Player player = new Player(Player.idGenerator.next(), commandAuth.getLogin());
+                UserEntity user = DatabaseAccessLayer.getUser(DatabaseAccessLayer.issueToken(commandAuth.getLogin()));
+                player.setUser(user);
                 ApplicationContext.instance().get(ClientConnections.class).registerConnection(player, session);
                 new PacketAuthOk().write(session);
                 ApplicationContext.instance().get(MatchMaker.class).joinGame(player);
