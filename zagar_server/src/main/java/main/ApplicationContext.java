@@ -24,14 +24,12 @@ public class ApplicationContext {
     }
 
     public static ApplicationContext instance() {
-        if (instance == null) {
             synchronized (ApplicationContext.class) {
                 if (instance == null) {
                     instance = new ApplicationContext();
                 }
+                return instance;
             }
-        }
-        return instance;
     }
 
     public void put(@NotNull Class clazz, @NotNull Object object) {

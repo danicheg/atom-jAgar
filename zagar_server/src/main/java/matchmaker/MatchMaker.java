@@ -4,7 +4,7 @@ import model.GameSession;
 import model.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Provides (searches or creates) {@link GameSession} for {@link Player}
@@ -23,5 +23,5 @@ public interface MatchMaker {
      * @return Currently open game sessions
      */
     @NotNull
-    List<GameSession> getActiveGameSessions();
+    CopyOnWriteArrayList<GameSession> getActiveGameSessions();
 }
