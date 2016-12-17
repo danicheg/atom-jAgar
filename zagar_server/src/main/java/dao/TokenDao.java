@@ -42,7 +42,6 @@ public class TokenDao implements Dao<Token> {
         log.info("Token '{}' inserted into DB", token);
     }
 
-    //no atomicity
     @Override
     public void insertAll(Token... tokens) {
         List<Token> listTokens = Arrays.asList(tokens);
@@ -71,6 +70,7 @@ public class TokenDao implements Dao<Token> {
         Stream<Consumer<Session>> tasks = listTokens.parallelStream()
                 .map(tkn -> (Consumer<Session>) session -> session.delete(tkn));
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
-        log.info("All tokens '{}' removed into DB", listTokens);
+        log.info("All tokens '{}' removed from DB", listTokens);
     }
+
 }

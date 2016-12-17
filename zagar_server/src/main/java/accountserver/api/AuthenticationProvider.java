@@ -1,6 +1,7 @@
 package accountserver.api;
 
 import entities.user.UserEntity;
+import errormessages.ApiErrorMessages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import accountserver.auth.Authorized;
@@ -18,7 +19,7 @@ import javax.ws.rs.core.Response;
 @Path("/auth")
 public class AuthenticationProvider {
 
-    private static final Logger log = LogManager.getLogger(AuthenticationProvider.class);
+    private static final Logger LOG = LogManager.getLogger(AuthenticationProvider.class);
 
     /*curl -i \
           -X POST \
@@ -33,19 +34,23 @@ public class AuthenticationProvider {
                              @FormParam("password") String password) {
 
         if (name == null || password == null || name.isEmpty() || password.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(ApiErrorMessages.WRONG_NAME_OR_PASSWORD)
+                    .build();
         }
 
         final String findByNameCondition = "name=\'" + name + "\'";
 
         if (DatabaseAccessLayer.checkByCondition(findByNameCondition)) {
-            return Response.status(Response.Status.NOT_ACCEPTABLE).build();
+            return Response.status(Response.Status.NOT_ACCEPTABLE)
+                    .entity(ApiErrorMessages.BUSY_NAME)
+                    .build();
         }
 
         UserEntity user = new UserEntity(name, password);
         DatabaseAccessLayer.insertUser(user);
 
-        log.info("New user registered with login {}", name);
+        LOG.info("New user registered with login {}", name);
         return Response.ok(user.getName() + " registered.").build();
 
     }
@@ -62,21 +67,27 @@ public class AuthenticationProvider {
                                      @FormParam("password") String password) {
 
         if (user == null || password == null || user.isEmpty() || password.isEmpty()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(ApiErrorMessages.WRONG_NAME_OR_PASSWORD)
+                    .build();
         }
 
         try {
 
             if (!authenticate(user, password)) {
-                return Response.status(Response.Status.UNAUTHORIZED).build();
+                return Response.status(Response.Status.UNAUTHORIZED)
+                        .entity(ApiErrorMessages.WRONG_CREDENTIALS)
+                        .build();
             }
 
             Token token = DatabaseAccessLayer.issueToken(user);
-            log.info("UserEntity '{}' successfully logged in", user);
+            LOG.info("UserEntity '{}' successfully logged in", user);
             return Response.ok(Long.toString(token.getToken())).build();
 
         } catch (Exception e) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(ApiErrorMessages.WRONG_CREDENTIALS)
+                    .build();
         }
 
     }
@@ -92,19 +103,23 @@ public class AuthenticationProvider {
 
         try {
             Token token = DatabaseAccessLayer.parse(rawToken);
-            log.info("Token is {}", token);
+            LOG.info("Provided token is {}", token);
             if (!DatabaseAccessLayer.contains(token)) {
-                return Response.status(Response.Status.BAD_REQUEST).build();
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(ApiErrorMessages.CAN_NOT_FIND_TOKEN)
+                        .build();
             } else {
                 UserEntity user = DatabaseAccessLayer.getUser(token);
                 DatabaseAccessLayer.removeToken(token);
-                log.info("UserEntity '{}' logout successfully", user.getName());
+                LOG.info("UserEntity '{}' logout successfully", user.getName());
                 return Response.ok(user.getName() + " successfully logout!").build();
             }
 
         } catch (Exception e) {
-            log.warn(e);
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            LOG.warn(e);
+            return Response.status(Response.Status.UNAUTHORIZED)
+                    .entity(ApiErrorMessages.WRONG_CREDENTIALS)
+                    .build();
 
         }
 
