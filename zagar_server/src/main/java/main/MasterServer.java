@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.jetbrains.annotations.NotNull;
+import replication.LeaderBoardSender;
 
 public class MasterServer {
 

@@ -9,14 +9,15 @@ import messagesystem.MessageSystem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import replication.Replicator;
+import replication.LeaderBoardSender;
+import replication.LeaderBoarder;
 
-public class ReplicateMsg extends Message {
+public class ReplicateLbd extends Message {
 
     @NotNull
-    private static final Logger log = LogManager.getLogger(ReplicateMsg.class);
+    private static final Logger log = LogManager.getLogger(ReplicateLbd.class);
 
-    public ReplicateMsg(Address from) {
+    public ReplicateLbd(Address from) {
         super(from, ApplicationContext.instance().get(MessageSystem.class).getService(
                 Mechanics.class).getAddress()
         );
@@ -25,6 +26,6 @@ public class ReplicateMsg extends Message {
     @Override
     public void exec(Abonent abonent) {
         log.info("ReplicationMsg exec() call");
-        ApplicationContext.instance().get(Replicator.class).replicateState();
+        ApplicationContext.instance().get(LeaderBoarder.class).replicateLeaderBoard();
     }
 }

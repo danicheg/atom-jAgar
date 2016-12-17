@@ -28,7 +28,7 @@ public class TestJsonReplicator implements Replicator {
     }
 
     @Override
-    public void replicate() {
+    public void replicateState() {
         if (json == null) return;
 
         log.info("Sending test replic {}", json);

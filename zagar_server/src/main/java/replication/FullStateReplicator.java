@@ -25,7 +25,7 @@ public class FullStateReplicator implements Replicator {
     private static final Logger LOG = LogManager.getLogger(FullStateReplicator.class);
 
     @Override
-    public void replicate() {
+    public void replicateState() {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
             Field field = gameSession.getField();
             Food[] food = new Food[field.getFoods().size()];
@@ -67,24 +67,11 @@ public class FullStateReplicator implements Replicator {
                 }
             }
 
-            String[] leaders = new String[10];
-            List<Player> players = gameSession.getPlayers();
-            if (players.size() < 10) {
-                for (int j = 0; j < players.size(); j++) {
-                    leaders[j] = players.get(j).getName();
-                }
-            } else {
-                for (int j = 0; j < 10; j++) {
-                    leaders[j] = players.get(j).getName();
-                }
-            }
-
             for (Map.Entry<Player, Session> connection
                     : ApplicationContext.instance().get(ClientConnections.class).getConnections()) {
                 if (gameSession.getPlayers().contains(connection.getKey()) && connection.getValue().isOpen()) {
                     try {
                         new PacketReplicate(cells, food, viruses).write(connection.getValue());
-                        new PacketLeaderBoard(leaders).write(connection.getValue());
                     } catch (IOException e) {
                         LOG.error("Exception in creating PacketReplicate: " + e);
                     }
