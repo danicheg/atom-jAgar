@@ -2,18 +2,11 @@ package network.handlers;
 
 import dao.DatabaseAccessLayer;
 import main.ApplicationContext;
-import matchmaker.MatchMaker;
 import mechanics.Mechanics;
 import messagesystem.Abonent;
 import messagesystem.Message;
 import messagesystem.MessageSystem;
-import model.Field;
-import model.Food;
-import model.GameConstants;
-import model.GameSession;
-import model.Location;
-import model.Player;
-import model.Vector;
+import model.*;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,9 +43,9 @@ public class PacketHandlerMove {
                 float dx = commandMove.getDx();
                 float dy = commandMove.getDy();
                 String name = commandMove.getName();
-                Player player = getPlayerByName(name);
+                Player player = Player.getPlayerByName(name);
                 if (player != null) {
-                    for (model.Cell cell : player.getCells()) {
+                    for (Cell cell : player.getCells()) {
                         float oldX = cell.getX();
                         float oldY = cell.getY();
                         int newX = Math.round(oldX + (dx - oldX) / cell.getRadius());
@@ -81,17 +74,6 @@ public class PacketHandlerMove {
         });
         messageSystem.execForService(client);
 
-    }
-
-    private Player getPlayerByName(String name) {
-        for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
-            for (Player player : gameSession.getPlayers()) {
-                if (player.getName().equals(name)) {
-                    return player;
-                }
-            }
-        }
-        return null;
     }
 
     private boolean checkDistance(Location first, Location second, Location foodCenter,

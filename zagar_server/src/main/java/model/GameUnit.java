@@ -14,11 +14,11 @@ public class GameUnit {
     private Location location;
     @NotNull
     private Color color;
-    private double speed = 0;
-    private double radius;
+    private float speed = 0;
+    private float radius;
     private int mass;
 
-    public GameUnit(@NotNull Color color, @NotNull Location location, double speed, int mass) {
+    public GameUnit(@NotNull Color color, @NotNull Location location, float speed, int mass) {
         this.id = new Random().nextInt();
         this.speed = speed;
         this.color = color;
@@ -35,7 +35,7 @@ public class GameUnit {
         this.radius = calcRadius(mass);
     }
 
-    public GameUnit(@NotNull Location location, double speed, int mass) {
+    public GameUnit(@NotNull Location location, float speed, int mass) {
         this.id = new Random().nextInt();
         this.speed = speed;
         this.location = location;
@@ -64,20 +64,16 @@ public class GameUnit {
         this.location = newLocation;
     }
 
-    public double getSpeed() {
+    public float getSpeed() {
         return this.speed;
     }
 
-    public void setSpped(int speed) {
+    public void setSpeed(int speed) {
         this.speed = speed;
     }
 
-    public double getRadius() {
+    public float getRadius() {
         return this.radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
     }
 
     public int getMass() {
@@ -86,6 +82,25 @@ public class GameUnit {
 
     public void setMass(int mass) {
         this.mass = mass;
+        calcRadius(mass);
+    }
+
+    public int getX() {
+        return this.getLocation().getX();
+    }
+
+    public int getY() {
+        return this.getLocation().getY();
+    }
+
+    public void setX(float x) {
+        int newX = Math.round(x);
+        this.setLocation(new Location(newX, this.getLocation().getY()));
+    }
+
+    public void setY(float x) {
+        int newY = Math.round(x);
+        this.setLocation(new Location(this.getLocation().getX(), newY));
     }
 
     @NotNull
@@ -106,7 +121,7 @@ public class GameUnit {
         }
     }
 
-    private double calcRadius(int mass) {
-        return sqrt(mass/PI);
+    private float calcRadius(int mass) {
+        return (float) sqrt(mass/PI);
     }
 }

@@ -18,6 +18,12 @@ public class Location {
         this.y = y;
     }
 
+    public Location(float x, float y) {
+        this.x = Math.round(x);
+        this.y = Math.round(y);
+    }
+
+
     public Location() {
         Random random = new Random();
         this.x = random.nextInt(GameConstants.FIELD_WIDTH);

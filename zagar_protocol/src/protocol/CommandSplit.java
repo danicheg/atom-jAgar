@@ -9,7 +9,14 @@ public final class CommandSplit extends Command {
     @NotNull
     public static final String NAME = "split";
 
-    public CommandSplit() {
+    private String name;
+
+    public CommandSplit(String name) {
         super(NAME);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -1,13 +1,17 @@
 package model;
 
 import entities.user.UserEntity;
+import main.ApplicationContext;
+import matchmaker.MatchMaker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import utils.IDGenerator;
 import utils.SequentialIDGenerator;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Player {
 
@@ -15,7 +19,7 @@ public class Player {
 
     private final int id;
     @NotNull
-    private final List<PlayerCell> cells;
+    private final List<Cell> cells;
     @NotNull
     private String name;
     @Nullable
@@ -26,8 +30,8 @@ public class Player {
     public Player(int playerId, @NotNull String playerName) {
         id = playerId;
         name = playerName;
-        cells = new ArrayList<>();
-        addCell(new PlayerCell(Cell.idGenerator.next(), 0, 0));
+        cells = new CopyOnWriteArrayList<>();
+        addCell(new Cell(new Location(0, 0)));
     }
 
     public void setUser(UserEntity user) {
@@ -47,11 +51,11 @@ public class Player {
         return this.session;
     }
 
-    private void addCell(@NotNull PlayerCell cell) {
+    public void addCell(@NotNull Cell cell) {
         cells.add(cell);
     }
 
-    public void removeCell(@NotNull PlayerCell cell) {
+    public void removeCell(@NotNull Cell cell) {
         cells.remove(cell);
     }
 
@@ -65,7 +69,7 @@ public class Player {
     }
 
     @NotNull
-    public List<PlayerCell> getCells() {
+    public List<Cell> getCells() {
         return cells;
     }
 
@@ -104,6 +108,17 @@ public class Player {
         return "Player{" +
                 "name='" + name + '\'' +
                 '}';
+    }
+
+    public static Player getPlayerByName(String name) {
+        for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
+            for (Player player : gameSession.getPlayers()) {
+                if (player.getName().equals(name)) {
+                    return player;
+                }
+            }
+        }
+        return null;
     }
 
 }

@@ -3,7 +3,7 @@ package utils;
 import model.Field;
 import model.GameConstants;
 import model.Player;
-import model.PlayerCell;
+import model.Cell;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
@@ -24,11 +24,11 @@ public class RandomPlayerPlacer implements PlayerPlacer {
     public void place(@NotNull Player player) {
         assert player.getCells().size() == 1;
         Random random = new Random();
-        for (PlayerCell playerCell : player.getCells()) {
+        for (Cell playerCell : player.getCells()) {
             playerCell.setX(playerCell.getRadius() +
-                    random.nextInt(GameConstants.FIELD_WIDTH - 2 * playerCell.getRadius()));
+                    random.nextInt(Math.round(GameConstants.FIELD_WIDTH - 2 * playerCell.getRadius())));
             playerCell.setY(playerCell.getRadius() +
-                    random.nextInt(GameConstants.FIELD_HEIGHT - 2 * playerCell.getRadius()));
+                    random.nextInt(Math.round(GameConstants.FIELD_HEIGHT - 2 * playerCell.getRadius())));
         }
     }
 

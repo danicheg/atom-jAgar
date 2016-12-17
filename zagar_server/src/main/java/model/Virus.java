@@ -13,7 +13,7 @@ public class Virus extends GameUnit {
     @NotNull
     private static final Logger log = LogManager.getLogger(Virus.class);
 
-    public Virus(@NotNull Location location, double speed) {
+    public Virus(@NotNull Location location, float speed) {
         super(location, speed * 2, INITIAL_VIRUS_MASS);
         if (log.isInfoEnabled()) {
             log.info(toString() + " created");

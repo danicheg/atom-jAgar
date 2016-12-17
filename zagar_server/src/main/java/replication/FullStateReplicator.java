@@ -5,19 +5,16 @@ import matchmaker.MatchMaker;
 import model.Field;
 import model.GameSession;
 import model.Player;
-import model.PlayerCell;
+import model.Cell;
 import network.ClientConnections;
-import network.packets.PacketLeaderBoard;
 import network.packets.PacketReplicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
-import protocol.model.Cell;
 import protocol.model.Food;
 import protocol.model.Virus;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public class FullStateReplicator implements Replicator {
@@ -52,11 +49,11 @@ public class FullStateReplicator implements Replicator {
             for (Player player : gameSession.getPlayers()) {
                 numberOfCellsInSession += player.getCells().size();
             }
-            Cell[] cells = new Cell[numberOfCellsInSession];
+            protocol.model.Cell[] cells = new protocol.model.Cell[numberOfCellsInSession];
             int i = 0;
             for (Player player : gameSession.getPlayers()) {
-                for (PlayerCell playerCell : player.getCells()) {
-                    cells[i] = new Cell(
+                for (Cell playerCell : player.getCells()) {
+                    cells[i] = new protocol.model.Cell(
                             playerCell.getId(),
                             player.getId(),
                             playerCell.getMass(),

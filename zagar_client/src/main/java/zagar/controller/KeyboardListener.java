@@ -17,7 +17,7 @@ public class KeyboardListener implements KeyListener {
             if (Game.socket != null && Game.socket.session != null) {
                 if (Game.socket.session.isOpen()) {
                     if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                        new PacketSplit().write();
+                        new PacketSplit(Game.login).write();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_W) {
                         new PacketEjectMass().write();
