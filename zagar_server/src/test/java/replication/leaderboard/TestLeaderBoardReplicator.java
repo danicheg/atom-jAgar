@@ -4,13 +4,14 @@ import main.ApplicationContext;
 import network.ClientConnections;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import replication.LeaderBoarder;
 import replication.Replicator;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class TestLeaderBoardReplicator implements Replicator {
+public class TestLeaderBoardReplicator implements LeaderBoarder {
 
     private static final Logger log = LogManager.getLogger(TestLeaderBoardReplicator.class);
 
@@ -28,7 +29,7 @@ public class TestLeaderBoardReplicator implements Replicator {
     }
 
     @Override
-    public void replicateState() {
+    public void replicateLeaderBoard() {
         if (json == null) return;
 
         log.info("Sending test leaderboard {}", json);
@@ -37,12 +38,12 @@ public class TestLeaderBoardReplicator implements Replicator {
             ApplicationContext.instance().get(ClientConnections.class)
                     .getConnections()
                     .forEach((connection) -> {
-                        try {
-                            if (connection.getValue().isOpen())
-                                connection.getValue().getRemote().sendString(json);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        if (connection.getValue().isOpen())
+                            try {
+                                    connection.getValue().getRemote().sendString(json);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                     });
         } catch (Exception e) {
             e.printStackTrace();

@@ -266,7 +266,6 @@ public class Game {
                 y += (float) ((GameFrame.mouseY - GameFrame.size.height / 2) / zoom);
                 followX = x;
                 followY = y;
-                new PacketMove(x, y, login).write();
 
                 if (rapidEject) {
                     new PacketEjectMass().write();

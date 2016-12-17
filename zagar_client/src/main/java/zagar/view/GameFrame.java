@@ -67,6 +67,7 @@ public class GameFrame extends JFrame {
         canvas.render();
     }
 
+    //TODO: Possibly here we should recount position of the mouse due to position of the screen
     @NotNull
     private Point getMouseLocation() {
         int x = (MouseInfo.getPointerInfo().getLocation().x - getLocationOnScreen().x);
