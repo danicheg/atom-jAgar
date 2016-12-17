@@ -11,6 +11,7 @@ import network.packets.PacketReplicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
+import protocol.model.Blob;
 import protocol.model.Food;
 import protocol.model.Virus;
 
@@ -64,11 +65,21 @@ public class FullStateReplicator implements Replicator {
                 }
             }
 
+            Blob[] blobs = new Blob[field.getBlobs().size()];
+            int inc = 0;
+            for (model.Blob blobGot : field.getBlobs()) {
+                blobs[inc] = new Blob(blobGot.getId(),
+                        blobGot.getMass(),
+                        blobGot.getLocation().getX(),
+                        blobGot.getLocation().getY());
+                inc++;
+            }
+
             for (Map.Entry<Player, Session> connection
                     : ApplicationContext.instance().get(ClientConnections.class).getConnections()) {
                 if (gameSession.getPlayers().contains(connection.getKey()) && connection.getValue().isOpen()) {
                     try {
-                        new PacketReplicate(cells, food, viruses).write(connection.getValue());
+                        new PacketReplicate(cells, food, viruses, blobs).write(connection.getValue());
                     } catch (IOException e) {
                         LOG.error("Exception in creating PacketReplicate: " + e);
                     }

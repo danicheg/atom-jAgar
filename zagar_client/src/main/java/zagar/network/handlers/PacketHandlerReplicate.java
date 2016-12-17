@@ -7,6 +7,7 @@ import protocol.CommandReplicate;
 import zagar.Game;
 import zagar.util.JSONDeserializationException;
 import zagar.util.JSONHelper;
+import zagar.view.Blob;
 import zagar.view.Cell;
 import zagar.view.Food;
 import zagar.view.Virus;
@@ -55,6 +56,14 @@ public class PacketHandlerReplicate {
         }
 
         Game.foods = gameFoods;
+
+        Blob[] gameBlobs = new Blob[commandReplicate.getBlobs().length];
+        for (int i = 0; i < commandReplicate.getBlobs().length; i++) {
+            protocol.model.Blob v = commandReplicate.getBlobs()[i];
+            gameBlobs[i] = new Blob(v.getX(), v.getY(), v.getSize(), v.getVirusId());
+        }
+
+        Game.blobs = gameBlobs;
 
         //TODO
 /*    if (b == null) return;
