@@ -18,11 +18,11 @@ import java.util.stream.Stream;
 
 public class LeaderboardDao implements Dao<Leaderboard> {
 
-    private static final Logger log = LogManager.getLogger(UserEntity.class);
+    private static final Logger LOG = LogManager.getLogger(UserEntity.class);
 
     @Override
     public List<Leaderboard> getAll() {
-        log.info("All leaders successfully obtained from db");
+        LOG.info("All leaders successfully obtained from db");
         return Database.selectTransactional(session ->
                 session.createQuery("from Leaderboard", Leaderboard.class).list());
     }
@@ -54,37 +54,37 @@ public class LeaderboardDao implements Dao<Leaderboard> {
     @Override
     public void insert(Leaderboard leaderboard) {
         Database.doTransactional((Function<Session, ?>) session -> session.save(leaderboard));
-        log.info("Leaderboard {} inserted into db", leaderboard);
+        LOG.info("Leaderboard {} inserted into db", leaderboard);
     }
 
     @Override
     public void insertAll(Leaderboard... leaderboards) {
         List<Leaderboard> listTokens = Arrays.asList(leaderboards);
-        Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
+        Stream<Function<Session, ?>> tasks = listTokens.stream()
                 .map(ldr -> session -> session.save(ldr));
         Database.doTransactional(tasks.collect(Collectors.toList()));
-        log.info("All leaderboards: '{}' inserted into DB", listTokens);
+        LOG.info("All leaderboards: '{}' inserted into DB", listTokens);
     }
 
     @Override
     public void update(Leaderboard leaderboard) {
         Database.doTransactional((Consumer<Session>) session -> session.update(leaderboard));
-        log.info("Leaderboard {} successfully updated", leaderboard);
+        LOG.info("Leaderboard {} successfully updated", leaderboard);
     }
 
     @Override
     public void delete(Leaderboard deleteLeaderboard) {
         Database.doTransactional((Consumer<Session>) session -> session.delete(deleteLeaderboard));
-        log.info("Leaderboard '{}' was removed from DB", deleteLeaderboard);
+        LOG.info("Leaderboard '{}' was removed from DB", deleteLeaderboard);
     }
 
     @Override
     public void deleteAll(Leaderboard... deleteLeaderboards) {
         List<Leaderboard> listTokens = Arrays.asList(deleteLeaderboards);
-        Stream<Consumer<Session>> tasks = listTokens.parallelStream()
+        Stream<Consumer<Session>> tasks = listTokens.stream()
                 .map(ldr -> (Consumer<Session>) session -> session.delete(ldr));
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
-        log.info("All leaderboards'{}' removed into DB", (Object[]) deleteLeaderboards);
+        LOG.info("All leaderboards'{}' removed into DB", (Object[]) deleteLeaderboards);
     }
 
 }

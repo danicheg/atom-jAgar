@@ -15,13 +15,13 @@ import java.util.stream.Stream;
 
 public class TokenDao implements Dao<Token> {
 
-    private static final Logger log = LogManager.getLogger(Token.class);
+    private static final Logger LOG = LogManager.getLogger(Token.class);
 
     @Override
     public List<Token> getAll() {
         List<Token> result = Database.selectTransactional(session ->
                 session.createQuery("from Token", Token.class).list());
-        log.info("All tokens successfully retrieved from DB: '{}'", result);
+        LOG.info("All tokens successfully retrieved from DB: '{}'", result);
         return result;
     }
 
@@ -30,7 +30,7 @@ public class TokenDao implements Dao<Token> {
         String totalCondition = Joiner.on(" and ").join(Arrays.asList(conditions));
         final List<Token> result = Database.selectTransactional(session ->
                 session.createQuery("from Token where " + totalCondition, Token.class).list());
-        log.info("Successfully retrieved tokens from DB: '{}' that satisfied conditions: '{}'",
+        LOG.info("Successfully retrieved tokens from DB: '{}' that satisfied conditions: '{}'",
                 result, totalCondition);
         return result;
     }
@@ -39,38 +39,38 @@ public class TokenDao implements Dao<Token> {
     public void insert(Token token) {
         token.getUser().setToken(token);
         Database.doTransactional((Function<Session, ?>) session -> session.save(token));
-        log.info("Token '{}' inserted into DB", token);
+        LOG.info("Token '{}' inserted into DB", token);
     }
 
     @Override
     public void insertAll(Token... tokens) {
         List<Token> listTokens = Arrays.asList(tokens);
         listTokens.forEach(tkn -> tkn.getUser().setToken(tkn));
-        Stream<Function<Session, ?>> tasks = listTokens.parallelStream()
+        Stream<Function<Session, ?>> tasks = listTokens.stream()
                 .map(tkn -> session -> session.save(tkn));
         Database.doTransactional(tasks.collect(Collectors.toList()));
-        log.info("All tokens: '{}' inserted into DB", listTokens);
+        LOG.info("All tokens: '{}' inserted into DB", listTokens);
     }
 
     @Override
     public void update(Token token) {
         Database.doTransactional((Consumer<Session>) session -> session.update(token));
-        log.info("Token '{}' successfully updated", token);
+        LOG.info("Token '{}' successfully updated", token);
     }
 
     @Override
     public void delete(Token deleteToken) {
         Database.doTransactional((Consumer<Session>) session -> session.delete(deleteToken));
-        log.info("Token '{}' removed into DB", deleteToken);
+        LOG.info("Token '{}' removed into DB", deleteToken);
     }
 
     @Override
     public void deleteAll(Token... deleteTokens) {
         List<Token> listTokens = Arrays.asList(deleteTokens);
-        Stream<Consumer<Session>> tasks = listTokens.parallelStream()
+        Stream<Consumer<Session>> tasks = listTokens.stream()
                 .map(tkn -> (Consumer<Session>) session -> session.delete(tkn));
         Database.doTransactionalList(tasks.collect(Collectors.toList()));
-        log.info("All tokens '{}' removed from DB", listTokens);
+        LOG.info("All tokens '{}' removed from DB", listTokens);
     }
 
 }
