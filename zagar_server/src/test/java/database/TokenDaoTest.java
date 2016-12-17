@@ -47,10 +47,10 @@ public class TokenDaoTest {
     }
 
     @Test
-    public void insertTokenTest(){
+    public void insertTokenTest() {
         final int initialSize = tokenDao.getAll().size();
-        tokenDao.insert(firstToken);
         userDao.insert(user1);
+        tokenDao.insert(firstToken);
         assertThat(tokenDao.getAll())
                 .hasSize(initialSize + 1)
                 .extracting(Token::getToken, Token::getDate, Token::getUser)
@@ -62,8 +62,8 @@ public class TokenDaoTest {
 
     @Test
     public void deleteTest() {
-        tokenDao.insert(firstToken);
         userDao.insert(user1);
+        tokenDao.insert(firstToken);
         final int initialSize = tokenDao.getAll().size();
         tokenDao.delete(firstToken);
         userDao.delete(user1);
@@ -71,19 +71,19 @@ public class TokenDaoTest {
     }
 
     @Test
-    public void insertAllTokensTest(){
+    public void insertAllTokensTest() {
         final int initialSize = tokenDao.getAll().size();
-        tokenDao.insertAll(firstToken, secondToken, thirdToken);
         userDao.insertAll(user1, user2, user3);
+        tokenDao.insertAll(firstToken, secondToken, thirdToken);
         assertThat(tokenDao.getAll()).hasSize(initialSize + 3);
         tokenDao.deleteAll(firstToken, secondToken, thirdToken);
         userDao.deleteAll(user1, user2, user3);
     }
 
     @Test
-    public void deleteAllTest(){
-        tokenDao.insertAll(firstToken, secondToken, thirdToken);
+    public void deleteAllTest() {
         userDao.insertAll(user1, user2, user3);
+        tokenDao.insertAll(firstToken, secondToken, thirdToken);
         assertThat(tokenDao.getAll()).hasSize(3);
         tokenDao.deleteAll(firstToken, secondToken, thirdToken);
         userDao.deleteAll(user1, user2, user3);

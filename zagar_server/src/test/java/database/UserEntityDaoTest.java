@@ -1,7 +1,6 @@
 package database;
 
 import dao.Database;
-import dao.TokenDao;
 import dao.UserDao;
 import entities.token.Token;
 import entities.user.UserEntity;
@@ -78,7 +77,7 @@ public class UserEntityDaoTest {
     }
 
     @Test
-    public void insertAllTest(){
+    public void insertAllTest() {
         final int initialSize = userDao.getAll().size();
         userDao.insertAll(firstTestUser, secondTestUser, thirdTestUser);
         assertThat(userDao.getAll()).hasSize(initialSize + 3);
@@ -86,7 +85,7 @@ public class UserEntityDaoTest {
     }
 
     @Test
-    public void deleteAllTest(){
+    public void deleteAllTest() {
         userDao.insertAll(firstTestUser, secondTestUser, thirdTestUser);
         final int initialSize = userDao.getAll().size();
         userDao.deleteAll(firstTestUser, secondTestUser, thirdTestUser);
