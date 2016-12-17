@@ -22,7 +22,7 @@ public class LeaderboardDaoTest {
     private UserDao userDao;
 
     private UserEntity firstTestUser;
-    private UserEntity secondTestUser;
+    private UserEntity leaderboardTwoUser;
 
     private Leaderboard leaderboardOne;
     private Leaderboard leaderboardTwo;
@@ -33,10 +33,10 @@ public class LeaderboardDaoTest {
         userDao = new UserDao();
 
         firstTestUser = new UserEntity("TestName", "TestPassword");
-        secondTestUser = new UserEntity("user", "pass");
+        leaderboardTwoUser = new UserEntity("user", "pass");
 
         leaderboardOne = new Leaderboard();
-        leaderboardTwo = new Leaderboard(secondTestUser);
+        leaderboardTwo = new Leaderboard(leaderboardTwoUser);
     }
 
     @Test
@@ -110,17 +110,37 @@ public class LeaderboardDaoTest {
 
     @Test
     public void checkLeaderboardHasUniqueMember() {
-        leaderboardDao.insert(leaderboardTwo);
-        leaderboardDao.insert(leaderboardOne);
-        leaderboardOne.addUser(secondTestUser);
-        leaderboardDao.update(leaderboardOne);
-        userDao.update(secondTestUser);
-        assertThat(leaderboardDao.getById(leaderboardTwo.getLeaderboardID()))
-                .extracting(Leaderboard::getUsers)
-                .doesNotContain(secondTestUser);
-        userDao.delete(secondTestUser);
-        leaderboardDao.delete(leaderboardOne);
-        leaderboardDao.delete(leaderboardTwo);
+
+        try (Session session = Database.openSession()) {
+            Transaction txn = session.beginTransaction();
+            session.save(firstTestUser);
+            leaderboardOne.addUser(firstTestUser);
+            session.save(leaderboardOne);
+            session.save(leaderboardTwo);
+            leaderboardOne.addUser(leaderboardTwoUser);
+            leaderboardTwoUser.setLeaderboard(leaderboardOne);
+            session.save(leaderboardOne);
+            session.save(leaderboardTwoUser);
+            txn.commit();
+
+            assertThat(leaderboardDao.getById(leaderboardOne.getLeaderboardID()).getUsers())
+                    .containsExactly(firstTestUser, leaderboardTwoUser);
+
+            assertThat(leaderboardDao.getById(leaderboardTwo.getLeaderboardID()))
+                    .extracting(Leaderboard::getUsers)
+                    .doesNotContain(leaderboardTwoUser);
+
+            txn = session.beginTransaction();
+            firstTestUser.setLeaderboard(null);
+            leaderboardTwoUser.setLeaderboard(null);
+            session.save(firstTestUser);
+            session.save(leaderboardTwoUser);
+            session.delete(leaderboardOne);
+            session.delete(leaderboardTwo);
+            session.delete(leaderboardTwoUser);
+            session.delete(firstTestUser);
+            txn.commit();
+        }
     }
 
     @Test
@@ -132,9 +152,9 @@ public class LeaderboardDaoTest {
 
             Transaction txn = session.beginTransaction();
             leaderboardOne.addUser(firstTestUser);
-            leaderboardOne.addUser(secondTestUser);
+            leaderboardOne.addUser(leaderboardTwoUser);
             session.save(firstTestUser);
-            session.save(secondTestUser);
+            session.save(leaderboardTwoUser);
             session.save(leaderboardOne);
             txn.commit();
 
@@ -145,7 +165,7 @@ public class LeaderboardDaoTest {
             firstTestUser.setLeaderboard(null);
             session.delete(leaderboardOne);
             session.delete(firstTestUser);
-            session.delete(secondTestUser);
+            session.delete(leaderboardTwoUser);
             txn.commit();
 
         }

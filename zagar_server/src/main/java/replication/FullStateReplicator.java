@@ -19,12 +19,7 @@ import protocol.model.Virus;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
-/**
- * @author Alpi
- * @since 31.10.16
- */
 public class FullStateReplicator implements Replicator {
 
     private static final Logger LOG = LogManager.getLogger(FullStateReplicator.class);
@@ -34,23 +29,23 @@ public class FullStateReplicator implements Replicator {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
             Field field = gameSession.getField();
             Food[] food = new Food[field.getFoods().size()];
-            int j = 0;
-            for (model.Food food_got : field.getFoods()) {
-                food[j] = new Food(food_got.getLocation().getX(),
-                        food_got.getLocation().getY(),
-                        food_got.getId(),
-                        food_got.getColor().getRed(),
-                        food_got.getColor().getGreen(),
-                        food_got.getColor().getBlue());
-                j++;
+            int counter = 0;
+            for (model.Food foodGot : field.getFoods()) {
+                food[counter] = new Food(foodGot.getLocation().getX(),
+                        foodGot.getLocation().getY(),
+                        foodGot.getId(),
+                        foodGot.getColor().getRed(),
+                        foodGot.getColor().getGreen(),
+                        foodGot.getColor().getBlue());
+                counter++;
             }
             Virus[] viruses = new Virus[field.getViruses().size()];
             int k = 0;
-            for (model.Virus virus_got : field.getViruses()) {
-                viruses[k] = new Virus(virus_got.getId(),
-                        virus_got.getMass(),
-                        virus_got.getLocation().getX(),
-                        virus_got.getLocation().getY());
+            for (model.Virus virusGot : field.getViruses()) {
+                viruses[k] = new Virus(virusGot.getId(),
+                        virusGot.getMass(),
+                        virusGot.getLocation().getX(),
+                        virusGot.getLocation().getY());
                 k++;
             }
             int numberOfCellsInSession = 0;
@@ -75,15 +70,15 @@ public class FullStateReplicator implements Replicator {
             String[] leaders = new String[10];
             List<Player> players = gameSession.getPlayers();
             if (players.size() < 10) {
-                for (int z = 0; z < players.size(); z++) {
-                    leaders[z] = players.get(z).getName();
+                for (int j = 0; j < players.size(); j++) {
+                    leaders[j] = players.get(j).getName();
                 }
             } else {
-                for (int z = 0; z < 10; z++) {
-                    leaders[z] = players.get(z).getName();
+                for (int j = 0; j < 10; j++) {
+                    leaders[j] = players.get(j).getName();
                 }
             }
-            
+
             for (Map.Entry<Player, Session> connection
                     : ApplicationContext.instance().get(ClientConnections.class).getConnections()) {
                 if (gameSession.getPlayers().contains(connection.getKey()) && connection.getValue().isOpen()) {
@@ -97,10 +92,5 @@ public class FullStateReplicator implements Replicator {
             }
         }
 
-    /*ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions().stream().flatMap(
-        gameSession -> gameSession.getPlayers().stream().flatMap(
-            player -> player.getCells().stream()
-        )
-    ).map(playerCell -> new Cell(playerCell.getId(), ))*/
     }
 }

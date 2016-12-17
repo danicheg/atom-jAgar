@@ -1,6 +1,7 @@
 package utils;
 
 import model.Field;
+import model.GameConstants;
 import model.Player;
 import model.PlayerCell;
 import org.jetbrains.annotations.NotNull;
@@ -25,9 +26,9 @@ public class RandomPlayerPlacer implements PlayerPlacer {
         Random random = new Random();
         for (PlayerCell playerCell : player.getCells()) {
             playerCell.setX(playerCell.getRadius() +
-                    random.nextInt(field.getWidth() - 2 * playerCell.getRadius()));
+                    random.nextInt(GameConstants.FIELD_WIDTH - 2 * playerCell.getRadius()));
             playerCell.setY(playerCell.getRadius() +
-                    random.nextInt(field.getHeight() - 2 * playerCell.getRadius()));
+                    random.nextInt(GameConstants.FIELD_HEIGHT - 2 * playerCell.getRadius()));
         }
     }
 

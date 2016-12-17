@@ -9,9 +9,6 @@ import utils.SequentialIDGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author apomosov
- */
 public class Player {
 
     public static final IDGenerator idGenerator = new SequentialIDGenerator();

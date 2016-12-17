@@ -7,24 +7,23 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class Location {
-    private static final Logger log = LogManager.getLogger(Player.class);
+
+    private static final Logger LOG = LogManager.getLogger(Player.class);
+
     private int x;
     private int y;
 
     public Location(int x, int y) {
         this.x = x;
         this.y = y;
-//        if (log.isInfoEnabled()) {
-//            log.info(toString() + " created");
-//        }
     }
 
     public Location() {
         Random random = new Random();
-        this.x = random.nextInt(Field.getWidth());
-        this.y = random.nextInt(Field.getHeight());
-        if (log.isInfoEnabled()) {
-            log.info(toString() + " created");
+        this.x = random.nextInt(GameConstants.FIELD_WIDTH);
+        this.y = random.nextInt(GameConstants.FIELD_HEIGHT);
+        if (LOG.isInfoEnabled()) {
+            LOG.info(toString() + " created");
         }
     }
 
@@ -37,15 +36,14 @@ public class Location {
     }
 
     public float distanceTo(Location other) {
-        return (float) Math.sqrt((other.getX() - x) * (other.getX() - x) + (other.getY() - y) *(other.getY() - y));
+        return (float) Math.sqrt((other.getX() - x) * (other.getX() - x) + (other.getY() - y) * (other.getY() - y));
     }
 
     @Override
     public boolean equals(@NotNull Object object) {
         if (object.getClass() != Location.class) return false;
         Location location = (Location) object;
-        if ((this.getX() == location.getX()) && (this.getY() == location.getY())) return true;
-        return false;
+        return (this.getX() == location.getX()) && (this.getY() == location.getY());
     }
 
     @Override

@@ -11,20 +11,16 @@ import static model.GameConstants.FOOD_MASS;
 public class Food extends GameUnit {
 
     @NotNull
-    private static final Logger log = LogManager.getLogger(Food.class);
+    private static final Logger LOG = LogManager.getLogger(Food.class);
 
     public Food(@NotNull Color color, @NotNull Location location) {
         super(color, location, FOOD_MASS);
-        if (log.isInfoEnabled()) {
-            log.info(toString() + " created");
-        }
+        LOG.info(toString() + " created");
     }
 
     public Food(@NotNull Location location) {
         super(location, FOOD_MASS);
-        if (log.isInfoEnabled()) {
-            log.info(toString() + " created");
-        }
+        LOG.info(toString() + " created");
     }
 
     @Override

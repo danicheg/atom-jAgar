@@ -2,20 +2,13 @@ package model;
 
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author apomosov
- */
 public class Field {
 
-    private static final int width = GameConstants.FIELD_WIDTH;
-    private static final int height = GameConstants.FIELD_HEIGHT;
     @NotNull
     private List<Virus> viruses;
     @NotNull
@@ -41,14 +34,6 @@ public class Field {
         return foods;
     }
 
-    public static int getWidth() {
-        return Field.width;
-    }
-
-    public static int getHeight() {
-        return Field.height;
-    }
-
     public void setViruses(@NotNull List<Virus> viruses) {
         this.viruses = viruses;
     }
@@ -57,7 +42,7 @@ public class Field {
         this.foods = food;
     }
 
-    public void addViruse(@NotNull Virus virus) {
+    public void addVirus(@NotNull Virus virus) {
         this.viruses.add(virus);
     }
 
@@ -67,14 +52,14 @@ public class Field {
 
     public static Field generatePrimaryState() {
         Field field = new Field();
-        int foodAmount = Field.getHeight() * Field.getWidth() / 100000;
+        int foodAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 100000;
         ConcurrentHashSet<Food> foods = new ConcurrentHashSet<>();
-        for (int i=0; i < foodAmount; i++) {
+        for (int i = 0; i < foodAmount; i++) {
             foods.add(new Food(GameUnit.getRandomColor(), new Location()));
         }
-        int virusAmount = Field.getHeight() * Field.getWidth() / 200000;
+        int virusAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 200000;
         List<Virus> viruses = new ArrayList<>();
-        for (int i=0; i < virusAmount; i++) {
+        for (int i = 0; i < virusAmount; i++) {
             viruses.add(new Virus(new Location()));
         }
         field.setViruses(viruses);
