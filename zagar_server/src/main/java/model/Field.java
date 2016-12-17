@@ -1,27 +1,47 @@
 package model;
 
+import com.sun.istack.internal.Nullable;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Field {
 
     @NotNull
     private List<Virus> viruses;
     @NotNull
+    private ConcurrentHashSet<Blob> blobs;
+    @NotNull
     private ConcurrentHashSet<Food> foods;
 
     public Field() {
-        viruses = new ArrayList<>();
+        viruses = new CopyOnWriteArrayList<>();
         foods = new ConcurrentHashSet<>();
+        blobs = new ConcurrentHashSet<>();
     }
 
-    public Field(@NotNull ConcurrentHashSet<Food> foods, @NotNull ArrayList<Virus> viruses) {
+    public Field(@NotNull ConcurrentHashSet<Food> foods, @NotNull CopyOnWriteArrayList<Virus> viruses) {
         this.viruses = viruses;
         this.foods = foods;
+        blobs = new ConcurrentHashSet<>();
+    }
+
+    public void addBlob(Blob blob) {
+        this.blobs.add(blob);
+    }
+
+    public void removeBlob(Blob blob) {
+        this.blobs.remove(blob);
+    }
+
+    @NotNull
+    public ConcurrentHashSet<Blob> getBlobs() {
+        return this.blobs;
     }
 
     @NotNull
