@@ -235,7 +235,7 @@ public class Game {
 
             for (Cell c : player) {
                 totalSize += c.size;
-                newScore += (c.size * c.size) / 100;
+                newScore += c.mass;
             }
 
             score = newScore;

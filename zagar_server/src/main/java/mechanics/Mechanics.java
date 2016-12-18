@@ -61,8 +61,8 @@ public class Mechanics extends Service implements Tickable {
                 double oldY = cell.getY();
                 double radius = cell.getRadius();
                 int mass = cell.getMass();
-                double newX = oldX + (Math.atan((dx - oldX) / radius) / Math.log(mass / 40 * Math.E));
-                double newY = oldY + (Math.atan((dy - oldY) / radius) / Math.log(mass / 40 * Math.E));
+                double newX = oldX + (Math.atan((dx - oldX) / radius) / Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
+                double newY = oldY + (Math.atan((dy - oldY) / radius) / Math.log(mass /  GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
 
 
                 if (Math.abs(newX) < GameConstants.FIELD_WIDTH && Math.abs(newY) < GameConstants.FIELD_HEIGHT) {
@@ -87,7 +87,7 @@ public class Mechanics extends Service implements Tickable {
                         double blobX = blob.getX();
                         double blobY = blob.getY();
                         Location blobCenter = new Location(blobX, blobY);
-                        if (checkDistance(first, second, blobCenter, blob.getMass(), cell.getMass())) {
+                        if (checkDistance(first, second, blobCenter, blob.getRadius(), cell.getRadius())) {
                             cell.setMass(cell.getMass() + 13);
                             player.getSession().sessionField().removeBlob(blob);
                             player.getUser().setScore(player.getScore());

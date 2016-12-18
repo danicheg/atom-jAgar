@@ -7,11 +7,11 @@ public final class Cell {
 
     private final int cellId;
     private final int playerId;
-    private final float size;
+    private final int size;
     private double x;
     private double y;
 
-    public Cell(int cellId, int playerId, float size, double x, double y) {
+    public Cell(int cellId, int playerId, int size, double x, double y) {
         this.cellId = cellId;
         this.playerId = playerId;
         this.size = size;
@@ -35,7 +35,7 @@ public final class Cell {
         return cellId;
     }
 
-    public float getSize() {
+    public int getSize() {
         return size;
     }
     

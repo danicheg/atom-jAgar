@@ -1,6 +1,7 @@
 package zagar.view;
 
 import org.jetbrains.annotations.NotNull;
+import protocol.model.Functions;
 import zagar.Game;
 import zagar.Main;
 
@@ -27,18 +28,19 @@ public class Cell {
     public Cell(double x, double y, float size, int id) {
         this.x = x;
         this.y = y;
-        this.size = size;
+        this.size = (float) Functions.calculateRadius(size);
         this.id = id;
         this.xRender = this.x;
         this.yRender = this.y;
         this.sizeRender = this.size;
+        this.mass = (int) size;
     }
 
     public void tick() {
         this.xRender -= (this.xRender - x) / 5f;
         this.yRender -= (this.yRender - y) / 5f;
         this.sizeRender -= (this.sizeRender - size) / 9f;
-        this.mass = Math.round((this.sizeRender * this.sizeRender) / 100);
+//        this.mass = Math.round((this.sizeRender * this.sizeRender) / 100);
         if (Game.cellNames.containsKey(this.id)) {
             this.name = Game.cellNames.get(this.id);
         }
@@ -74,7 +76,7 @@ public class Cell {
                 return;
             }
 
-            int massRender = (int) ((this.size * this.size) / 100);
+            int massRender = (int) this.size;
                 Polygon hexagon = new Polygon();
                 int a = massRender / 20 + 5;
                 a = Math.min(a, 50);

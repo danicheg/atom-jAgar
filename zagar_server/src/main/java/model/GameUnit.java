@@ -1,6 +1,7 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
+import protocol.model.Functions;
 
 import java.awt.*;
 import java.util.Random;
@@ -140,6 +141,6 @@ public class GameUnit {
     }
 
     private float calcRadius(int mass) {
-        return (float) sqrt(mass / PI);
+        return Functions.calculateRadius(mass);
     }
 }
