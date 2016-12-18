@@ -75,6 +75,9 @@ public class Game {
     public static String login = DEFAULT_LOGIN;
 
     @NotNull
+    public static String password = DEFAULT_PASSWORD;
+
+    @NotNull
     public static Map<Integer, String> cellNames = new HashMap<>();
 
     public static long fps = 60;
@@ -147,7 +150,7 @@ public class Game {
                     DEFAULT_LOGIN
             );
 
-            String password = JOptionPane.showInputDialog(
+            password = JOptionPane.showInputDialog(
                     null,
                     "Password",
                     DEFAULT_PASSWORD
@@ -165,10 +168,15 @@ public class Game {
                 if (!authClient.register(login, password)) {
                     Reporter.reportFail("Register failed", "Register failed");
                 }
-            } else {
-                serverToken = "Bearer " + authClient.login(Game.login, password);
-                if (serverToken == null) {
-                    Reporter.reportWarn("Login failed", "Login failed");
+            } else if (authOption == AuthOption.LOGIN) {
+                String authToken = authClient.login(Game.login, password);
+                if (authToken == null) {
+                    authenticate();
+                } else {
+                    serverToken = "Bearer " + authToken;
+                    if (serverToken == null) {
+                        Reporter.reportWarn("Login failed", "Login failed");
+                    }
                 }
             }
         }
@@ -236,9 +244,9 @@ public class Game {
             }
 
             score = newScore;
-//            if (newScore > score) {
-//                score = newScore;
-//            }
+            /*if (newScore > score) {
+               score = newScore;
+            }*/
 
             zoomm = GameFrame.size.height / (1024 / Math.pow(Math.min(64.0 / totalSize, 1), 0.4));
 
@@ -288,6 +296,12 @@ public class Game {
         for (Virus virus : viruses) {
             if (virus != null) {
                 virus.tick();
+            }
+        }
+
+        for (Blob blobs : blobs) {
+            if (blobs != null) {
+                blobs.tick();
             }
         }
 
