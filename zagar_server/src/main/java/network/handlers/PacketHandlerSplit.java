@@ -43,20 +43,7 @@ public class PacketHandlerSplit {
             public void exec(Abonent abonent) {
                 LOG.info("Recieved command " + commandSplit.getCommand());
                 String name = commandSplit.getName();
-                Player player = Player.getPlayerByName(name);
-                if (player != null) {
-                    for (Cell elem : player.getCells()) {
-                        if (player.getCells().size() < 16) {
-                            int oldMass = elem.getMass();
-                            if (oldMass >= GameConstants.DEFAULT_PLAYER_CELL_MASS * 2) {
-                                elem.setMass(oldMass / 2);
-                                Cell newCell = new Cell(new Location(elem.getLocation().getX() + elem.getRadius() * 2,
-                                        elem.getLocation().getY() + elem.getRadius() * 2));
-                                player.addCell(newCell);
-                            }
-                        }
-                    }
-                }
+                mechanicsService.splitMove(name);
             }
         });
 

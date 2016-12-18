@@ -9,6 +9,10 @@ public class Vector extends Object {
         this.y = y;
     }
 
+    public static Vector createVector(Location start, Location end) {
+        return new Vector(end.getX() - start.getX(), end.getY() - start.getY());
+    }
+
     public Vector divide(float value) {
         return new Vector(x / value, y / value);
     }

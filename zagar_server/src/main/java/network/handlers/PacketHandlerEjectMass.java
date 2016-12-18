@@ -45,27 +45,7 @@ public class PacketHandlerEjectMass {
             public void exec(Abonent abonent) {
                 LOG.info("Recieved command " + commandEjectMass.getCommand());
                 String name = commandEjectMass.getName();
-                Player player = Player.getPlayerByName(name);
-                if (player != null) {
-                    int massToEject = player.getMass() * 10 / 100;
-                    int elemAmount = player.getCells().size();
-                    int massOnOneElem = massToEject / elemAmount;
-                    if (massOnOneElem >= 10) {
-                        for (Cell elem : player.getCells()) {
-                            int tempMass = massOnOneElem;
-                            if (tempMass >= 10) {
-                                while (tempMass >= 10) {
-                                    Blob blob = new Blob(Color.LIGHT_GRAY, new Location(), 10, 10);
-                                    tempMass = tempMass - 10;
-                                    elem.setMass(elem.getMass() - 10);
-                                    player.getSession().getField().addBlob(blob);
-                                    player.getUser().setScore(player.getScore());
-                                    DatabaseAccessLayer.updateUser(player.getUser());
-                                }
-                            }
-                        }
-                    }
-                }
+                mechanicsService.ejectMove(name);
             }
         });
 

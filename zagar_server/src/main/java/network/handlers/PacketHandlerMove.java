@@ -1,12 +1,10 @@
 package network.handlers;
 
-import dao.DatabaseAccessLayer;
 import main.ApplicationContext;
 import mechanics.Mechanics;
 import messagesystem.Abonent;
 import messagesystem.Message;
 import messagesystem.MessageSystem;
-import model.*;
 import network.ClientConnectionServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,8 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import protocol.CommandMove;
 import utils.JSONDeserializationException;
 import utils.JSONHelper;
-
-import java.util.Set;
 
 public class PacketHandlerMove {
 
@@ -43,14 +39,9 @@ public class PacketHandlerMove {
                 float dx = commandMove.getDx();
                 float dy = commandMove.getDy();
                 String name = commandMove.getName();
-                Player player = Player.getPlayerByName(name);
-                if (player != null) {
-                    player.getSession().getField().makeSingleTurn(player, dx, dy);
-                }
+                mechanicsService.makeMove(dx, dy, name);
             }
         });
-        messageSystem.execForService(client);
-
     }
 
 

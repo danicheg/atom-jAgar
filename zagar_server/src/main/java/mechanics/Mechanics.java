@@ -1,16 +1,22 @@
 package mechanics;
 
+import dao.DatabaseAccessLayer;
 import main.ApplicationContext;
 import main.Service;
+import matchmaker.MatchMaker;
 import messagesystem.Message;
 import messagesystem.MessageSystem;
 import messagesystem.messages.ReplicateLbd;
 import messagesystem.messages.ReplicateMsg;
+import model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import ticker.Tickable;
 import ticker.Ticker;
+
+import java.awt.*;
+import java.util.Set;
 
 public class Mechanics extends Service implements Tickable {
 
@@ -37,6 +43,9 @@ public class Mechanics extends Service implements Tickable {
         }
 
         log.info("Start replication");
+
+        botMove();
+
         @NotNull MessageSystem messageSystem = ApplicationContext.instance().get(MessageSystem.class);
         Message messageReplicate = new ReplicateMsg(this.getAddress());
         messageSystem.sendMessage(messageReplicate);
@@ -44,6 +53,105 @@ public class Mechanics extends Service implements Tickable {
         messageSystem.sendMessage(messageLeaderboard);
         //execute all messages from queue
         messageSystem.execForService(this);
+    }
+
+    public void makeMove(float dx, float dy, String name) {
+        Player player = Player.getPlayerByName(name);
+        if (player != null) {
+            for (Cell cell : player.getCells()) {
+                float oldX = cell.getX();
+                float oldY = cell.getY();
+                int newX = Math.round(oldX + (dx - oldX) / cell.getRadius());
+                int newY = Math.round(oldY + (dy - oldY) / cell.getRadius());
+                if (Math.abs(newX) < GameConstants.FIELD_WIDTH && Math.abs(newY) < GameConstants.FIELD_HEIGHT) {
+                    cell.setX(newX);
+                    cell.setY(newY);
+                    Set<Food> foods = player.getSession().getField().getFoods();
+                    Location first = new Location(Math.round(oldX), Math.round(oldY));
+                    Location second = new Location(Math.round(newX), Math.round(newY));
+                    for (Food food : foods) {
+                        float fX = food.getLocation().getX();
+                        float fY = food.getLocation().getY();
+                        Location food_center = new Location(Math.round(fX), Math.round(fY));
+                        if (checkDistance(first, second, food_center, food.getMass(), cell.getMass())) {
+                            cell.setMass(cell.getMass() + food.getMass());
+                            player.getSession().getField().getFoods().remove(food);
+                            player.getUser().setScore(player.getScore());
+                            DatabaseAccessLayer.updateUser(player.getUser());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void ejectMove(String name) {
+        Player player = Player.getPlayerByName(name);
+        if (player != null) {
+            int massToEject = player.getMass() * 10 / 100;
+            int elemAmount = player.getCells().size();
+            int massOnOneElem = massToEject / elemAmount;
+            if (massOnOneElem >= 10) {
+                for (Cell elem : player.getCells()) {
+                    int tempMass = massOnOneElem;
+                    if (tempMass >= 10) {
+                        while (tempMass >= 10) {
+                            Blob blob = new Blob(Color.LIGHT_GRAY, new Location(), new Location(),10, 10);
+                            tempMass = tempMass - 10;
+                            elem.setMass(elem.getMass() - 10);
+                            player.getSession().getField().addBlob(blob);
+                            player.getUser().setScore(player.getScore());
+                            DatabaseAccessLayer.updateUser(player.getUser());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void splitMove(String name) {
+        Player player = Player.getPlayerByName(name);
+        if (player != null) {
+            for (Cell elem : player.getCells()) {
+                if (player.getCells().size() < 16) {
+                    int oldMass = elem.getMass();
+                    if (oldMass >= GameConstants.DEFAULT_PLAYER_CELL_MASS * 2) {
+                        elem.setMass(oldMass / 2);
+                        Cell newCell = new Cell(new Location(elem.getLocation().getX() + elem.getRadius() * 2,
+                                elem.getLocation().getY() + elem.getRadius() * 2));
+                        player.addCell(newCell);
+                    }
+                }
+            }
+        }
+    }
+
+    public void botMove() {
+        for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
+            for (Blob blob: gameSession.getField().getBlobs()) {
+                blob.makeMove();
+            }
+        }
+    }
+
+    private boolean checkDistance(Location first, Location second, Location foodCenter,
+                                  float foodLength, float cellLength) {
+        Vector vector = new Vector(second.getX() - first.getX(), second.getY() - first.getY());
+        Vector normalVector = vector.makeNormal().normalize();
+        Vector foodNormalVector = normalVector.extend(foodLength);
+        Vector cellNormalVector = normalVector.extend(cellLength);
+
+        Location edgeUp = foodNormalVector.getEnd(foodCenter);
+        Location edgeDown = foodNormalVector.getStart(foodCenter);
+
+        Location centerCellGone = cellNormalVector.intersectWith(vector, first, foodCenter);
+        Location edgeUpCell = cellNormalVector.getEnd(centerCellGone);
+        Location edgeDownCell = cellNormalVector.getStart(centerCellGone);
+
+        float distanceOne = edgeDown.distanceTo(edgeUpCell);
+        float distanceTwo = edgeUp.distanceTo(edgeDownCell);
+        float length = 2 * cellNormalVector.length();
+        return ((distanceOne < length) && (distanceTwo < length));
     }
 
 }

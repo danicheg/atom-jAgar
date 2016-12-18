@@ -68,7 +68,7 @@ public class GameUnit {
         return this.speed;
     }
 
-    public void setSpeed(int speed) {
+    public void setSpeed(float speed) {
         this.speed = speed;
     }
 

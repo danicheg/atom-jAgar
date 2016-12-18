@@ -14,9 +14,17 @@ public class Blob extends GameUnit {
     @NotNull
     private static final Logger log = LogManager.getLogger(Blob.class);
 
-    public Blob(@NotNull Color color, @NotNull Location location, float speed, int mass) {
-        super(color, location, speed, mass);
+    private Vector vector;
+
+    public Blob(@NotNull Color color, @NotNull Location initiallyLocation, @NotNull Location nextLcoation, float speed, int mass) {
+        super(color, initiallyLocation, speed, mass);
+        vector = Vector.createVector(initiallyLocation, nextLcoation).normalize();
         log.info(toString() + " created");
+    }
+
+    public void makeMove() {
+        setLocation(vector.extend(getSpeed()).getEnd(getLocation()));
+        setSpeed(getSpeed() - 2);
     }
 
     @Override
