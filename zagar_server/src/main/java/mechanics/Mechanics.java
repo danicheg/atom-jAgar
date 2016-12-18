@@ -59,8 +59,12 @@ public class Mechanics extends Service implements Tickable {
             for (Cell cell : player.getCells()) {
                 float oldX = cell.getX();
                 float oldY = cell.getY();
-                int newX = Math.round(oldX + (dx - oldX) / cell.getRadius());
-                int newY = Math.round(oldY + (dy - oldY) / cell.getRadius());
+                float radius = cell.getRadius();
+                float mass = cell.getMass();
+                int newX = Math.round(oldX + (float) (Math.atan((dx - oldX) / radius) / Math.log(mass / 40 * Math.E)));
+                int newY = Math.round(oldY + (float) (Math.atan((dy - oldY) / radius) / Math.log(mass / 40 * Math.E)));
+
+
                 if (Math.abs(newX) < GameConstants.FIELD_WIDTH && Math.abs(newY) < GameConstants.FIELD_HEIGHT) {
                     cell.setX(newX);
                     cell.setY(newY);
