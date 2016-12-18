@@ -1,5 +1,6 @@
 package model;
 
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import utils.IDGenerator;
 import utils.SequentialIDGenerator;
 
@@ -23,5 +24,27 @@ public class Cell extends GameUnit {
 
     public int getId() {
         return id;
+    }
+
+    public static protocol.model.Cell[] generateProtocolCellsFromModel(GameSession gameSession) {
+        int numberOfCellsInSession = 0;
+        for (Player player : gameSession.getPlayers()) {
+            numberOfCellsInSession += player.getCells().size();
+        }
+        protocol.model.Cell[] cells = new protocol.model.Cell[numberOfCellsInSession];
+        int i = 0;
+        for (Player player : gameSession.getPlayers()) {
+            for (Cell playerCell : player.getCells()) {
+                cells[i] = new protocol.model.Cell(
+                        playerCell.getId(),
+                        player.getId(),
+                        playerCell.getMass(),
+                        playerCell.getX(),
+                        playerCell.getY()
+                );
+                i++;
+            }
+        }
+        return cells;
     }
 }

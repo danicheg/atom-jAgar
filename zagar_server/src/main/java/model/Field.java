@@ -51,7 +51,7 @@ public class Field {
     }
 
     @NotNull
-    public Set<Food> getFoods() {
+    public ConcurrentHashSet<Food> getFoods() {
         return foods;
     }
 
