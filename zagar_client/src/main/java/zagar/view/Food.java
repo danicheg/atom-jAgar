@@ -7,13 +7,13 @@ import java.awt.*;
 
 public class Food {
 
-    private int x, y;
+    private double x, y;
     private int id;
     private static float size = 20f;
     private int r, g, b;
 
 
-    public Food(int x, int y, int id, int r, int g, int b) {
+    public Food(double x, double y, int id, int r, int g, int b) {
         this.id = id;
         this.x = x;
         this.y = y;

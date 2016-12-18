@@ -15,11 +15,11 @@ public class Blob {
     public double xRender;
     public double yRender;
     public int mass;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private float sizeRender;
 
-    public Blob(int x, int y, float size, int id) {
+    public Blob(double x, double y, float size, int id) {
         this.r = 111;
         this.g = 111;
         this.b = 111;

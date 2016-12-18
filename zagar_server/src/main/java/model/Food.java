@@ -34,7 +34,7 @@ public class Food extends GameUnit {
 
     @Override
     public int hashCode() {
-        return this.getLocation().getX() * 3 + this.getLocation().getY() * 5;
+        return (int) this.getLocation().getX() * 31 + (int) this.getLocation().getY() * 37;
     }
 
     @Override

@@ -5,14 +5,14 @@ package protocol.model;
  */
 public final class Food {
 
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private int id;
     private int r;
     private int g;
     private int b;
 
-    public Food(int x, int y, int id,int r, int g, int b) {
+    public Food(double x, double y, int id,int r, int g, int b) {
         this.x = x;
         this.y = y;
         this.id = id;
@@ -21,11 +21,11 @@ public final class Food {
         this.b = b;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

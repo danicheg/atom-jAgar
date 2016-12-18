@@ -26,8 +26,9 @@ public class Blob extends GameUnit {
     }
 
     public void makeMove() {
-        setLocation(vector.extend(getSpeed()).getEnd(getLocation()));
-        setSpeed(getSpeed() - 2);
+        vector = vector.extend(getSpeed());
+        setLocation(vector.getEnd(getLocation()));
+        decreaseSpeed(0.33f);
     }
 
     @Override
@@ -42,8 +43,8 @@ public class Blob extends GameUnit {
     }
 
     private static Location calculateDislocation(Cell parent, Location mouseLocation) {
-        Vector vector = Vector.createVector(parent.getLocation(), mouseLocation).normalize().extend(parent.getRadius() + 10 + (float) sqrt(GameConstants.BLOB_MASS_CREATE/PI));
-        return vector.getEnd(mouseLocation);
+        Vector vector = Vector.createVector(parent.getLocation(), mouseLocation).normalize().extend(parent.getRadius() + 10 + sqrt(GameConstants.BLOB_MASS_CREATE/PI));
+        return vector.getEnd(parent.getLocation());
     }
 
     public static protocol.model.Blob[] generateProtocolBlobsFromModel(ConcurrentHashSet<Blob> blobsIn) {

@@ -10,15 +10,10 @@ public class Location {
 
     private static final Logger LOG = LogManager.getLogger(Player.class);
 
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
-    public Location(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public Location(float x, float y) {
+    public Location(double x, double y) {
         this.x = Math.round(x);
         this.y = Math.round(y);
     }
@@ -33,16 +28,33 @@ public class Location {
         }
     }
 
-    public int getX() {
+    public double getX() {
         return this.x;
     }
 
-    public int getY() {
+    public double getY() {
         return this.y;
     }
 
-    public float distanceTo(Location other) {
-        return (float) Math.sqrt((other.getX() - x) * (other.getX() - x) + (other.getY() - y) * (other.getY() - y));
+    public void setX(double x) {
+        if (x < GameConstants.FIELD_WIDTH) {
+            this.x = x;
+        } else {
+            this.x = GameConstants.FIELD_WIDTH - 2;
+        }
+    }
+
+
+    public void setY(double y) {
+        if (y < GameConstants.FIELD_HEIGHT) {
+            this.y = y;
+        } else {
+            this.y = GameConstants.FIELD_HEIGHT - 2;
+        }
+    }
+
+    public double distanceTo(Location other) {
+        return Math.sqrt((other.getX() - x) * (other.getX() - x) + (other.getY() - y) * (other.getY() - y));
     }
 
     @Override

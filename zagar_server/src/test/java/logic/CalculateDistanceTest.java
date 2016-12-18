@@ -27,9 +27,9 @@ public class CalculateDistanceTest {
         Location edge_up_cell = d.getEnd(center_cell_gone);
         Location edge_down_cell = d.getStart(center_cell_gone);
 
-        float distanceOne = edge_down.distanceTo(edge_up_cell);
-        float distanceTwo = edge_up.distanceTo(edge_down_cell);
-        float length = 2 * d.length();
+        double distanceOne = edge_down.distanceTo(edge_up_cell);
+        double distanceTwo = edge_up.distanceTo(edge_down_cell);
+        double length = 2 * d.length();
         return ((distanceOne <  length) && (distanceTwo <  length));
     }
 }

@@ -57,24 +57,24 @@ public class Mechanics extends Service implements Tickable {
         Player player = Player.getPlayerByName(name);
         if (player != null) {
             for (Cell cell : player.getCells()) {
-                float oldX = cell.getX();
-                float oldY = cell.getY();
-                float radius = cell.getRadius();
-                float mass = cell.getMass();
-                int newX = Math.round(oldX + (float) (Math.atan((dx - oldX) / radius) / Math.log(mass / 40 * Math.E)));
-                int newY = Math.round(oldY + (float) (Math.atan((dy - oldY) / radius) / Math.log(mass / 40 * Math.E)));
+                double oldX = cell.getX();
+                double oldY = cell.getY();
+                double radius = cell.getRadius();
+                int mass = cell.getMass();
+                double newX = oldX + (Math.atan((dx - oldX) / radius) / Math.log(mass / 40 * Math.E));
+                double newY = oldY + (Math.atan((dy - oldY) / radius) / Math.log(mass / 40 * Math.E));
 
 
                 if (Math.abs(newX) < GameConstants.FIELD_WIDTH && Math.abs(newY) < GameConstants.FIELD_HEIGHT) {
                     cell.setX(newX);
                     cell.setY(newY);
                     Set<Food> foods = player.getSession().sessionField().getFoods();
-                    Location first = new Location(Math.round(oldX), Math.round(oldY));
+                    Location first = new Location(oldX, oldY);
                     Location second = new Location(newX, newY);
                     for (Food food : foods) {
-                        float foodX = food.getLocation().getX();
-                        float foodY = food.getLocation().getY();
-                        Location foodCenter = new Location(Math.round(foodX), Math.round(foodY));
+                        double foodX = food.getLocation().getX();
+                        double foodY = food.getLocation().getY();
+                        Location foodCenter = new Location(foodX, foodY);
                         if (checkDistance(first, second, foodCenter, food.getMass(), cell.getMass())) {
                             cell.setMass(cell.getMass() + food.getMass());
                             player.getSession().sessionField().getFoods().remove(food);
@@ -87,7 +87,7 @@ public class Mechanics extends Service implements Tickable {
         }
     }
 
-    public void ejectMove(float x, float y, String name) {
+    public void ejectMove(double x, double y, String name) {
         Player player = Player.getPlayerByName(name);
         if (player != null) {
             Cell cell = player.getMostMassiveCell();
@@ -142,9 +142,9 @@ public class Mechanics extends Service implements Tickable {
         Location edgeUpCell = cellNormalVector.getEnd(centerCellGone);
         Location edgeDownCell = cellNormalVector.getStart(centerCellGone);
 
-        float distanceOne = edgeDown.distanceTo(edgeUpCell);
-        float distanceTwo = edgeUp.distanceTo(edgeDownCell);
-        float length = 2 * cellNormalVector.length();
+        double distanceOne = edgeDown.distanceTo(edgeUpCell);
+        double distanceTwo = edgeUp.distanceTo(edgeDownCell);
+        double length = 2 * cellNormalVector.length();
         return (distanceOne < length) && (distanceTwo < length);
     }
 

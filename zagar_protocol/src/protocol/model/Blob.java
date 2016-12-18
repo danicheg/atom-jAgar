@@ -4,21 +4,21 @@ public class Blob {
 
     private final int blobId;
     private final float size;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
-    public Blob(int blobId, float size, int x, int y) {
+    public Blob(int blobId, float size, double x,double y) {
         this.blobId = blobId;
         this.size = size;
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 

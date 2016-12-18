@@ -1,10 +1,10 @@
 package model;
 
 public class Vector extends Object {
-    public float x;
-    public float y;
+    public double x;
+    public double y;
 
-    public Vector(float x, float y) {
+    public Vector(double x, double y) {
         this.x = x;
         this.y = y;
     }
@@ -13,7 +13,7 @@ public class Vector extends Object {
         return new Vector(end.getX() - start.getX(), end.getY() - start.getY());
     }
 
-    public Vector divide(float value) {
+    public Vector divide(double value) {
         return new Vector(x / value, y / value);
     }
 
@@ -25,20 +25,20 @@ public class Vector extends Object {
         return new Vector(y * (-1), x * 1);
     }
 
-    public Vector extend(float value) {
+    public Vector extend(double value) {
         return new Vector(x * value, y * value);
     }
 
     public Location getEnd(Location start) {
-        return new Location(start.getX() + Math.round(x), start.getY() + Math.round(y));
+        return new Location(start.getX() + x, start.getY() + y);
     }
 
     public Location getStart(Location end) {
-        return new Location(end.getX() - Math.round(x), end.getY() - Math.round(y));
+        return new Location(end.getX() - x, end.getY() - y);
     }
 
-    public float length() {
-      return (float) Math.sqrt(x*x + y*y);
+    public double length() {
+      return Math.sqrt(x*x + y*y);
     }
 
     public boolean is_collinear(Vector other) {
@@ -63,7 +63,7 @@ public class Vector extends Object {
     public Location intersectWith(Vector another, Location startOther, Location startThis) {
         if (is_collinear(another)) return null;
         Vector other = another.normalize();
-        float alpha = (other.x * (startThis.getY() - startOther.getY()) - other.y * (startThis.getX() - startOther.getX()))
+        double alpha = (other.x * (startThis.getY() - startOther.getY()) - other.y * (startThis.getX() - startOther.getX()))
                 / (this.x * other.y - this.y * other.x);
         return extend(alpha).getEnd(startOther);
     }

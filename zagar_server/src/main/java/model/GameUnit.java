@@ -6,6 +6,7 @@ import java.awt.*;
 import java.util.Random;
 
 import static java.lang.Math.PI;
+import static java.lang.Math.floor;
 import static java.lang.Math.sqrt;
 
 public class GameUnit {
@@ -84,7 +85,8 @@ public class GameUnit {
     }
 
     public void setLocation(@NotNull Location newLocation) {
-        this.location = newLocation;
+        this.location.setX(newLocation.getX());
+        this.location.setY(newLocation.getY());
     }
 
     public float getSpeed() {
@@ -93,6 +95,14 @@ public class GameUnit {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public  void decreaseSpeed (float decrement) {
+        float result = speed - decrement;
+        if (result < 0) {
+            result = 0;
+        }
+        speed = result;
     }
 
     public float getRadius() {
@@ -108,22 +118,20 @@ public class GameUnit {
         calcRadius(mass);
     }
 
-    public int getX() {
+    public double getX() {
         return this.getLocation().getX();
     }
 
-    public void setX(float x) {
-        int newX = Math.round(x);
-        this.setLocation(new Location(newX, this.getLocation().getY()));
+    public void setX(double x) {
+        this.location.setX(x);
     }
 
-    public int getY() {
+    public double getY() {
         return this.getLocation().getY();
     }
 
-    public void setY(float y) {
-        int newY = Math.round(y);
-        this.setLocation(new Location(this.getLocation().getX(), newY));
+    public void setY(double y) {
+        this.location.setY(y);
     }
 
     @NotNull

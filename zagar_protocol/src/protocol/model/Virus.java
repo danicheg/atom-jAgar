@@ -4,21 +4,21 @@ public class Virus {
 
     private final int virusId;
     private final float size;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
-    public Virus(int cellId, float size, int x, int y) {
+    public Virus(int cellId, float size, double x, double y) {
         this.virusId = cellId;
         this.size = size;
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
     }
 
