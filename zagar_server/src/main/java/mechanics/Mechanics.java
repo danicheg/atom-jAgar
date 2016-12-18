@@ -72,12 +72,24 @@ public class Mechanics extends Service implements Tickable {
                     Location first = new Location(oldX, oldY);
                     Location second = new Location(newX, newY);
                     for (Food food : foods) {
-                        double foodX = food.getLocation().getX();
-                        double foodY = food.getLocation().getY();
+                        double foodX = food.getX();
+                        double foodY = food.getY();
                         Location foodCenter = new Location(foodX, foodY);
                         if (checkDistance(first, second, foodCenter, food.getMass(), cell.getMass())) {
-                            cell.setMass(cell.getMass() + food.getMass());
+                            cell.setMass(cell.getMass() + 1);
                             player.getSession().sessionField().getFoods().remove(food);
+                            player.getUser().setScore(player.getScore());
+                            DatabaseAccessLayer.updateUser(player.getUser());
+                        }
+                    }
+                    Set<Blob> blobs = player.getSession().sessionField().getBlobs();
+                    for (Blob blob : blobs) {
+                        double blobX = blob.getX();
+                        double blobY = blob.getY();
+                        Location blobCenter = new Location(blobX, blobY);
+                        if (checkDistance(first, second, blobCenter, blob.getMass(), cell.getMass())) {
+                            cell.setMass(cell.getMass() + 13);
+                            player.getSession().sessionField().removeBlob(blob);
                             player.getUser().setScore(player.getScore());
                             DatabaseAccessLayer.updateUser(player.getUser());
                         }
@@ -111,8 +123,8 @@ public class Mechanics extends Service implements Tickable {
                     int oldMass = elem.getMass();
                     if (oldMass >= GameConstants.DEFAULT_PLAYER_CELL_MASS * 2) {
                         elem.setMass(oldMass / 2);
-                        Cell newCell = new Cell(new Location(elem.getLocation().getX() + elem.getRadius() * 2,
-                                elem.getLocation().getY() + elem.getRadius() * 2));
+                        Cell newCell = new Cell(new Location(elem.getLocation().getX() + elem.getRadius() * 5,
+                                elem.getLocation().getY() + elem.getRadius() * 5));
                         player.addCell(newCell);
                     }
                 }

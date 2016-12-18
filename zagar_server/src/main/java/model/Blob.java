@@ -43,7 +43,8 @@ public class Blob extends GameUnit {
     }
 
     private static Location calculateDislocation(Cell parent, Location mouseLocation) {
-        Vector vector = Vector.createVector(parent.getLocation(), mouseLocation).normalize().extend(parent.getRadius() + 10 + sqrt(GameConstants.BLOB_MASS_CREATE/PI));
+        Vector vector = Vector.createVector(parent.getLocation(), mouseLocation).normalize().extend(parent.getRadius() +
+                100  + sqrt(GameConstants.BLOB_MASS_CREATE/PI));
         return vector.getEnd(parent.getLocation());
     }
 
