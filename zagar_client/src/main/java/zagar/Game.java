@@ -92,9 +92,14 @@ public class Game {
     private double zoomm = -1;
     private int sortTimer;
 
-    public Game() {
+    public Game() throws Exception {
 
-        authenticate();
+        try {
+            authenticate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Problem with login in game");
+        }
 
         final WebSocketClient client = new WebSocketClient();
         socket = new ServerConnectionSocket();
@@ -128,12 +133,12 @@ public class Game {
         });
     }
 
-    private void authenticate() {
+    private void authenticate() throws Exception {
         while (serverToken == null) {
 
             AuthOption authOption = chooseAuthOption();
             if (authOption == null) {
-                return;
+                throw new Exception("AuthOption is null");
             }
 
             login = JOptionPane.showInputDialog(
@@ -142,18 +147,18 @@ public class Game {
                     DEFAULT_LOGIN
             );
 
-            String password = (JOptionPane.showInputDialog(
+            String password = JOptionPane.showInputDialog(
                     null,
                     "Password",
-                    DEFAULT_PASSWORD)
+                    DEFAULT_PASSWORD
             );
 
             if (login == null) {
-                login = DEFAULT_LOGIN;
+                throw new Exception("Login input closed");
             }
 
             if (password == null) {
-                password = DEFAULT_PASSWORD;
+                throw new Exception("Register input closed");
             }
 
             if (authOption == AuthOption.REGISTER) {
@@ -166,7 +171,6 @@ public class Game {
                     Reporter.reportWarn("Login failed", "Login failed");
                 }
             }
-
         }
     }
 
