@@ -7,9 +7,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.LockSupport;
 
-/**
- * Created by apomosov on 14.05.16.
- */
 public class Ticker {
 
     private static final Logger log = LogManager.getLogger(Ticker.class);
@@ -21,7 +18,7 @@ public class Ticker {
     public Ticker(Tickable tickable, int maxTicksPerSecond) {
         this.tickable = tickable;
         this.tickNumber = new AtomicLong(0);
-        this.sleepTimeNanos = TimeUnit.MILLISECONDS.toNanos(50) / maxTicksPerSecond;
+        this.sleepTimeNanos = TimeUnit.SECONDS.toNanos(1) / maxTicksPerSecond;
     }
 
     public void loop() {
