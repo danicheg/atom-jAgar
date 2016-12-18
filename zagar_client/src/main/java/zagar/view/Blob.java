@@ -70,7 +70,7 @@ public class Blob {
 
     @Override
     public String toString() {
-        return "Virus{" +
+        return "Blob{" +
                 "x=" + x +
                 ", y=" + y +
                 ", id=" + id +
