@@ -32,31 +32,26 @@ public class MasterServerConfiguration {
                 collectServices(props, services, i);
             }
 
+        } catch (NumberFormatException e) {
+            throw new WrongConfigBuildException("NumberFormatException " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            throw new WrongConfigBuildException("ClassNotFoundException for class " + e);
         } catch (IOException e) {
             throw new WrongConfigBuildException("While trying opened configuration.ini being raised exception: " + e);
         }
-
     }
 
     private MasterServerConfiguration() {
         throw new IllegalAccessError(getClass() + " - utility class");
     }
 
-    private static void getPortValues(Properties props) {
-        try {
+    private static void getPortValues(Properties props) throws NumberFormatException {
             ACCOUNT_PORT = Integer.valueOf(props.getProperty("accountServerPort"));
             CLIENT_PORT = Integer.valueOf(props.getProperty("clientConnectionPort"));
-        } catch (NumberFormatException e) {
-            throw new WrongConfigBuildException("NumberFormatException " + e.getMessage());
-        }
     }
 
-    private static void collectServices(Properties props, String[] services, int i) {
-        try {
+    private static void collectServices(Properties props, String[] services, int i) throws ClassNotFoundException {
             SERVICES_ARRAY[i] = Class.forName(props.getProperty(services[i]));
-        } catch (ClassNotFoundException e) {
-            throw new WrongConfigBuildException("ClassNotFoundException for class " + e);
-        }
     }
 
 }
