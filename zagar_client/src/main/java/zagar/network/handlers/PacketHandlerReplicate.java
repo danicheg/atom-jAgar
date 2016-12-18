@@ -16,8 +16,7 @@ import java.util.Collections;
 
 public class PacketHandlerReplicate {
 
-    @NotNull
-    private static final Logger log = LogManager.getLogger(PacketHandlerReplicate.class);
+    private static final Logger LOG = LogManager.getLogger(PacketHandlerReplicate.class);
 
     public PacketHandlerReplicate(@NotNull String json) {
 
@@ -29,7 +28,7 @@ public class PacketHandlerReplicate {
             return;
         }
 
-        log.info("Get message {}", commandReplicate);
+        LOG.info("Get message {}", commandReplicate);
 
         Cell[] gameCells = new Cell[commandReplicate.getCells().length];
         for (int i = 0; i < commandReplicate.getCells().length; i++) {
@@ -156,7 +155,7 @@ public class PacketHandlerReplicate {
     }
 
     if (!flag) {
-      log.info("Adding new cell " + cellID + " <" + name + ">" + " /" + Game.cellsNumber + "/");
+      LOG.info("Adding new cell " + cellID + " <" + name + ">" + " /" + Game.cellsNumber + "/");
       Cell cell = new Cell(x, y, size, cellID, virus);
       if (name.length() > 0) {
         Game.cellNames.put(cellID, name);

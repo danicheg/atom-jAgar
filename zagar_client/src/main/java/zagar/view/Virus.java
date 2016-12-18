@@ -41,7 +41,7 @@ public class Virus {
         public void render(@NotNull Graphics2D g, float scale) {
 
                 g.setColor(Color.GREEN);
-                int size = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
+                int virusSize = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
 
                 float avgX = 0;
                 float avgY = 0;
@@ -56,10 +56,11 @@ public class Virus {
                 avgX /= Game.player.size();
                 avgY /= Game.player.size();
 
-                int x = (int) ((this.xRender - avgX) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
-                int y = (int) ((this.yRender - avgY) * Game.zoom) + GameFrame.size.height / 2 - size / 2;
+                int virusX = (int) ((this.xRender - avgX) * Game.zoom) + GameFrame.size.width / 2 - virusSize / 2;
+                int virusY = (int) ((this.yRender - avgY) * Game.zoom) + GameFrame.size.height / 2 - virusSize / 2;
 
-                if (x < -size - 30 || x > GameFrame.size.width + 30 || y < -size - 30 || y > GameFrame.size.height + 30) {
+                if (virusX < -virusSize - 30 || virusX > GameFrame.size.width + 30 ||
+                        virusY < -virusSize - 30 || virusY > GameFrame.size.height + 30) {
                     return;
                 }
 
@@ -72,11 +73,13 @@ public class Virus {
                         float pi = 3.14f;
                         int spike = 0;
                         if (i % 2 == 0) {
-                            spike = (int) (20 * Math.min(Math.max(1, (massRender / 80f)), 8) * Game.zoom);
+                            spike = (int) (20 * Math.min(Math.max(1, massRender / 80f), 8) * Game.zoom);
                         }
                         hexagon.addPoint(
-                                (int) (x + ((size + spike) / 2) * Math.cos(-rotation + i * 2 * pi / a)) + size / 2,
-                                (int) (y + ((size + spike) / 2) * Math.sin(-rotation + i * 2 * pi / a)) + size / 2
+                                (int) (virusX + ((virusSize + spike) / 2) * Math.cos(-rotation + i * 2 * pi / a))
+                                        + virusSize / 2,
+                                (int) (virusY + ((virusSize + spike) / 2) * Math.sin(-rotation + i * 2 * pi / a))
+                                        + virusSize / 2
                         );
                     }
                     g.fillPolygon(hexagon);
