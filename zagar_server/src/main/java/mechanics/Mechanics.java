@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import ticker.Tickable;
 import ticker.Ticker;
 
-import java.awt.*;
 import java.util.Set;
 
 public class Mechanics extends Service implements Tickable {
@@ -51,7 +50,6 @@ public class Mechanics extends Service implements Tickable {
         messageSystem.sendMessage(messageReplicate);
         Message messageLeaderboard = new ReplicateLbd(this.getAddress());
         messageSystem.sendMessage(messageLeaderboard);
-        //execute all messages from queue
         messageSystem.execForService(this);
     }
 
@@ -66,16 +64,16 @@ public class Mechanics extends Service implements Tickable {
                 if (Math.abs(newX) < GameConstants.FIELD_WIDTH && Math.abs(newY) < GameConstants.FIELD_HEIGHT) {
                     cell.setX(newX);
                     cell.setY(newY);
-                    Set<Food> foods = player.getSession().getField().getFoods();
+                    Set<Food> foods = player.getSession().sessionField().getFoods();
                     Location first = new Location(Math.round(oldX), Math.round(oldY));
-                    Location second = new Location(Math.round(newX), Math.round(newY));
+                    Location second = new Location(newX, newY);
                     for (Food food : foods) {
-                        float fX = food.getLocation().getX();
-                        float fY = food.getLocation().getY();
-                        Location food_center = new Location(Math.round(fX), Math.round(fY));
-                        if (checkDistance(first, second, food_center, food.getMass(), cell.getMass())) {
+                        float foodX = food.getLocation().getX();
+                        float foodY = food.getLocation().getY();
+                        Location foodCenter = new Location(Math.round(foodX), Math.round(foodY));
+                        if (checkDistance(first, second, foodCenter, food.getMass(), cell.getMass())) {
                             cell.setMass(cell.getMass() + food.getMass());
-                            player.getSession().getField().getFoods().remove(food);
+                            player.getSession().sessionField().getFoods().remove(food);
                             player.getUser().setScore(player.getScore());
                             DatabaseAccessLayer.updateUser(player.getUser());
                         }
@@ -93,7 +91,7 @@ public class Mechanics extends Service implements Tickable {
                 Location mouseLocation = new Location(x, y);
                 Blob blob = new Blob(mouseLocation, cell);
                 cell.setMass(cell.getMass() - GameConstants.BLOB_MASS_CREATE);
-                player.getSession().getField().addBlob(blob);
+                player.getSession().sessionField().addBlob(blob);
                 player.getUser().setScore(player.getScore());
                 DatabaseAccessLayer.updateUser(player.getUser());
             }
@@ -118,9 +116,9 @@ public class Mechanics extends Service implements Tickable {
         }
     }
 
-    public void botMove() {
+    private void botMove() {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
-            for (Blob blob: gameSession.getField().getBlobs()) {
+            for (Blob blob: gameSession.sessionField().getBlobs()) {
                 blob.makeMove();
             }
         }
@@ -143,7 +141,7 @@ public class Mechanics extends Service implements Tickable {
         float distanceOne = edgeDown.distanceTo(edgeUpCell);
         float distanceTwo = edgeUp.distanceTo(edgeDownCell);
         float length = 2 * cellNormalVector.length();
-        return ((distanceOne < length) && (distanceTwo < length));
+        return (distanceOne < length) && (distanceTwo < length);
     }
 
 }

@@ -1,13 +1,15 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import java.util.Random;
-import java.awt.*;
 
-import static java.lang.Math.*;
+import java.awt.*;
+import java.util.Random;
+
+import static java.lang.Math.PI;
+import static java.lang.Math.sqrt;
 
 public class GameUnit {
+
     @NotNull
     private int id;
     @NotNull
@@ -52,9 +54,30 @@ public class GameUnit {
         this.radius = calcRadius(mass);
     }
 
+    static Color getRandomColor() {
+        Random random = new Random();
+        switch (random.nextInt(5)) {
+            case 0:
+                return Color.BLACK;
+            case 1:
+                return Color.BLUE;
+            case 2:
+                return Color.GREEN;
+            case 3:
+                return Color.ORANGE;
+            case 4:
+                return Color.RED;
+            case 5:
+                return Color.YELLOW;
+            default:
+                return Color.PINK;
+        }
+    }
+
     public int getId() {
         return this.id;
     }
+
     @NotNull
     public Location getLocation() {
         return this.location;
@@ -89,17 +112,17 @@ public class GameUnit {
         return this.getLocation().getX();
     }
 
-    public int getY() {
-        return this.getLocation().getY();
-    }
-
     public void setX(float x) {
         int newX = Math.round(x);
         this.setLocation(new Location(newX, this.getLocation().getY()));
     }
 
-    public void setY(float x) {
-        int newY = Math.round(x);
+    public int getY() {
+        return this.getLocation().getY();
+    }
+
+    public void setY(float y) {
+        int newY = Math.round(y);
         this.setLocation(new Location(this.getLocation().getX(), newY));
     }
 
@@ -108,20 +131,7 @@ public class GameUnit {
         return this.color;
     }
 
-    static Color getRandomColor() {
-        Random random = new Random();
-        switch (random.nextInt(5)) {
-            case 0: return Color.BLACK;
-            case 1: return Color.BLUE;
-            case 2: return Color.GREEN;
-            case 3: return Color.ORANGE;
-            case 4: return Color.RED;
-            case 5: return Color.YELLOW;
-            default: return Color.PINK;
-        }
-    }
-
     private float calcRadius(int mass) {
-        return (float) sqrt(mass/PI);
+        return (float) sqrt(mass / PI);
     }
 }

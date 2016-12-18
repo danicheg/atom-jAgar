@@ -26,7 +26,7 @@ public interface GameSession {
      */
     void leave(@NotNull Player player);
 
-    List<Player> getPlayers();
+    List<Player> sessionPlayersList();
 
-    Field getField();
+    Field sessionField();
 }

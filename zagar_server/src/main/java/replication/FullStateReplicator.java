@@ -25,7 +25,7 @@ public class FullStateReplicator implements Replicator {
     @Override
     public void replicateState() {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
-            Field field = gameSession.getField();
+            Field field = gameSession.sessionField();
 
             Food[] food = model.Food.generateProtocolFoodFromModel(field.getFoods());
             Virus[] viruses = model.Virus.generateProtocolVirusesFromModel(field.getViruses());
@@ -34,7 +34,7 @@ public class FullStateReplicator implements Replicator {
 
             for (Map.Entry<Player, Session> connection
                     : ApplicationContext.instance().get(ClientConnections.class).getConnections()) {
-                if (gameSession.getPlayers().contains(connection.getKey()) && connection.getValue().isOpen()) {
+                if (gameSession.sessionPlayersList().contains(connection.getKey()) && connection.getValue().isOpen()) {
                     try {
                         new PacketReplicate(cells, food, viruses, blobs).write(connection.getValue());
                     } catch (IOException e) {

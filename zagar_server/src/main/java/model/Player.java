@@ -8,8 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import utils.IDGenerator;
 import utils.SequentialIDGenerator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -121,9 +119,7 @@ public class Player {
     public Cell getMostMassiveCell() {
         Cell cellResult = null;
         for (Cell cell : cells) {
-            if (cellResult == null) {
-                cellResult = cell;
-            } else if (cellResult.getMass() < cell.getMass()) {
+            if (cellResult == null || cellResult.getMass() < cell.getMass()) {
                 cellResult = cell;
             }
         }
@@ -132,7 +128,7 @@ public class Player {
 
     public static Player getPlayerByName(String name) {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
-            for (Player player : gameSession.getPlayers()) {
+            for (Player player : gameSession.sessionPlayersList()) {
                 if (player.getName().equals(name)) {
                     return player;
                 }
@@ -143,7 +139,7 @@ public class Player {
 
     public static boolean removeUserFromSession(Player playerGot) {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
-            for (Player player : gameSession.getPlayers()) {
+            for (Player player : gameSession.sessionPlayersList()) {
                 if (player.equals(playerGot)) {
                     gameSession.leave(playerGot);
                     return true;

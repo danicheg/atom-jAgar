@@ -23,7 +23,7 @@ public class LeaderBoardSender implements LeaderBoarder {
     public void replicateLeaderBoard() {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
             String[] leaders = new String[10];
-            List<Player> players = gameSession.getPlayers();
+            List<Player> players = gameSession.sessionPlayersList();
             if (players.size() < 10) {
                 for (int j = 0; j < players.size(); j++) {
                     leaders[j] = players.get(j).getName();
@@ -36,7 +36,7 @@ public class LeaderBoardSender implements LeaderBoarder {
 
             for (Map.Entry<Player, Session> connection
                     : ApplicationContext.instance().get(ClientConnections.class).getConnections()) {
-                if (gameSession.getPlayers().contains(connection.getKey()) && connection.getValue().isOpen()) {
+                if (gameSession.sessionPlayersList().contains(connection.getKey()) && connection.getValue().isOpen()) {
                     try {
                         new PacketLeaderBoard(leaders).write(connection.getValue());
                     } catch (IOException e) {

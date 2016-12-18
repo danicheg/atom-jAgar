@@ -10,9 +10,6 @@ import utils.VirusGenerator;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author apomosov
- */
 public class GameSessionImpl implements GameSession {
 
     private static final IDGenerator idGenerator = new SequentialIDGenerator();
@@ -54,13 +51,13 @@ public class GameSessionImpl implements GameSession {
     }
 
     @Override
-    public List<Player> getPlayers() {
+    public List<Player> sessionPlayersList() {
         return new ArrayList<>(players);
     }
 
     @NotNull
     @Override
-    public Field getField() {
+    public Field sessionField() {
         return field;
     }
 
