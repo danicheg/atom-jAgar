@@ -2,6 +2,7 @@ package network.handlers;
 
 import dao.DatabaseAccessLayer;
 import dao.TokenDao;
+import dao.Validator;
 import entities.token.Token;
 import entities.user.UserEntity;
 import main.ApplicationContext;
@@ -34,7 +35,7 @@ public class PacketHandlerAuth {
             LOG.error("CommandAuth - JSONDeserializationException: " + e);
             return;
         }
-        if (!DatabaseAccessLayer.validateToken(commandAuth.getToken())) {
+        if (!Validator.validateToken(commandAuth.getToken())) {
 
             try {
                 new PacketAuthFail(

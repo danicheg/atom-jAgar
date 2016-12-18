@@ -61,23 +61,6 @@ public class DatabaseAccessLayer {
         return tokenDao.getAllWhere(findByTokenCondition).get(0);
     }
 
-    public static void validate(@NotNull String rawToken) throws Exception {
-        Token token = parse(rawToken);
-        if (!contains(token)) {
-            throw new Exception("Token validation exception");
-        }
-        LOG.info("Correct token from '{}'", getUser(token).getName());
-    }
-
-    public static Boolean validateToken(@NotNull String rawToken) throws Exception {
-        Token token = parse(rawToken);
-        if (!contains(token)) {
-            throw new Exception("Token validation exception");
-        }
-        LOG.info("Correct token from '{}'", getUser(token).getName());
-        return true;
-    }
-
     public static UserEntity getUser(@NotNull Token token) {
         final String findByTokenCondition = TOKEN_PREPEND + token.getToken();
         return tokenDao.getAllWhere(findByTokenCondition).get(0).getUser();
