@@ -9,7 +9,14 @@ public final class CommandEjectMass extends Command {
     @NotNull
     public static final String NAME = "eject";
 
-    public CommandEjectMass() {
+    private String name;
+
+    public CommandEjectMass(String name) {
         super(NAME);
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

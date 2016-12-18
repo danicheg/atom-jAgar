@@ -83,7 +83,15 @@ public class Player {
             newScore += (c.getMass() * c.getMass()) / 100;
         }
         return newScore;
-}
+    }
+
+    public int getMass() {
+        int massResult = 0;
+        for (Cell c : cells) {
+            massResult += c.getMass();
+        }
+        return massResult;
+    }
 
     @Override
     public boolean equals(Object o) {

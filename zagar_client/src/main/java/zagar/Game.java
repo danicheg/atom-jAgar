@@ -231,9 +231,10 @@ public class Game {
                 newScore += (c.size * c.size) / 100;
             }
 
-            if (newScore > score) {
-                score = newScore;
-            }
+            score = newScore;
+//            if (newScore > score) {
+//                score = newScore;
+//            }
 
             zoomm = GameFrame.size.height / (1024 / Math.pow(Math.min(64.0 / totalSize, 1), 0.4));
 
@@ -269,7 +270,7 @@ public class Game {
                 new PacketMove(x, y, login).write();
 
                 if (rapidEject) {
-                    new PacketEjectMass().write();
+                    new PacketEjectMass(login).write();
                 }
             }
         }

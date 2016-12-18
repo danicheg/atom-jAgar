@@ -20,7 +20,7 @@ public class KeyboardListener implements KeyListener {
                         new PacketSplit(Game.login).write();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_W) {
-                        new PacketEjectMass().write();
+                        new PacketEjectMass(Game.login).write();
                     }
                     if (e.getKeyCode() == KeyEvent.VK_T) {
                         Game.rapidEject = true;
