@@ -15,9 +15,11 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
+import static zagar.GameConstants.*;
+
 public class SendingPacketsToServerTest {
 
-    private String gameServerUrl = "ws://127.0.0.1:7000";
+    private String gameServerUrl = "ws://" + DEFAULT_GAME_SERVER_HOST + ":" + DEFAULT_GAME_SERVER_PORT;
     private AuthClient authClient = new AuthClient();
 
     @Test

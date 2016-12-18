@@ -14,12 +14,11 @@ public class GameFrame extends JFrame {
 
     private static final long serialVersionUID = 3637327282806739934L;
 
-    @NotNull
-    private static final Logger log = LogManager.getLogger(GameFrame.class);
+    private static final Logger LOG = LogManager.getLogger(GameFrame.class);
 
-    @NotNull
     public static Dimension size = new Dimension(1100, 700);
-    public static double mouseX, mouseY;
+    public static double mouseX;
+    public static double mouseY;
 
     private static long startTime = System.currentTimeMillis();
     private static long frames = 0;
@@ -44,14 +43,16 @@ public class GameFrame extends JFrame {
     }
 
     public void render() {
-        log.info("[RENDER]");
-        log.info("CELLS:\n" + Arrays.toString(Game.cells));
-        log.info("VIRUSES:\n" + Arrays.toString(Game.viruses));
-        log.info("FOODS:\n" + Arrays.toString(Game.foods));
-        log.info("PLAYER'S CELLS AMOUNT: " + Game.player.size());
-        log.info("VIRUSES AMOUNT: " + Game.viruses.length);
-        log.info("FOOD AMOUNT: " + Game.foods.length);
-        log.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
+        LOG.info("[RENDER]");
+        LOG.info("CELLS:\n" + Arrays.toString(Game.cells));
+        LOG.info("VIRUSES:\n" + Arrays.toString(Game.viruses));
+        LOG.info("FOODS:\n" + Arrays.toString(Game.foods));
+        LOG.info("BLOBS:\n" + Arrays.toString(Game.blobs));
+        LOG.info("PLAYER'S CELLS AMOUNT: " + Game.player.size());
+        LOG.info("VIRUSES AMOUNT: " + Game.viruses.length);
+        LOG.info("FOOD AMOUNT: " + Game.foods.length);
+        LOG.info("BLOBS AMOUNT: " + Game.blobs.length);
+        LOG.info("LEADERBOARD:\n" + Arrays.toString(Game.leaderBoard));
         Point mouseP = getMouseLocation();
         mouseX = mouseP.getX();
         mouseY = mouseP.getY();

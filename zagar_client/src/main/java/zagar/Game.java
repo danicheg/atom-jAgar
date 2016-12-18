@@ -8,10 +8,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import zagar.auth.AuthClient;
 import zagar.network.ServerConnectionSocket;
-import zagar.network.packets.PacketEjectMass;
 import zagar.network.packets.PacketMove;
 import zagar.util.Reporter;
-import zagar.view.*;
+import zagar.view.Blob;
+import zagar.view.Cell;
+import zagar.view.Food;
+import zagar.view.GameFrame;
+import zagar.view.Virus;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -24,15 +27,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
-import static zagar.GameConstants.DEFAULT_GAME_SERVER_HOST;
-import static zagar.GameConstants.DEFAULT_GAME_SERVER_PORT;
 import static zagar.GameConstants.DEFAULT_LOGIN;
 import static zagar.GameConstants.DEFAULT_PASSWORD;
 
 public class Game {
 
     @NotNull
-    private static final Logger log = LogManager.getLogger(Game.class);
+    private static final Logger LOG = LogManager.getLogger(Game.class);
 
     @NotNull
     public static volatile Cell[] cells = new Cell[0];
@@ -113,7 +114,7 @@ public class Game {
                 ClientUpgradeRequest request = new ClientUpgradeRequest();
                 request.setHeader("Origin", "zagar.io");
                 client.connect(socket, serverURI, request);
-                log.info("Trying to connect <" + gameServerUrl + ">");
+                LOG.info("Trying to connect <" + gameServerUrl + ">");
                 socket.awaitClose(7, TimeUnit.DAYS);
             } catch (Throwable t) {
                 t.printStackTrace();
@@ -207,15 +208,7 @@ public class Game {
 
     public void tick() throws IOException {
 
-        // To decrease amount of packets to the server
-//        try {
-//            Thread.sleep(200);
-//        } catch (InterruptedException e) {
-//            log.error(e);
-//            Thread.currentThread().interrupt();
-//        }
-
-        log.info("[TICK]");
+        LOG.info("[TICK]");
 
         ArrayList<Integer> toRemove = new ArrayList<>();
 
@@ -223,7 +216,7 @@ public class Game {
             for (Cell c : Game.cells) {
                 if (c != null) {
                     if (c.id == i && !player.contains(c)) {
-                        log.info("Centered cell " + c.name);
+                        LOG.info("Centered cell " + c.name);
                         player.add(c);
                         toRemove.add(i);
                     }
@@ -236,17 +229,16 @@ public class Game {
         }
 
         if (socket.session != null && player.size() > 0) {
+
             float totalSize = 0;
             int newScore = 0;
+
             for (Cell c : player) {
                 totalSize += c.size;
                 newScore += (c.size * c.size) / 100;
             }
 
             score = newScore;
-            /*if (newScore > score) {
-               score = newScore;
-            }*/
 
             zoomm = GameFrame.size.height / (1024 / Math.pow(Math.min(64.0 / totalSize, 1), 0.4));
 
@@ -280,10 +272,6 @@ public class Game {
                 followX = x;
                 followY = y;
                 new PacketMove(x, y, login).write();
-
-                if (rapidEject) {
-                    new PacketEjectMass(x, y, login).write();
-                }
             }
         }
 
@@ -299,9 +287,9 @@ public class Game {
             }
         }
 
-        for (Blob blobs : blobs) {
-            if (blobs != null) {
-                blobs.tick();
+        for (Blob blob : blobs) {
+            if (blob != null) {
+                blob.tick();
             }
         }
 

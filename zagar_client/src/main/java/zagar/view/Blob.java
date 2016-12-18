@@ -7,15 +7,17 @@ import java.awt.*;
 
 public class Blob {
 
-    private int x, y;
-    private int id;
-    private float size;
-    private final int r, g, b;
-
-    private float sizeRender;
+    private final int id;
+    private final float size;
+    private final int r;
+    private final int g;
+    private final int b;
     public double xRender;
     public double yRender;
     public int mass;
+    private int x;
+    private int y;
+    private float sizeRender;
 
     public Blob(int x, int y, float size, int id) {
         this.r = 111;
@@ -41,7 +43,7 @@ public class Blob {
 
         Color color = new Color(this.r, this.g, this.b);
         g.setColor(color);
-        int size = (int) ((this.size * 2f * scale) * Game.zoom);
+        int blobSize = (int) ((this.size * 2f * scale) * Game.zoom);
 
         float avgX = 0;
         float avgY = 0;
@@ -56,13 +58,14 @@ public class Blob {
         avgX /= Game.player.size();
         avgY /= Game.player.size();
 
-        int x = (int) ((this.x - avgX) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
-        int y = (int) ((this.y - avgY) * Game.zoom) + GameFrame.size.height / 2 - size / 2;
+        int blobX = (int) ((this.x - avgX) * Game.zoom) + GameFrame.size.width / 2 - blobSize / 2;
+        int blobY = (int) ((this.y - avgY) * Game.zoom) + GameFrame.size.height / 2 - blobSize / 2;
 
-        if (x < -size - 30 || x > GameFrame.size.width + 30 || y < -size - 30 || y > GameFrame.size.height + 30) {
+        if (blobX < -blobSize - 30 || blobX > GameFrame.size.width + 30 ||
+                blobY < -blobSize - 30 || blobY > GameFrame.size.height + 30) {
             return;
         }
-        g.fillOval(x,y,size,size);
+        g.fillOval(blobX, blobY, blobSize, blobSize);
     }
 
     @Override

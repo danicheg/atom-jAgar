@@ -9,18 +9,18 @@ import java.awt.image.BufferedImage;
 
 public class Cell {
 
-    public double x, y;
-    public int id;
+    public final int id;
+    public double x;
+    public double y;
     public float size;
-
-    @NotNull
     public String name = "";
-
-    private float sizeRender;
     public double xRender;
     public double yRender;
     public int mass;
-    private int r, g, b;
+    private float sizeRender;
+    private int r;
+    private int g;
+    private int b;
     private float rotation = 0;
 
     public Cell(double x, double y, float size, int id) {
@@ -46,13 +46,13 @@ public class Cell {
     }
 
     public void render(@NotNull Graphics2D g, float scale) {
-        if (Game.player.size() > 0) {
+        if (!Game.player.isEmpty()) {
             Color color = new Color(this.r, this.g, this.b);
             if (scale == 1) {
                 color = new Color((int) (this.r / 1.3), (int) (this.g / 1.3), (int) (this.b / 1.3));
             }
             g.setColor(color);
-            int size = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
+            int cellSize = (int) ((this.sizeRender * 2f * scale) * Game.zoom);
 
             float avgX = 0;
             float avgY = 0;
@@ -67,34 +67,35 @@ public class Cell {
             avgX /= Game.player.size();
             avgY /= Game.player.size();
 
-            int x = (int) ((this.xRender - avgX) * Game.zoom) + GameFrame.size.width / 2 - size / 2;
-            int y = (int) ((this.yRender - avgY) * Game.zoom) + GameFrame.size.height / 2 - size / 2;
+            int cellX = (int) ((this.xRender - avgX) * Game.zoom) + GameFrame.size.width / 2 - cellSize / 2;
+            int cellY = (int) ((this.yRender - avgY) * Game.zoom) + GameFrame.size.height / 2 - cellSize / 2;
 
-            if (x < -size - 30 || x > GameFrame.size.width + 30 || y < -size - 30 || y > GameFrame.size.height + 30) {
+            if (cellX < -cellSize - 30 || cellX > GameFrame.size.width + 30 ||
+                    cellY < -cellSize - 30 || cellY > GameFrame.size.height + 30) {
                 return;
             }
 
             int massRender = (int) ((this.size * this.size) / 100);
-                Polygon hexagon = new Polygon();
-                int a = massRender / 20 + 5;
-                a = Math.min(a, 50);
-                for (int i = 0; i < a; i++) {
-                    float pi = 3.14f;
-                    int pointX = (int) (x + (size / 2) * Math.cos(rotation + i * 2 * pi / a)) + size / 2;
-                    int pointY = (int) (y + (size / 2) * Math.sin(rotation + i * 2 * pi / a)) + size / 2;
-                    hexagon.addPoint(pointX, pointY);
-                }
-                g.fillPolygon(hexagon);
+            Polygon hexagon = new Polygon();
+            int a = massRender / 20 + 5;
+            a = Math.min(a, 50);
+            for (int i = 0; i < a; i++) {
+                float pi = 3.14f;
+                int pointX = (int) (cellX + (cellSize / 2) * Math.cos(rotation + i * 2 * pi / a)) + cellSize / 2;
+                int pointY = (int) (cellY + (cellSize / 2) * Math.sin(rotation + i * 2 * pi / a)) + cellSize / 2;
+                hexagon.addPoint(pointX, pointY);
+            }
+            g.fillPolygon(hexagon);
 
             if (this.name.length() > 0 || this.mass > 30) {
-                Font font = Main.frame.canvas.fontCells;
+                Font font = Main.frame.canvas.cellsFont;
                 BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
                 FontMetrics fm = img.getGraphics().getFontMetrics(font);
                 int fontSize = fm.stringWidth(this.name);
-                outlineString(g, this.name, x + size / 2 - fontSize / 2, y + size / 2);
-                String mass = this.mass + "";
-                int massSize = fm.stringWidth(mass);
-                outlineString(g, mass, x + size / 2 - massSize / 2, y + size / 2 + 17);
+                outlineString(g, this.name, cellX + cellSize / 2 - fontSize / 2, cellY + cellSize / 2);
+                String cellMass = Integer.toString(this.mass);
+                int massSize = fm.stringWidth(cellMass);
+                outlineString(g, cellMass, cellX + cellSize / 2 - massSize / 2, cellY + cellSize / 2 + 17);
             }
         }
     }
@@ -107,21 +108,6 @@ public class Cell {
         g.drawString(string, x, y + 1);
         g.setColor(new Color(255, 255, 255));
         g.drawString(string, x, y);
-    }
-
-    public void setColor(byte r, byte g, byte b) {
-        this.r = r;
-        this.g = g;
-        this.b = b;
-        if (r < 0) {
-            this.r = r + 256;
-        }
-        if (g < 0) {
-            this.g = g + 256;
-        }
-        if (b < 0) {
-            this.b = b + 256;
-        }
     }
 
     @Override
