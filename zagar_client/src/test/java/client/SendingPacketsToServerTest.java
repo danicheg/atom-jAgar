@@ -42,7 +42,7 @@ public class SendingPacketsToServerTest {
         });
         thread.start();
         while (Game.socket == null || Game.socket.session == null || !Game.socket.session.isOpen()) {
-            new PacketEjectMass(Game.login).write();
+            new PacketEjectMass(Game.followX, Game.followY, Game.login).write();
             new PacketSplit(Game.login).write();
             new PacketMove(13.4f, 1.5f, Game.login).write();
         }

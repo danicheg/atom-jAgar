@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 import java.util.List;
 
+import static java.lang.Math.PI;
+import static java.lang.Math.sqrt;
+
 public class Blob extends GameUnit {
 
     @NotNull
@@ -16,9 +19,9 @@ public class Blob extends GameUnit {
 
     private Vector vector;
 
-    public Blob(@NotNull Color color, @NotNull Location initiallyLocation, @NotNull Location nextLcoation, float speed, int mass) {
-        super(color, initiallyLocation, speed, mass);
-        vector = Vector.createVector(initiallyLocation, nextLcoation).normalize();
+    public Blob(@NotNull Location mouseLocation, Cell parent) {
+        super(Color.LIGHT_GRAY, calculateDislocation(parent, mouseLocation), GameConstants.BLOB_SPEED, GameConstants.BLOB_MASS_CREATE);
+        vector = Vector.createVector(parent.getLocation(), getLocation());
         log.info(toString() + " created");
     }
 
@@ -36,6 +39,11 @@ public class Blob extends GameUnit {
                 ", mass=" + this.getMass() +
                 ", radius=" + this.getRadius() +
                 '}';
+    }
+
+    private static Location calculateDislocation(Cell parent, Location mouseLocation) {
+        Vector vector = Vector.createVector(parent.getLocation(), mouseLocation).normalize().extend(parent.getRadius() + 10 + (float) sqrt(GameConstants.BLOB_MASS_CREATE/PI));
+        return vector.getEnd(mouseLocation);
     }
 
     public static protocol.model.Blob[] generateProtocolBlobsFromModel(ConcurrentHashSet<Blob> blobsIn) {

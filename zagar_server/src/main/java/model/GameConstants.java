@@ -16,4 +16,5 @@ public final class GameConstants {
     public static final int INITIAL_VIRUS_MASS = 25;
     public static final int BLOB_MASS_CREATE = 18;
     public static final int BLOB_MASS_EATEN = 13;
+    public static final int BLOB_SPEED = 10;
 }

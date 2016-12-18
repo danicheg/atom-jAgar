@@ -45,7 +45,9 @@ public class PacketHandlerEjectMass {
             public void exec(Abonent abonent) {
                 LOG.info("Recieved command " + commandEjectMass.getCommand());
                 String name = commandEjectMass.getName();
-                mechanicsService.ejectMove(name);
+                float x = commandEjectMass.getX();
+                float y = commandEjectMass.getY();
+                mechanicsService.ejectMove(x, y, name);
             }
         });
 

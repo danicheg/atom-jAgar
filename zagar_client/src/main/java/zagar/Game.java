@@ -270,7 +270,7 @@ public class Game {
                 new PacketMove(x, y, login).write();
 
                 if (rapidEject) {
-                    new PacketEjectMass(login).write();
+                    new PacketEjectMass(x, y, login).write();
                 }
             }
         }

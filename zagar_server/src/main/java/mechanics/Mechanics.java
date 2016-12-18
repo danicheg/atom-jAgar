@@ -85,12 +85,13 @@ public class Mechanics extends Service implements Tickable {
         }
     }
 
-    public void ejectMove(String name) {
+    public void ejectMove(float x, float y, String name) {
         Player player = Player.getPlayerByName(name);
         if (player != null) {
             Cell cell = player.getMostMassiveCell();
             if (cell.getMass() >= GameConstants.DEFAULT_PLAYER_CELL_MASS + GameConstants.BLOB_MASS_CREATE) {
-                Blob blob = new Blob(Color.LIGHT_GRAY, new Location(), new Location(), 10, GameConstants.BLOB_MASS_CREATE);
+                Location mouseLocation = new Location(x, y);
+                Blob blob = new Blob(mouseLocation, cell);
                 cell.setMass(cell.getMass() - GameConstants.BLOB_MASS_CREATE);
                 player.getSession().getField().addBlob(blob);
                 player.getUser().setScore(player.getScore());
