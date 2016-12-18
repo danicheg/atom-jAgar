@@ -9,15 +9,16 @@ import java.awt.image.BufferedImage;
 
 public class Cell {
 
-    public final int id;
     public double x;
     public double y;
+    public final int id;
     public float size;
     public String name = "";
+
+    private float sizeRender;
     public double xRender;
     public double yRender;
     public int mass;
-    private float sizeRender;
     private int r;
     private int g;
     private int b;
@@ -38,8 +39,6 @@ public class Cell {
         this.yRender -= (this.yRender - y) / 5f;
         this.sizeRender -= (this.sizeRender - size) / 9f;
         this.mass = Math.round((this.sizeRender * this.sizeRender) / 100);
-        this.rotation += (1f / (Math.max(this.mass, 20) * 2));
-
         if (Game.cellNames.containsKey(this.id)) {
             this.name = Game.cellNames.get(this.id);
         }
@@ -76,16 +75,16 @@ public class Cell {
             }
 
             int massRender = (int) ((this.size * this.size) / 100);
-            Polygon hexagon = new Polygon();
-            int a = massRender / 20 + 5;
-            a = Math.min(a, 50);
-            for (int i = 0; i < a; i++) {
-                float pi = 3.14f;
-                int pointX = (int) (cellX + (cellSize / 2) * Math.cos(rotation + i * 2 * pi / a)) + cellSize / 2;
-                int pointY = (int) (cellY + (cellSize / 2) * Math.sin(rotation + i * 2 * pi / a)) + cellSize / 2;
-                hexagon.addPoint(pointX, pointY);
-            }
-            g.fillPolygon(hexagon);
+                Polygon hexagon = new Polygon();
+                int a = massRender / 20 + 5;
+                a = Math.min(a, 50);
+                for (int i = 0; i < a; i++) {
+                    float pi = 3.14f;
+                    int pointX = (int) (cellX + (cellSize / 2) * Math.cos(rotation + i * 2 * pi / a)) + cellSize / 2;
+                    int pointY = (int) (cellY + (cellSize / 2) * Math.sin(rotation + i * 2 * pi / a)) + cellSize / 2;
+                    hexagon.addPoint(pointX, pointY);
+                }
+                g.fillPolygon(hexagon);
 
             if (this.name.length() > 0 || this.mass > 30) {
                 Font font = Main.frame.canvas.cellsFont;
