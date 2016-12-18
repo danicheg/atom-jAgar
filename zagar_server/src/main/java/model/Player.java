@@ -118,6 +118,18 @@ public class Player {
                 '}';
     }
 
+    public Cell getMostMassiveCell() {
+        Cell cellResult = null;
+        for (Cell cell : cells) {
+            if (cellResult == null) {
+                cellResult = cell;
+            } else if (cellResult.getMass() < cell.getMass()) {
+                cellResult = cell;
+            }
+        }
+        return cellResult;
+    }
+
     public static Player getPlayerByName(String name) {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
             for (Player player : gameSession.getPlayers()) {

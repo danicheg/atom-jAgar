@@ -88,26 +88,17 @@ public class Mechanics extends Service implements Tickable {
     public void ejectMove(String name) {
         Player player = Player.getPlayerByName(name);
         if (player != null) {
-            int massToEject = player.getMass() * 10 / 100;
-            int elemAmount = player.getCells().size();
-            int massOnOneElem = massToEject / elemAmount;
-            if (massOnOneElem >= 10) {
-                for (Cell elem : player.getCells()) {
-                    int tempMass = massOnOneElem;
-                    if (tempMass >= 10) {
-                        while (tempMass >= 10) {
-                            Blob blob = new Blob(Color.LIGHT_GRAY, new Location(), new Location(),10, 10);
-                            tempMass = tempMass - 10;
-                            elem.setMass(elem.getMass() - 10);
-                            player.getSession().getField().addBlob(blob);
-                            player.getUser().setScore(player.getScore());
-                            DatabaseAccessLayer.updateUser(player.getUser());
-                        }
-                    }
-                }
+            Cell cell = player.getMostMassiveCell();
+            if (cell.getMass() >= GameConstants.DEFAULT_PLAYER_CELL_MASS + GameConstants.BLOB_MASS_CREATE) {
+                Blob blob = new Blob(Color.LIGHT_GRAY, new Location(), new Location(), 10, GameConstants.BLOB_MASS_CREATE);
+                cell.setMass(cell.getMass() - GameConstants.BLOB_MASS_CREATE);
+                player.getSession().getField().addBlob(blob);
+                player.getUser().setScore(player.getScore());
+                DatabaseAccessLayer.updateUser(player.getUser());
             }
         }
     }
+
 
     public void splitMove(String name) {
         Player player = Player.getPlayerByName(name);
