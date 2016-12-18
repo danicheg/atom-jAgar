@@ -49,6 +49,10 @@ public class PacketHandlerAuth {
         } else {
 
             try {
+                Player toRemovePlayer = Player.getPlayerByName(commandAuth.getLogin());
+                if (toRemovePlayer != null) {
+                    Player.removeUserFromSession(toRemovePlayer);
+                }
                 Player player = new Player(Player.idGenerator.next(), commandAuth.getLogin());
                 UserEntity user = DatabaseAccessLayer.getUser(DatabaseAccessLayer.issueToken(commandAuth.getLogin()));
                 player.setUser(user);

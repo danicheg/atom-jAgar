@@ -129,4 +129,16 @@ public class Player {
         return null;
     }
 
+    public static boolean removeUserFromSession(Player playerGot) {
+        for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
+            for (Player player : gameSession.getPlayers()) {
+                if (player.equals(playerGot)) {
+                    gameSession.leave(playerGot);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
