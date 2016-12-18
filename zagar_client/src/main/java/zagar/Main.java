@@ -15,9 +15,14 @@ public class Main {
     public static GameThread thread;
 
     public static void main(@NotNull String[] args) {
+        try {
+            game = new Game();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
         thread = new GameThread();
         frame = new GameFrame();
-        game = new Game();
         start();
 
     }
