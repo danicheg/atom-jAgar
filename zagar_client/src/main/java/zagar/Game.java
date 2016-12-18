@@ -210,6 +210,12 @@ public class Game {
 
         LOG.info("[TICK]");
 
+        try {
+            Thread.sleep(50);
+        } catch (InterruptedException e) {
+            LOG.error(e);
+        }
+
         ArrayList<Integer> toRemove = new ArrayList<>();
 
         for (int i : playerID) {

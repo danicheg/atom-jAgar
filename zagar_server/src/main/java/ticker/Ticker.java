@@ -21,7 +21,7 @@ public class Ticker {
     public Ticker(Tickable tickable, int maxTicksPerSecond) {
         this.tickable = tickable;
         this.tickNumber = new AtomicLong(0);
-        this.sleepTimeNanos = TimeUnit.SECONDS.toNanos(1) / maxTicksPerSecond;
+        this.sleepTimeNanos = TimeUnit.MILLISECONDS.toNanos(50) / maxTicksPerSecond;
     }
 
     public void loop() {

@@ -36,7 +36,7 @@ public class Mechanics extends Service implements Tickable {
     @Override
     public void tick(long elapsedNanos) {
         try {
-            Thread.sleep(1500);
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             log.error(e);
             Thread.currentThread().interrupt();
