@@ -44,4 +44,16 @@ public class Cell extends GameUnit {
         }
         return cells;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Cell player = (Cell) o;
+        return id == player.id;
+    }
 }

@@ -64,6 +64,15 @@ public class Mechanics extends Service implements Tickable {
                 double radius = cell.getRadius();
                 int mass = cell.getMass();
 
+                for (Cell cell2 : player.getCells()) {
+                    if (!cell.equals(cell2)) {
+                        if (cell.getLocation().distanceTo(cell2.getLocation()) < cell.getRadius()) {
+                            cell.setMass(cell.getMass() + cell2.getMass());
+                            player.removeCell(cell2);
+                        }
+                    }
+                }
+
                 //Moving
                 double newX = oldX + 2 * (Math.atan((dx - oldX) / radius) /
                         Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
