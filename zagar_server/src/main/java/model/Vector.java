@@ -30,6 +30,14 @@ public class Vector {
         return new Vector(x * value, y * value);
     }
 
+    public Vector plus(Vector vector) {
+        return new Vector(x + vector.x, y + vector.y);
+    }
+
+    public Vector minus(Vector vector) {
+        return new Vector(x - vector.x, y - vector.y);
+    }
+
     public Location getEnd(Location start) {
         return new Location(start.getX() + x, start.getY() + y);
     }

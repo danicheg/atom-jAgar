@@ -12,9 +12,11 @@ import model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import protocol.model.Functions;
 import ticker.Tickable;
 import ticker.Ticker;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -58,6 +60,7 @@ public class Mechanics extends Service implements Tickable {
     public void makeMove(float dx, float dy, String name) {
         Player player = Player.getPlayerByName(name);
         if (player != null) {
+            Vector vectorCenter = buildMassCenter(player, dx, dy);
             for (Cell cell : player.getCells()) {
                 double oldX = cell.getX();
                 double oldY = cell.getY();
@@ -74,19 +77,20 @@ public class Mechanics extends Service implements Tickable {
                 }
 
                 //Moving
-                double newX = oldX + 2 * (Math.atan((dx - oldX) / radius) /
-                        Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
-                double newY = oldY + 2 * (Math.atan((dy - oldY) / radius) /
-                        Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
+                double newX = Functions.calculateDestinationOnTurn(oldX, dx, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
+                double newY = Functions.calculateDestinationOnTurn(oldY, dy, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
+                Location pointWithoutCorrecting = new Location(newX, newY);
+                Location pointWithCorrecting = vectorCenter.getEnd(cell.getLocation());
+                Location properPoint = Vector.createVector(pointWithCorrecting, pointWithoutCorrecting)
+                        .divide(2)
+                        .getEnd(pointWithCorrecting);
 
-
-                if (newX < GameConstants.FIELD_WIDTH
-                        && newY < GameConstants.FIELD_HEIGHT
-                        && newX > 0
-                        && newY > 0) {
+                if (properPoint.getX() < GameConstants.FIELD_WIDTH
+                        && properPoint.getY() < GameConstants.FIELD_HEIGHT
+                        && properPoint.getX() > 0
+                        && properPoint.getY() > 0) {
                     //Eating food
-                    cell.setX(newX);
-                    cell.setY(newY);
+                    cell.setLocation(properPoint);
                     Set<Food> foods = player.getSession().sessionField().getFoods();
                     Location first = new Location(oldX, oldY);
                     Location second = new Location(newX, newY);
@@ -197,4 +201,23 @@ public class Mechanics extends Service implements Tickable {
         return (distanceOne < length) && (distanceTwo < length);
     }
 
+    private Vector buildMassCenter(Player player, float dx, float dy) {
+        int massCommon = player.getMass();
+        double xCenter = 0;
+        double yCenter = 0;
+        double radius = 0;
+        for (Cell cell : player.getCells()) {
+            xCenter = xCenter + cell.getX() * cell.getMass();
+            yCenter = yCenter + cell.getY() * cell.getMass();
+            radius = radius + cell.getRadius();
+        }
+        xCenter = xCenter / massCommon;
+        yCenter = yCenter / massCommon;
+        radius = radius / player.getCells().size();
+        int mass = (int) massCommon / player.getCells().size();
+        Location startCenterPoint = new Location(xCenter, yCenter);
+        double newXCenter = Functions.calculateDestinationOnTurn(xCenter, dx, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
+        double newYCenter = Functions.calculateDestinationOnTurn(yCenter, dy, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
+        return Vector.createVector(startCenterPoint, new Location(newXCenter, newYCenter));
+    }
 }
