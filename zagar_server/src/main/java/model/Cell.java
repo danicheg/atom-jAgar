@@ -8,16 +8,24 @@ public class Cell extends GameUnit {
 
     private final int id;
 
+    private final Player owner;
+
     public static final IDGenerator idGenerator = new SequentialIDGenerator();
 
-    public Cell(Location x) {
+    public Cell(Location x, Player owner) {
         super(x, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+        this.owner = owner;
         this.id = idGenerator.next();
     }
 
-    public Cell() {
+    public Cell(Player owner) {
         super(new Location(), GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+        this.owner = owner;
         this.id = idGenerator.next();
+    }
+
+    public Player getOwner() {
+        return this.owner;
     }
 
     public int getId() {

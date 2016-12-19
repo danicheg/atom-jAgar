@@ -16,10 +16,12 @@ import protocol.utils.Calculator;
 import protocol.GameConstraints;
 import ticker.Tickable;
 import ticker.Ticker;
+import utils.EatComparator;
 import utils.ServerCalculator;
 
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Mechanics extends Service implements Tickable {
 
@@ -60,6 +62,9 @@ public class Mechanics extends Service implements Tickable {
     public void makeMove(float dx, float dy, String name) {
         Player player = Player.getPlayerByName(name);
         if (player != null) {
+            if (player.getCells().size() == 0) {
+                //End of the game
+            }
             Vector vectorCenter = buildMassCenter(player, dx, dy);
             for (Cell cell : player.getCells()) {
                 double oldX = cell.getX();
@@ -121,6 +126,27 @@ public class Mechanics extends Service implements Tickable {
                         }
                     }
 
+                    //Eating another cell
+                    List<Cell> enemies = new CopyOnWriteArrayList<>();
+                    player.getSession().sessionPlayersList().stream()
+                            .filter((c) -> !c.equals(player))
+                            .map(Player::getCells)
+                            .forEach(enemies::addAll);
+                    for (Cell enemy : enemies) {
+                        double enemyX = enemy.getX();
+                        double enemyY = enemy.getY();
+                        Location enemyCenter = new Location(enemyX, enemyY);
+                        if (checkDistance(first, second, enemyCenter, enemy.getRadius(), cell.getRadius())) {
+                            EatComparator comparator = new EatComparator();
+                            if (comparator.compare(cell, enemy) == 1) {
+                                cell.setMass(cell.getMass() + enemy.getMass());
+                                enemy.getOwner().getCells().remove(enemy);
+                                player.getUser().setScore(player.getScore());
+                                DatabaseAccessLayer.updateUser(player.getUser());
+                            }
+                        }
+                    }
+
                     //Splitting if is more than virus
                     int oldMass = cell.getMass();
                     List<Virus> viruses = player.getSession().sessionField().getViruses();
@@ -128,7 +154,7 @@ public class Mechanics extends Service implements Tickable {
                         if (checkDistance(first, second, virus.getLocation(), virus.getRadius() / 2, cell.getRadius())) {
                             if (oldMass >= virus.getMass()) {
                                 cell.setMass(oldMass / 2);
-                                Cell newCell = new Cell(ServerCalculator.calculateLocationOnSplitting(cell));
+                                Cell newCell = new Cell(ServerCalculator.calculateLocationOnSplitting(cell), player);
                                 newCell.setMass(oldMass / 2);
                                 player.addCell(newCell);
                             }
@@ -164,7 +190,7 @@ public class Mechanics extends Service implements Tickable {
                     if (oldMass >= GameConstraints.DEFAULT_PLAYER_CELL_MASS * 2) {
                         elem.setMass(oldMass / 2);
                         Location newCellLocation = ServerCalculator.calculateLocationOnSplitting(elem);
-                        Cell newCell = new Cell(newCellLocation);
+                        Cell newCell = new Cell(newCellLocation, player);
                         newCell.setMass(oldMass / 2);
                         player.addCell(newCell);
                     }

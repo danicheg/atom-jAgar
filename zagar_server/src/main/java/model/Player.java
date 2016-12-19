@@ -29,7 +29,7 @@ public class Player {
         id = playerId;
         name = playerName;
         cells = new CopyOnWriteArrayList<>();
-        addCell(new Cell(new Location(0, 0)));
+        addCell(new Cell(new Location(0, 0), this));
     }
 
     public void setUser(UserEntity user) {
