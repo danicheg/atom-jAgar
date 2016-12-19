@@ -13,6 +13,7 @@ import utils.VirusGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class GameSessionImpl implements GameSession {
 
@@ -39,6 +40,11 @@ public class GameSessionImpl implements GameSession {
         field.generateFieldWithFood();
         foodGenerator.startGenerating();
         virusGenerator.generate();
+        List<Cell> cells = new CopyOnWriteArrayList<>();
+        sessionPlayersList().stream()
+                .filter(player -> !player.equals(players))
+                .map(Player::getCells)
+                .forEach(cells::addAll);
     }
 
     @Override

@@ -4,6 +4,7 @@ import model.GameSession;
 import model.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -23,5 +24,5 @@ public interface MatchMaker {
      * @return Currently open game sessions
      */
     @NotNull
-    CopyOnWriteArrayList<GameSession> getActiveGameSessions();
+    List<GameSession> getActiveGameSessions();
 }

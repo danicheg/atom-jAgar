@@ -7,45 +7,40 @@ import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import protocol.GameConstraints;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Creates {@link GameSession} for single player
- *
- * @author Alpi
- */
 public class MatchMakerImpl implements MatchMaker {
+
     @NotNull
-    private final Logger log = LogManager.getLogger(MatchMakerImpl.class);
+    private static final Logger LOG = LogManager.getLogger(MatchMakerImpl.class);
     @NotNull
     private final List<GameSession> activeGameSessions = new CopyOnWriteArrayList<>();
 
-    /**
-     * Creates new GameSession for single player
-     *
-     * @param player single player
-     */
     @Override
     public void joinGame(@NotNull Player player) {
-        GameSession newGameSession = createNewGame();
-        activeGameSessions.add(newGameSession);
-        newGameSession.join(player);
-        if (log.isInfoEnabled()) {
-            log.info(player + " joined " + newGameSession);
+        final Optional<GameSession> sessionOptional = activeGameSessions.stream()
+                .filter(session -> session.sessionPlayersList().size() < GameConstraints.MAX_PLAYERS_IN_SESSION)
+                .findFirst();
+        if (sessionOptional.isPresent()) {
+            final GameSession freeSession = sessionOptional.get();
+            freeSession.join(player);
+            LOG.info(player + " joined to session" + freeSession);
+        } else {
+            GameSession newGameSession = new GameSessionImpl(new Field());
+            activeGameSessions.add(newGameSession);
+            newGameSession.join(player);
+            LOG.info(player + " joined to new game session" + newGameSession);
         }
     }
 
     @NotNull
-    public CopyOnWriteArrayList<GameSession> getActiveGameSessions() {
+    @Override
+    public List<GameSession> getActiveGameSessions() {
         return new CopyOnWriteArrayList<>(activeGameSessions);
     }
 
-    /**
-     * @return new GameSession
-     */
-    private GameSession createNewGame() {
-        return new GameSessionImpl(new Field());
-    }
 }
