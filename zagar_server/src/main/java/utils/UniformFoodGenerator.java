@@ -34,8 +34,6 @@ public class UniformFoodGenerator implements FoodGenerator {
                     RandomColorGenerator.generateRandomColor(),
                     new Location(random.nextInt(GameConstants.FIELD_WIDTH), random.nextInt(GameConstants.FIELD_HEIGHT))
             );
-            random.nextInt(GameConstants.FIELD_WIDTH);
-            random.nextInt(GameConstants.FIELD_HEIGHT);
             field.addFood(generatedFood);
         }
     }

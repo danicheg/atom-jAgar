@@ -39,8 +39,10 @@ public class Location {
     public void setX(double x) {
         if (x < GameConstants.FIELD_WIDTH) {
             this.x = x;
-        } else {
+        } else  if (x > 0){
             this.x = GameConstants.FIELD_WIDTH - 2;
+        } else {
+            this.x = 0;
         }
     }
 
@@ -48,8 +50,10 @@ public class Location {
     public void setY(double y) {
         if (y < GameConstants.FIELD_HEIGHT) {
             this.y = y;
-        } else {
+        } else if (y > 0) {
             this.y = GameConstants.FIELD_HEIGHT - 2;
+        } else {
+            this.y = 0;
         }
     }
 

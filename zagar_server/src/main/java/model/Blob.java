@@ -5,6 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
+import protocol.model.Functions;
 
 import java.awt.Color;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Blob extends GameUnit {
     public void makeMove() {
         vector = vector.extend(getSpeed());
         setLocation(vector.getEnd(getLocation()));
-        decreaseSpeed(0.33f);
+        decreaseSpeed(0.66f);
     }
 
     @Override
@@ -44,7 +45,7 @@ public class Blob extends GameUnit {
 
     private static Location calculateDislocation(Cell parent, Location mouseLocation) {
         Vector vector = Vector.createVector(parent.getLocation(), mouseLocation).normalize().extend(parent.getRadius() +
-                100  + sqrt(GameConstants.BLOB_MASS_CREATE/PI));
+                2  + Functions.calculateRadius(GameConstants.BLOB_MASS_CREATE));
         return vector.getEnd(parent.getLocation());
     }
 
