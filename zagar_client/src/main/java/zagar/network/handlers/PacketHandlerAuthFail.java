@@ -8,6 +8,7 @@ import zagar.util.JSONHelper;
 import zagar.util.Reporter;
 
 public class PacketHandlerAuthFail {
+
     public PacketHandlerAuthFail(@NotNull String json) {
         CommandAuthFail commandAuthFail;
         try {
@@ -19,4 +20,5 @@ public class PacketHandlerAuthFail {
         Game.state = Game.GameState.NOT_AUTHORIZED;
         Reporter.reportFail("Token authentication failed", commandAuthFail.getCause());
     }
+
 }

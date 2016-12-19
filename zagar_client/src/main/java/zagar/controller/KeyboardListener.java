@@ -1,5 +1,7 @@
 package zagar.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import zagar.Game;
 import zagar.network.packets.PacketEjectMass;
@@ -11,40 +13,32 @@ import java.io.IOException;
 
 public class KeyboardListener implements KeyListener {
 
+    private static final Logger LOG = LogManager.getLogger(KeyboardListener.class);
+
     @Override
-    public void keyPressed(@NotNull KeyEvent e) {
+    public void keyPressed(@NotNull KeyEvent event) {
         try {
-            if (Game.socket != null && Game.socket.session != null) {
-                if (Game.socket.session.isOpen()) {
-                    if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-                        new PacketSplit(Game.login).write();
-                    }
-                    if (e.getKeyCode() == KeyEvent.VK_W) {
-                        new PacketEjectMass(Game.followX, Game.followY, Game.login).write();
-                    }
-                    if (e.getKeyCode() == KeyEvent.VK_T) {
-                        Game.rapidEject = true;
-                    }
+            if (Game.socket.session.isOpen()) {
+                if (event.getKeyCode() == KeyEvent.VK_SPACE) {
+                    new PacketSplit(Game.login).write();
+                }
+                if (event.getKeyCode() == KeyEvent.VK_W) {
+                    new PacketEjectMass(Game.followX, Game.followY, Game.login).write();
                 }
             }
-        } catch (IOException ioEx) {
-            ioEx.printStackTrace();
+        } catch (IOException e) {
+            LOG.error("Can't send packet because session is closed: " + e);
         }
     }
 
     @Override
     public void keyReleased(@NotNull KeyEvent e) {
-        if (Game.socket != null && Game.socket.session != null) {
-            if (Game.socket.session.isOpen()) {
-                if (e.getKeyCode() == KeyEvent.VK_T) {
-                    Game.rapidEject = false;
-                }
-            }
-        }
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
+        throw new UnsupportedOperationException();
     }
 
 }

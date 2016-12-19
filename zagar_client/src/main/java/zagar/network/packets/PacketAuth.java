@@ -10,8 +10,9 @@ import zagar.util.JSONHelper;
 import java.io.IOException;
 
 public class PacketAuth {
-    @NotNull
-    private static final Logger log = LogManager.getLogger(">>>");
+
+    private static final Logger LOG = LogManager.getLogger(PacketAuth.class);
+
     @NotNull
     private final String login;
     @NotNull
@@ -24,7 +25,8 @@ public class PacketAuth {
 
     public void write() throws IOException {
         String msg = JSONHelper.toJSON(new CommandAuth(login, token));
-        log.info("Sending [" + msg + "]");
+        LOG.info("Sending [" + msg + "]");
         Game.socket.session.getRemote().sendString(msg);
     }
+
 }

@@ -1,4 +1,4 @@
-package protocol.enums;
+package protocol.model;
 
 public class GameConstraints {
     public static final int MAX_PLAYERS_IN_SESSION = 10;
@@ -21,4 +21,9 @@ public class GameConstraints {
     public static final int DEFAULT_ACCOUNT_SERVER_PORT = 8080;
     public static final String DEFAULT_LOGIN = "zAgar";
     public static final String DEFAULT_PASSWORD = "pass";
+
+    private GameConstraints() {
+        throw new IllegalAccessError(getClass() + " - utility class");
+    }
+
 }

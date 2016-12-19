@@ -81,13 +81,13 @@ public class Game {
     public static Map<Integer, String> cellNames = new HashMap<>();
 
     public static long fps = 60;
-    public static boolean rapidEject;
 
     @NotNull
     public static GameState state = GameState.NOT_AUTHORIZED;
 
     @NotNull
-    private String gameServerUrl = "ws://127.0.0.1:7000";
+    private String gameServerUrl = "ws://" + GameConstants.DEFAULT_GAME_SERVER_HOST +
+            ":" + GameConstants.DEFAULT_GAME_SERVER_PORT;
 
     @NotNull
     private AuthClient authClient = new AuthClient();
@@ -119,21 +119,6 @@ public class Game {
                 t.printStackTrace();
             }
         }).start();
-    }
-
-    private static void sortCells() {
-        Arrays.sort(cells, (o1, o2) -> {
-            if (o1 == null && o2 == null) {
-                return 0;
-            }
-            if (o1 == null) {
-                return 1;
-            }
-            if (o2 == null) {
-                return -1;
-            }
-            return Float.compare(o1.size, o2.size);
-        });
     }
 
     private void authenticate() throws Exception {
@@ -227,7 +212,7 @@ public class Game {
             playerID.remove(playerID.indexOf(i));
         }
 
-        if (socket.session != null && player.size() > 0) {
+        if (socket.session != null && !player.isEmpty()) {
 
             float totalSize = 0;
             int newScore = 0;
@@ -292,12 +277,6 @@ public class Game {
             }
         }
 
-        sortTimer++;
-
-        if (sortTimer > 10) {
-            sortCells();
-            sortTimer = 0;
-        }
     }
 
     private enum AuthOption {
