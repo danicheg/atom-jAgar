@@ -30,9 +30,11 @@ public class UniformFoodGenerator implements FoodGenerator {
     public void tick(long elapsedNanos) {
         if (field.getFoods().size() < threshold) {
             Random random = new Random();
+            int x = random.nextInt(GameConstants.FIELD_WIDTH);
+            int y = random.nextInt(GameConstants.FIELD_HEIGHT);
             Food generatedFood = new Food(
                     RandomColorGenerator.generateRandomColor(),
-                    new Location(random.nextInt(GameConstants.FIELD_WIDTH), random.nextInt(GameConstants.FIELD_HEIGHT))
+                    new Location(x, y)
             );
             field.addFood(generatedFood);
         }

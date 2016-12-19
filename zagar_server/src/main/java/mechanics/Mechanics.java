@@ -8,20 +8,15 @@ import messagesystem.Message;
 import messagesystem.MessageSystem;
 import messagesystem.messages.ReplicateLbd;
 import messagesystem.messages.ReplicateMsg;
-import model.Blob;
-import model.Cell;
-import model.Food;
-import model.GameConstants;
-import model.GameSession;
-import model.Location;
-import model.Player;
-import model.Vector;
+import model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import ticker.Tickable;
 import ticker.Ticker;
 
+import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 public class Mechanics extends Service implements Tickable {
@@ -106,6 +101,19 @@ public class Mechanics extends Service implements Tickable {
                             DatabaseAccessLayer.updateUser(player.getUser());
                         }
                     }
+                    int oldMass = cell.getMass();
+                    List<Virus> viruses = player.getSession().sessionField().getViruses();
+                    for (Virus virus : viruses) {
+                        if (checkDistance(first, second, virus.getLocation(), virus.getRadius() / 2, cell.getRadius())) {
+                            if (oldMass >= virus.getMass()) {
+                                cell.setMass(oldMass / 2);
+                                Cell newCell = new Cell(new Location(cell.getLocation().getX() + cell.getRadius() * 5,
+                                        cell.getLocation().getY() + cell.getRadius() * 5));
+                                newCell.setMass(oldMass / 2);
+                                player.addCell(newCell);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -137,6 +145,7 @@ public class Mechanics extends Service implements Tickable {
                         elem.setMass(oldMass / 2);
                         Cell newCell = new Cell(new Location(elem.getLocation().getX() + elem.getRadius() * 5,
                                 elem.getLocation().getY() + elem.getRadius() * 5));
+                        newCell.setMass(oldMass / 2);
                         player.addCell(newCell);
                     }
                 }
