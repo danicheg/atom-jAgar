@@ -69,8 +69,8 @@ public class Mechanics extends Service implements Tickable {
                 for (Cell cell2 : player.getCells()) {
                     if (!cell.equals(cell2)) {
                         if (cell.getLocation().distanceTo(cell2.getLocation()) < cell.getRadius()) {
-                            cell.setMass(cell.getMass() + cell2.getMass());
-                            player.removeCell(cell2);
+                                cell.setMass(cell.getMass() + cell2.getMass());
+                                player.removeCell(cell2);
                         }
                     }
                 }
