@@ -1,8 +1,9 @@
 package model;
 
-public class Vector extends Object {
-    public double x;
-    public double y;
+public class Vector {
+
+    private double x;
+    private double y;
 
     public Vector(double x, double y) {
         this.x = x;
@@ -38,11 +39,11 @@ public class Vector extends Object {
     }
 
     public double length() {
-      return Math.sqrt(x*x + y*y);
+      return Math.sqrt(Math.pow(x, 2d) + Math.pow(y, 2d));
     }
 
-    public boolean is_collinear(Vector other) {
-        return (this == other || extend(-1) == other);
+    public boolean isCollinear(Vector other) {
+        return this.equals(other) || this.extend(-1).equals(other);
     }
 
     //Vectors are parallel
@@ -54,17 +55,30 @@ public class Vector extends Object {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Vector other = ((Vector) o).normalize();
-        Vector normalized = this.normalize();
-        return normalized.x == other.x && normalized.y == other.y;
+        Vector vector = (Vector) o;
+        return Double.compare(vector.x, x) == 0 && Double.compare(vector.y, y) == 0;
     }
 
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
+    }
 
     public Location intersectWith(Vector another, Location startOther, Location startThis) {
-        if (is_collinear(another)) return null;
+        if (isCollinear(another)) {
+            return null;
+        }
         Vector other = another.normalize();
-        double alpha = (other.x * (startThis.getY() - startOther.getY()) - other.y * (startThis.getX() - startOther.getX()))
+        double alpha = (other.x * (startThis.getY() - startOther.getY())
+                - other.y * (startThis.getX() - startOther.getX()))
                 / (this.x * other.y - this.y * other.x);
         return extend(alpha).getEnd(startOther);
     }
+
 }

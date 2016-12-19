@@ -58,10 +58,26 @@ public class Location {
     }
 
     @Override
-    public boolean equals(@NotNull Object object) {
-        if (object.getClass() != Location.class) return false;
-        Location location = (Location) object;
-        return (this.getX() == location.getX()) && (this.getY() == location.getY());
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Location location = (Location) o;
+        return Double.compare(location.x, x) == 0 && Double.compare(location.y, y) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        temp = Double.doubleToLongBits(x);
+        result = (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(y);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        return result;
     }
 
     @Override

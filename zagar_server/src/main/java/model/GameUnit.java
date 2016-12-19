@@ -36,15 +36,6 @@ public class GameUnit {
         this.radius = calcRadius(mass);
     }
 
-    public GameUnit(@NotNull Location location, float speed, int mass) {
-        this.id = new Random().nextInt();
-        this.speed = speed;
-        this.location = location;
-        this.color = RandomColorGenerator.generateRandomColor();
-        this.mass = mass;
-        this.radius = calcRadius(mass);
-    }
-
     public GameUnit(@NotNull Location location, int mass) {
         this.id = new Random().nextInt();
         this.color = RandomColorGenerator.generateRandomColor();

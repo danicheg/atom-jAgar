@@ -23,26 +23,19 @@ public class Field {
         blobs = new ConcurrentHashSet<>();
     }
 
-    public Field(@NotNull ConcurrentHashSet<Food> foods, @NotNull CopyOnWriteArrayList<Virus> viruses) {
-        this.viruses = viruses;
-        this.foods = foods;
-        blobs = new ConcurrentHashSet<>();
-    }
-
-    public Field generatePrimaryState() {
+    public void generatePrimaryState() {
         int foodAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 100000;
-        ConcurrentHashSet<Food> foods = new ConcurrentHashSet<>();
+        ConcurrentHashSet<Food> primaryFoods = new ConcurrentHashSet<>();
         for (int i = 0; i < foodAmount; i++) {
-            foods.add(new Food(RandomColorGenerator.generateRandomColor(), new Location()));
+            primaryFoods.add(new Food(RandomColorGenerator.generateRandomColor(), new Location()));
         }
         int virusAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 200000;
-        List<Virus> viruses = new ArrayList<>();
+        List<Virus> primaryViruses = new ArrayList<>();
         for (int i = 0; i < virusAmount; i++) {
-            viruses.add(new Virus(new Location()));
+            primaryViruses.add(new Virus(new Location()));
         }
-        setViruses(viruses);
-        setFoods(foods);
-        return this;
+        setViruses(primaryViruses);
+        setFoods(primaryFoods);
     }
 
     public void addBlob(Blob blob) {
@@ -63,7 +56,7 @@ public class Field {
         return viruses;
     }
 
-    public void setViruses(@NotNull List<Virus> viruses) {
+    private void setViruses(@NotNull List<Virus> viruses) {
         this.viruses = viruses;
     }
 
@@ -72,7 +65,7 @@ public class Field {
         return foods;
     }
 
-    public void setFoods(@NotNull ConcurrentHashSet<Food> food) {
+    private void setFoods(@NotNull ConcurrentHashSet<Food> food) {
         this.foods = food;
     }
 

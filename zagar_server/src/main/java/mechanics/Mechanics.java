@@ -8,7 +8,14 @@ import messagesystem.Message;
 import messagesystem.MessageSystem;
 import messagesystem.messages.ReplicateLbd;
 import messagesystem.messages.ReplicateMsg;
-import model.*;
+import model.Blob;
+import model.Cell;
+import model.Food;
+import model.GameConstants;
+import model.GameSession;
+import model.Location;
+import model.Player;
+import model.Vector;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
@@ -61,8 +68,10 @@ public class Mechanics extends Service implements Tickable {
                 double oldY = cell.getY();
                 double radius = cell.getRadius();
                 int mass = cell.getMass();
-                double newX = oldX + (Math.atan((dx - oldX) / radius) / Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
-                double newY = oldY + (Math.atan((dy - oldY) / radius) / Math.log(mass /  GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
+                double newX = oldX + (Math.atan((dx - oldX) / radius) /
+                        Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
+                double newY = oldY + (Math.atan((dy - oldY) / radius) /
+                        Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
 
 
                 if (Math.abs(newX) < GameConstants.FIELD_WIDTH && Math.abs(newY) < GameConstants.FIELD_HEIGHT) {
@@ -134,7 +143,7 @@ public class Mechanics extends Service implements Tickable {
 
     private void botMove() {
         for (GameSession gameSession : ApplicationContext.instance().get(MatchMaker.class).getActiveGameSessions()) {
-            for (Blob blob: gameSession.sessionField().getBlobs()) {
+            for (Blob blob : gameSession.sessionField().getBlobs()) {
                 blob.makeMove();
             }
         }
