@@ -1,7 +1,7 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
-import protocol.model.Functions;
+import protocol.utils.Calculator;
 import utils.RandomColorGenerator;
 
 import java.awt.*;
@@ -109,6 +109,6 @@ public class GameUnit {
     }
 
     private float calcRadius(int mass) {
-        return Functions.calculateRadius(mass);
+        return Calculator.calculateRadius(mass);
     }
 }

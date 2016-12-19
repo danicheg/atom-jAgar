@@ -1,19 +1,20 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
+import protocol.enums.GameConstraints;
 
 import java.util.List;
 
 /**
  * Single agar.io game session
  * <p>Single game session take place in square map, where players battle for food
- * <p>Max {@link protocol.model.GameConstraints#MAX_PLAYERS_IN_SESSION} players can play within single game session
+ * <p>Max {@link GameConstraints#MAX_PLAYERS_IN_SESSION} players can play within single game session
  *
  * @author Alpi
  */
 public interface GameSession {
     /**
-     * Player can join session whenever there are less then {@link protocol.model.GameConstraints#MAX_PLAYERS_IN_SESSION} players within game session
+     * Player can join session whenever there are less then {@link GameConstraints#MAX_PLAYERS_IN_SESSION} players within game session
      *
      * @param player player to join the game
      */

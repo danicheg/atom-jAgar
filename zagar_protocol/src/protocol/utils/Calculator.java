@@ -1,6 +1,6 @@
-package protocol.model;
+package protocol.utils;
 
-public class Functions {
+public class Calculator {
 
     public static float calculateRadius(int mass) {
         return (float) Math.sqrt(mass * 100);

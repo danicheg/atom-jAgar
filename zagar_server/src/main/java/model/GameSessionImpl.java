@@ -1,7 +1,7 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
-import protocol.model.GameConstraints;
+import protocol.enums.GameConstraints;
 import utils.FoodGenerator;
 import utils.IDGenerator;
 import utils.PlayerPlacer;

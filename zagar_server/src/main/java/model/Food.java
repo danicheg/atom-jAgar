@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 
-import static protocol.model.GameConstraints.FOOD_MASS;
+import static protocol.enums.GameConstraints.FOOD_MASS;
 
 public class Food extends GameUnit {
 

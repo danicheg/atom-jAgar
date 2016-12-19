@@ -12,8 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-import static zagar.GameConstants.DEFAULT_ACCOUNT_SERVER_HOST;
-import static zagar.GameConstants.DEFAULT_ACCOUNT_SERVER_PORT;
+import static protocol.enums.GameConstraints.*;
 
 public class AuthClient {
 

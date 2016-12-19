@@ -5,14 +5,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
-import protocol.model.Functions;
-import protocol.model.GameConstraints;
+import protocol.utils.Calculator;
+import protocol.enums.GameConstraints;
 
 import java.awt.Color;
-import java.util.List;
-
-import static java.lang.Math.PI;
-import static java.lang.Math.sqrt;
 
 public class Blob extends GameUnit {
 
@@ -46,7 +42,7 @@ public class Blob extends GameUnit {
 
     private static Location calculateDislocation(Cell parent, Location mouseLocation) {
         Vector vector = Vector.createVector(parent.getLocation(), mouseLocation).normalize().extend(parent.getRadius() +
-                2  + Functions.calculateRadius(GameConstraints.BLOB_MASS_CREATE));
+                2  + Calculator.calculateRadius(GameConstraints.BLOB_MASS_CREATE));
         return vector.getEnd(parent.getLocation());
     }
 

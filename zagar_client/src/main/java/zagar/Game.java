@@ -27,8 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
-import static zagar.GameConstants.DEFAULT_LOGIN;
-import static zagar.GameConstants.DEFAULT_PASSWORD;
+import static protocol.enums.GameConstraints.*;
 
 public class Game {
 

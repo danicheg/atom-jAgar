@@ -2,12 +2,10 @@ package zagar.view;
 
 
 import org.jetbrains.annotations.NotNull;
-import protocol.model.Functions;
+import protocol.utils.Calculator;
 import zagar.Game;
-import zagar.Main;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 
 public class Virus {
 
@@ -24,7 +22,7 @@ public class Virus {
         public Virus(double x, double y, float mass, int id) {
             this.x = x;
             this.y = y;
-            this.size = Functions.calculateRadius(mass);
+            this.size = Calculator.calculateRadius(mass);
             this.mass = (int) mass;
             this.id = id;
             this.xRender = this.x;

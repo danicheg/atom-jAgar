@@ -1,6 +1,6 @@
 package model;
 
-import protocol.model.GameConstraints;
+import protocol.enums.GameConstraints;
 import utils.IDGenerator;
 import utils.SequentialIDGenerator;
 

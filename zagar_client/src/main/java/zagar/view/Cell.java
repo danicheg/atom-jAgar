@@ -1,7 +1,7 @@
 package zagar.view;
 
 import org.jetbrains.annotations.NotNull;
-import protocol.model.Functions;
+import protocol.utils.Calculator;
 import zagar.Game;
 import zagar.Main;
 
@@ -28,7 +28,7 @@ public class Cell {
     public Cell(double x, double y, float mass, int id) {
         this.x = x;
         this.y = y;
-        this.size = Functions.calculateRadius(mass);
+        this.size = Calculator.calculateRadius(mass);
         this.id = id;
         this.xRender = this.x;
         this.yRender = this.y;

@@ -12,14 +12,12 @@ import model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import protocol.model.Functions;
-import protocol.model.GameConstraints;
+import protocol.utils.Calculator;
+import protocol.enums.GameConstraints;
 import ticker.Tickable;
 import ticker.Ticker;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 public class Mechanics extends Service implements Tickable {
@@ -78,8 +76,8 @@ public class Mechanics extends Service implements Tickable {
                 }
 
                 //Moving
-                double newX = Functions.calculateDestinationOnTurn(oldX, dx, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
-                double newY = Functions.calculateDestinationOnTurn(oldY, dy, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+                double newX = Calculator.calculateDestinationOnTurn(oldX, dx, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+                double newY = Calculator.calculateDestinationOnTurn(oldY, dy, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
                 Location pointWithoutCorrecting = new Location(newX, newY);
                 Location pointWithCorrecting = vectorCenter.getEnd(cell.getLocation());
                 Location properPoint = Vector.createVector(pointWithCorrecting, pointWithoutCorrecting)
@@ -217,8 +215,8 @@ public class Mechanics extends Service implements Tickable {
         radius = radius / player.getCells().size();
         int mass = (int) massCommon / player.getCells().size();
         Location startCenterPoint = new Location(xCenter, yCenter);
-        double newXCenter = Functions.calculateDestinationOnTurn(xCenter, dx, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
-        double newYCenter = Functions.calculateDestinationOnTurn(yCenter, dy, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+        double newXCenter = Calculator.calculateDestinationOnTurn(xCenter, dx, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+        double newYCenter = Calculator.calculateDestinationOnTurn(yCenter, dy, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
         return Vector.createVector(startCenterPoint, new Location(newXCenter, newYCenter));
     }
 }

@@ -1,4 +1,4 @@
-package protocol.model;
+package protocol.enums;
 
 public class GameConstraints {
     public static final int MAX_PLAYERS_IN_SESSION = 10;
@@ -14,4 +14,11 @@ public class GameConstraints {
     public static final int BLOB_MASS_CREATE = 18;
     public static final int BLOB_MASS_EATEN = 13;
     public static final int BLOB_SPEED = 2;
+
+    public static final String DEFAULT_GAME_SERVER_HOST = "localhost";
+    public static final int DEFAULT_GAME_SERVER_PORT = 7000;
+    public static final String DEFAULT_ACCOUNT_SERVER_HOST = "localhost";
+    public static final int DEFAULT_ACCOUNT_SERVER_PORT = 8080;
+    public static final String DEFAULT_LOGIN = "zAgar";
+    public static final String DEFAULT_PASSWORD = "pass";
 }

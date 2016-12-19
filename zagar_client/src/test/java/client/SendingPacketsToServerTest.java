@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-import static zagar.GameConstants.*;
+import static protocol.enums.GameConstraints.*;
 
 public class SendingPacketsToServerTest {
 

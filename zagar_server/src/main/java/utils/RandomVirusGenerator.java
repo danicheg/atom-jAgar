@@ -4,7 +4,7 @@ import model.Field;
 import model.Location;
 import model.Virus;
 import org.jetbrains.annotations.NotNull;
-import protocol.model.GameConstraints;
+import protocol.enums.GameConstraints;
 
 import java.util.Random;
 

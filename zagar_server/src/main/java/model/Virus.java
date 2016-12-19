@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static protocol.model.GameConstraints.INITIAL_VIRUS_MASS;
+import static protocol.enums.GameConstraints.INITIAL_VIRUS_MASS;
 
 public class Virus extends GameUnit {
 
