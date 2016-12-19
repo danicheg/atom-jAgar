@@ -2,7 +2,7 @@ package model;
 
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
-import protocol.enums.GameConstraints;
+import protocol.GameConstraints;
 import utils.RandomColorGenerator;
 
 import java.util.ArrayList;

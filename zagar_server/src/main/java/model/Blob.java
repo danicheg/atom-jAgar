@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
 import protocol.utils.Calculator;
-import protocol.enums.GameConstraints;
+import protocol.GameConstraints;
 
 import java.awt.Color;
 

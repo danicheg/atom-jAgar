@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.TimeUnit;
 
-import static protocol.enums.GameConstraints.*;
+import static protocol.GameConstraints.*;
 
 public class Game {
 
@@ -86,8 +86,8 @@ public class Game {
     public static GameState state = GameState.NOT_AUTHORIZED;
 
     @NotNull
-    private String gameServerUrl = "ws://" + GameConstants.DEFAULT_GAME_SERVER_HOST +
-            ":" + GameConstants.DEFAULT_GAME_SERVER_PORT;
+    private String gameServerUrl = "ws://" + DEFAULT_GAME_SERVER_HOST +
+            ":" + DEFAULT_GAME_SERVER_PORT;
 
     @NotNull
     private AuthClient authClient = new AuthClient();

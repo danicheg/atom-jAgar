@@ -2,7 +2,7 @@ package zagar.view;
 
 import org.jetbrains.annotations.NotNull;
 import protocol.utils.Calculator;
-import protocol.enums.GameConstraints;
+import protocol.GameConstraints;
 import zagar.Game;
 
 import java.awt.*;

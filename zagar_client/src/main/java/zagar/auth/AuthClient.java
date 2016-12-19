@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-import static protocol.enums.GameConstraints.*;
+import static protocol.GameConstraints.*;
 
 public class AuthClient {
 

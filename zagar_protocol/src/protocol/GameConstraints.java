@@ -1,4 +1,4 @@
-package protocol.model;
+package protocol;
 
 public class GameConstraints {
     public static final int MAX_PLAYERS_IN_SESSION = 10;

@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.concurrent.TimeUnit;
 
-import static protocol.enums.GameConstraints.*;
+import static protocol.GameConstraints.*;
 
 public class SendingPacketsToServerTest {
 

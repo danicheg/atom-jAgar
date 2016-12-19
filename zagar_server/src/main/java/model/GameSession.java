@@ -1,7 +1,7 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
-import protocol.enums.GameConstraints;
+import protocol.GameConstraints;
 
 import java.util.List;
 

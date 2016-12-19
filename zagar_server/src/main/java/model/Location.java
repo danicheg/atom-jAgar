@@ -2,7 +2,7 @@ package model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import protocol.enums.GameConstraints;
+import protocol.GameConstraints;
 
 import java.util.Random;
 

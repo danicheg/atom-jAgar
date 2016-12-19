@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import protocol.utils.Calculator;
-import protocol.enums.GameConstraints;
+import protocol.GameConstraints;
 import ticker.Tickable;
 import ticker.Ticker;
 
