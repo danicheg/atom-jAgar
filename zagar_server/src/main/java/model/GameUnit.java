@@ -2,13 +2,10 @@ package model;
 
 import org.jetbrains.annotations.NotNull;
 import protocol.model.Functions;
+import utils.RandomColorGenerator;
 
 import java.awt.*;
 import java.util.Random;
-
-import static java.lang.Math.PI;
-import static java.lang.Math.floor;
-import static java.lang.Math.sqrt;
 
 public class GameUnit {
 
@@ -43,37 +40,17 @@ public class GameUnit {
         this.id = new Random().nextInt();
         this.speed = speed;
         this.location = location;
-        this.color = getRandomColor();
+        this.color = RandomColorGenerator.generateRandomColor();
         this.mass = mass;
         this.radius = calcRadius(mass);
     }
 
     public GameUnit(@NotNull Location location, int mass) {
         this.id = new Random().nextInt();
-        this.color = getRandomColor();
+        this.color = RandomColorGenerator.generateRandomColor();
         this.location = location;
         this.mass = mass;
         this.radius = calcRadius(mass);
-    }
-
-    static Color getRandomColor() {
-        Random random = new Random();
-        switch (random.nextInt(5)) {
-            case 0:
-                return Color.BLACK;
-            case 1:
-                return Color.BLUE;
-            case 2:
-                return Color.GREEN;
-            case 3:
-                return Color.ORANGE;
-            case 4:
-                return Color.RED;
-            case 5:
-                return Color.YELLOW;
-            default:
-                return Color.PINK;
-        }
     }
 
     public int getId() {
@@ -98,7 +75,7 @@ public class GameUnit {
         this.speed = speed;
     }
 
-    public  void decreaseSpeed (float decrement) {
+    public void decreaseSpeed(float decrement) {
         float result = speed - decrement;
         if (result < 0) {
             result = 0;

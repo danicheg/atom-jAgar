@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-@WebSocket(maxTextMessageSize = 1024)
+@WebSocket(maxTextMessageSize = 32768)
 public class ServerConnectionSocket {
 
     @NotNull

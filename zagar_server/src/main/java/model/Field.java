@@ -1,16 +1,11 @@
 package model;
 
-import com.sun.istack.internal.Nullable;
-import dao.DatabaseAccessLayer;
-import main.ApplicationContext;
-import matchmaker.MatchMaker;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
+import utils.RandomColorGenerator;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Field {
@@ -34,6 +29,22 @@ public class Field {
         blobs = new ConcurrentHashSet<>();
     }
 
+    public Field generatePrimaryState() {
+        int foodAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 100000;
+        ConcurrentHashSet<Food> foods = new ConcurrentHashSet<>();
+        for (int i = 0; i < foodAmount; i++) {
+            foods.add(new Food(RandomColorGenerator.generateRandomColor(), new Location()));
+        }
+        int virusAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 200000;
+        List<Virus> viruses = new ArrayList<>();
+        for (int i = 0; i < virusAmount; i++) {
+            viruses.add(new Virus(new Location()));
+        }
+        setViruses(viruses);
+        setFoods(foods);
+        return this;
+    }
+
     public void addBlob(Blob blob) {
         this.blobs.add(blob);
     }
@@ -52,13 +63,13 @@ public class Field {
         return viruses;
     }
 
+    public void setViruses(@NotNull List<Virus> viruses) {
+        this.viruses = viruses;
+    }
+
     @NotNull
     public ConcurrentHashSet<Food> getFoods() {
         return foods;
-    }
-
-    public void setViruses(@NotNull List<Virus> viruses) {
-        this.viruses = viruses;
     }
 
     public void setFoods(@NotNull ConcurrentHashSet<Food> food) {
@@ -71,22 +82,5 @@ public class Field {
 
     public void addFood(@NotNull Food food) {
         this.foods.add(food);
-    }
-
-    public static Field generatePrimaryState() {
-        Field field = new Field();
-        int foodAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 100000;
-        ConcurrentHashSet<Food> foods = new ConcurrentHashSet<>();
-        for (int i = 0; i < foodAmount; i++) {
-            foods.add(new Food(GameUnit.getRandomColor(), new Location()));
-        }
-        int virusAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 200000;
-        List<Virus> viruses = new ArrayList<>();
-        for (int i = 0; i < virusAmount; i++) {
-            viruses.add(new Virus(new Location()));
-        }
-        field.setViruses(viruses);
-        field.setFoods(foods);
-        return field;
     }
 }

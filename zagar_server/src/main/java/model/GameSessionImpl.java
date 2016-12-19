@@ -4,7 +4,10 @@ import org.jetbrains.annotations.NotNull;
 import utils.FoodGenerator;
 import utils.IDGenerator;
 import utils.PlayerPlacer;
+import utils.RandomPlayerPlacer;
+import utils.RandomVirusGenerator;
 import utils.SequentialIDGenerator;
+import utils.UniformFoodGenerator;
 import utils.VirusGenerator;
 
 import java.util.ArrayList;
@@ -20,20 +23,20 @@ public class GameSessionImpl implements GameSession {
     @NotNull
     private final List<Player> players;
     @NotNull
-    private final FoodGenerator foodGenerator;
-    @NotNull
     private final PlayerPlacer playerPlacer;
-    @NotNull
-    private final VirusGenerator virusGenerator;
 
-    public GameSessionImpl(@NotNull FoodGenerator foodGenerator,
-                           @NotNull PlayerPlacer playerPlacer,
-                           @NotNull VirusGenerator virusGenerator) {
-        this.foodGenerator = foodGenerator;
-        this.playerPlacer = playerPlacer;
-        this.virusGenerator = virusGenerator;
-        field = Field.generatePrimaryState();
+    public GameSessionImpl(@NotNull Field fieldToPlace) {
+        FoodGenerator foodGenerator = new UniformFoodGenerator(
+                fieldToPlace,
+                GameConstants.FOOD_PER_SECOND_GENERATION,
+                GameConstants.MAX_FOOD_ON_FIELD
+        );
+        VirusGenerator virusGenerator = new RandomVirusGenerator(fieldToPlace, GameConstants.NUMBER_OF_VIRUSES);
+        playerPlacer = new RandomPlayerPlacer(fieldToPlace);
+        field = fieldToPlace;
         players = new ArrayList<>();
+        field.generatePrimaryState();
+        foodGenerator.startGenerating();
         virusGenerator.generate();
     }
 
@@ -52,7 +55,7 @@ public class GameSessionImpl implements GameSession {
 
     @Override
     public List<Player> sessionPlayersList() {
-        return new ArrayList<>(players);
+        return players;
     }
 
     @NotNull
@@ -67,5 +70,5 @@ public class GameSessionImpl implements GameSession {
                 "id=" + id +
                 '}';
     }
-    
+
 }

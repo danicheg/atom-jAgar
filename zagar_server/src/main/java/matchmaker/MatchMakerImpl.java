@@ -1,18 +1,13 @@
 package matchmaker;
 
 import model.Field;
-import model.GameConstants;
 import model.GameSession;
 import model.GameSessionImpl;
 import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import utils.RandomPlayerPlacer;
-import utils.RandomVirusGenerator;
-import utils.UniformFoodGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -50,22 +45,7 @@ public class MatchMakerImpl implements MatchMaker {
     /**
      * @return new GameSession
      */
-    private
-    @NotNull
-    GameSession createNewGame() {
-        Field field = new Field();
-        //TODO
-        //Ticker ticker = ApplicationContext.instance().get(Ticker.class);
-        UniformFoodGenerator foodGenerator = new UniformFoodGenerator(
-                field,
-                GameConstants.FOOD_PER_SECOND_GENERATION,
-                GameConstants.MAX_FOOD_ON_FIELD
-        );
-        //ticker.registerTickable(foodGenerator);
-        return new GameSessionImpl(
-                foodGenerator,
-                new RandomPlayerPlacer(field),
-                new RandomVirusGenerator(field, GameConstants.NUMBER_OF_VIRUSES)
-        );
+    private GameSession createNewGame() {
+        return new GameSessionImpl(new Field());
     }
 }

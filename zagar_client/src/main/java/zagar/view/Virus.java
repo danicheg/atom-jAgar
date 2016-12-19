@@ -35,7 +35,6 @@ public class Virus {
             this.yRender -= (this.yRender - y) / 5f;
             this.sizeRender -= (this.sizeRender - size) / 9f;
             this.mass = Math.round((this.sizeRender * this.sizeRender) / 100);
-            this.rotation += (1f / (Math.max(this.mass, 20) * 2));
         }
 
         public void render(@NotNull Graphics2D g, float scale) {

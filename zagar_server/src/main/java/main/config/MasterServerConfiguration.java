@@ -24,12 +24,13 @@ public class MasterServerConfiguration {
         ) {
 
             props.load(input);
-            getPortValues(props);
+            ACCOUNT_PORT = Integer.valueOf(props.getProperty("accountServerPort"));
+            CLIENT_PORT = Integer.valueOf(props.getProperty("clientConnectionPort"));
 
             final String[] services = props.getProperty("services").split(",");
             SERVICES_ARRAY = new Class[services.length];
             for (int i = 0; i < SERVICES_ARRAY.length; i++) {
-                collectServices(props, services, i);
+                SERVICES_ARRAY[i] = Class.forName(props.getProperty(services[i]));
             }
 
         } catch (NumberFormatException e) {
@@ -43,15 +44,6 @@ public class MasterServerConfiguration {
 
     private MasterServerConfiguration() {
         throw new IllegalAccessError(getClass() + " - utility class");
-    }
-
-    private static void getPortValues(Properties props) throws NumberFormatException {
-            ACCOUNT_PORT = Integer.valueOf(props.getProperty("accountServerPort"));
-            CLIENT_PORT = Integer.valueOf(props.getProperty("clientConnectionPort"));
-    }
-
-    private static void collectServices(Properties props, String[] services, int i) throws ClassNotFoundException {
-            SERVICES_ARRAY[i] = Class.forName(props.getProperty(services[i]));
     }
 
 }

@@ -11,9 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import protocol.model.Blob;
+import protocol.model.Cell;
 import protocol.model.Food;
 import protocol.model.Virus;
-import protocol.model.Cell;
 
 import java.io.IOException;
 import java.util.Map;
