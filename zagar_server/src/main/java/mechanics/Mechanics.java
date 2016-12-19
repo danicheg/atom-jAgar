@@ -162,8 +162,20 @@ public class Mechanics extends Service implements Tickable {
                     int oldMass = elem.getMass();
                     if (oldMass >= GameConstraints.DEFAULT_PLAYER_CELL_MASS * 2) {
                         elem.setMass(oldMass / 2);
-                        Cell newCell = new Cell(new Location(elem.getLocation().getX() + elem.getRadius() * 5,
-                                elem.getLocation().getY() + elem.getRadius() * 5));
+                        double x = elem.getLocation().getX();
+                        double y = elem.getLocation().getY();
+                        if (GameConstraints.FIELD_WIDTH - elem.getX() - elem.getRadius() * 6 > 0) {
+                            x = elem.getX() + elem.getRadius() * 5;
+                        } else if (elem.getLocation().getX() - elem.getRadius() * 6 > 0) {
+                            x = elem.getX() - elem.getRadius() * 5;
+                        }
+                        if (GameConstraints.FIELD_HEIGHT - elem.getY() - elem.getRadius() * 6 > 0) {
+                            y = elem.getY() + elem.getRadius() * 5;
+                        } else if (elem.getY() - elem.getRadius() * 6 > 0){
+                            y = elem.getLocation().getY() - elem.getRadius() * 5;
+                        }
+                        Location newCellLocation = new Location(x,y);
+                        Cell newCell = new Cell(newCellLocation);
                         newCell.setMass(oldMass / 2);
                         player.addCell(newCell);
                     }
