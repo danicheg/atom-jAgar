@@ -11,8 +11,7 @@ import java.io.IOException;
 
 public class PacketMove {
 
-    @NotNull
-    private static final Logger log = LogManager.getLogger(">>>");
+    private static final Logger LOG = LogManager.getLogger(PacketMove.class);
 
     private float x;
     private float y;
@@ -26,7 +25,8 @@ public class PacketMove {
 
     public void write() throws IOException {
         String msg = JSONHelper.toJSON(new CommandMove(x, y, name));
-        log.info("Sending [" + msg + "]");
+        LOG.info("Sending [" + msg + "]");
         Game.socket.session.getRemote().sendString(msg);
     }
+
 }

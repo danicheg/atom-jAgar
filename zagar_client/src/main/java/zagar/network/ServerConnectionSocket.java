@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class ServerConnectionSocket {
 
     @NotNull
-    private static final Logger log = LogManager.getLogger("<<<");
+    private static final Logger LOG = LogManager.getLogger(ServerConnectionSocket.class);
 
     @NotNull
     private final CountDownLatch closeLatch;
@@ -47,26 +47,26 @@ public class ServerConnectionSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, @NotNull String reason) {
-        log.info("Closed." + statusCode + "<" + reason + ">");
+        LOG.info("Closed." + statusCode + "<" + reason + ">");
         this.closeLatch.countDown();
     }
 
     @OnWebSocketConnect
     public void onConnect(@NotNull Session session) throws IOException {
         this.session = session;
-        log.info("Connected!");
+        LOG.info("Connected!");
         new PacketAuth(Game.login, Game.serverToken).write();
     }
 
     @OnWebSocketMessage
     public void onTextPacket(@NotNull String msg) {
-        log.info("Received packet: " + msg);
+        LOG.info("Received packet: " + msg);
         if (session.isOpen()) {
             handlePacket(msg);
         }
     }
 
-    public void handlePacket(@NotNull String msg) {
+    private void handlePacket(@NotNull String msg) {
         JsonObject json = JSONHelper.getJSONObject(msg);
         String name = json.get("command").getAsString();
         switch (name) {
@@ -82,6 +82,8 @@ public class ServerConnectionSocket {
             case CommandAuthOk.NAME:
                 new PacketHandlerAuthOk();
                 break;
+            default:
+                LOG.error("Unsupported packet");
         }
     }
 }

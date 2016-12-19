@@ -4,9 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 
-/**
- * @author apomosov
- */
 public class Reporter {
 
     private Reporter() {

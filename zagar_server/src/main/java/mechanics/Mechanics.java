@@ -33,14 +33,14 @@ public class Mechanics extends Service implements Tickable {
     @Override
     public void run() {
         log.info(getAddress() + " started");
-        Ticker ticker = new Ticker(this, 50);
+        Ticker ticker = new Ticker(this, 200);
         ticker.loop();
     }
 
     @Override
     public void tick(long elapsedNanos) {
         try {
-            Thread.sleep(20);
+            Thread.sleep(5);
         } catch (InterruptedException e) {
             log.error(e);
             Thread.currentThread().interrupt();
