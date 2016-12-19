@@ -40,11 +40,6 @@ public class GameSessionImpl implements GameSession {
         field.generateFieldWithFood();
         foodGenerator.startGenerating();
         virusGenerator.generate();
-        List<Cell> cells = new CopyOnWriteArrayList<>();
-        sessionPlayersList().stream()
-                .filter(player -> !player.equals(players))
-                .map(Player::getCells)
-                .forEach(cells::addAll);
     }
 
     @Override
