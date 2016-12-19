@@ -75,17 +75,7 @@ public class Cell {
                 return;
             }
 
-            int massRender = (int) this.size;
-                Polygon hexagon = new Polygon();
-                int a = massRender / 20 + 5;
-                a = Math.min(a, 50);
-                for (int i = 0; i < a; i++) {
-                    float pi = 3.14f;
-                    int pointX = (int) (cellX + (cellSize / 2) * Math.cos(rotation + i * 2 * pi / a)) + cellSize / 2;
-                    int pointY = (int) (cellY + (cellSize / 2) * Math.sin(rotation + i * 2 * pi / a)) + cellSize / 2;
-                    hexagon.addPoint(pointX, pointY);
-                }
-                g.fillPolygon(hexagon);
+            g.fillOval(cellX, cellY, cellSize, cellSize);
 
             if (this.name.length() > 0 || this.mass > 30) {
                 Font font = Main.frame.canvas.cellsFont;

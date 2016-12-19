@@ -50,7 +50,16 @@ public class Food {
             if (x < -size - 30 || x > GameFrame.size.width + 30 || y < -size - 30 || y > GameFrame.size.height + 30) {
                 return;
             }
-            g.fillOval(x,y,size,size);
+        int massRender = (int) this.size;
+        Polygon hexagon = new Polygon();
+        int a = massRender / 20 + 5;
+        a = Math.min(a, 50);
+        for (int i = 0; i < a; i++) {
+            int pointX = (int) (x+ (size / 2) * Math.cos(i * 2 * Math.PI / a)) + size / 2;
+            int pointY = (int) (y + (size / 2) * Math.sin(i * 2 * Math.PI / a)) + size / 2;
+            hexagon.addPoint(pointX, pointY);
+        }
+        g.fillPolygon(hexagon);
     }
 
     @Override
