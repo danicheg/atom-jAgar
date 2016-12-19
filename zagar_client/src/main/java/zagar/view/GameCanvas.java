@@ -82,12 +82,7 @@ public class GameCanvas extends JPanel {
 
         g.setFont(cellsFont);
 
-        for (int virusesCounter = 0; virusesCounter < Game.viruses.length; virusesCounter++) {
-            Virus virus = Game.viruses[virusesCounter];
-            if (virus != null) {
-                virus.render(g, 1);
-            }
-        }
+
 
         for (int foodsCounter = 0; foodsCounter < Game.foods.length; foodsCounter++) {
             Food food = Game.foods[foodsCounter];
@@ -113,6 +108,13 @@ public class GameCanvas extends JPanel {
                 if (cell.mass > 9) {
                     cell.render(g, Math.max(1 - 1f / (cell.mass / 10f), 0.87f));
                 }
+            }
+        }
+
+        for (int virusesCounter = 0; virusesCounter < Game.viruses.length; virusesCounter++) {
+            Virus virus = Game.viruses[virusesCounter];
+            if (virus != null) {
+                virus.render(g, 1);
             }
         }
 

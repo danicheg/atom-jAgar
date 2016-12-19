@@ -63,6 +63,8 @@ public class Mechanics extends Service implements Tickable {
                 double oldY = cell.getY();
                 double radius = cell.getRadius();
                 int mass = cell.getMass();
+
+                //Moving
                 double newX = oldX + 2 * (Math.atan((dx - oldX) / radius) /
                         Math.log(mass / GameConstants.DEFAULT_PLAYER_CELL_MASS * Math.E));
                 double newY = oldY + 2 * (Math.atan((dy - oldY) / radius) /
@@ -73,6 +75,7 @@ public class Mechanics extends Service implements Tickable {
                         && newY < GameConstants.FIELD_HEIGHT
                         && newX > 0
                         && newY > 0) {
+                    //Eating food
                     cell.setX(newX);
                     cell.setY(newY);
                     Set<Food> foods = player.getSession().sessionField().getFoods();
@@ -89,6 +92,8 @@ public class Mechanics extends Service implements Tickable {
                             DatabaseAccessLayer.updateUser(player.getUser());
                         }
                     }
+
+                    //Eating blob
                     Set<Blob> blobs = player.getSession().sessionField().getBlobs();
                     for (Blob blob : blobs) {
                         double blobX = blob.getX();
@@ -101,6 +106,8 @@ public class Mechanics extends Service implements Tickable {
                             DatabaseAccessLayer.updateUser(player.getUser());
                         }
                     }
+
+                    //Splitting if is more than virus
                     int oldMass = cell.getMass();
                     List<Virus> viruses = player.getSession().sessionField().getViruses();
                     for (Virus virus : viruses) {
