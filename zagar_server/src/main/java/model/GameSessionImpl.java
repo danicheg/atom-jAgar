@@ -36,7 +36,7 @@ public class GameSessionImpl implements GameSession {
         playerPlacer = new RandomPlayerPlacer(fieldToPlace);
         field = fieldToPlace;
         players = new ArrayList<>();
-        field.generatePrimaryState();
+        field.generateFieldWithFood();
         foodGenerator.startGenerating();
         virusGenerator.generate();
     }
