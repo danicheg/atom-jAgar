@@ -16,6 +16,7 @@ import protocol.utils.Calculator;
 import protocol.GameConstraints;
 import ticker.Tickable;
 import ticker.Ticker;
+import utils.ServerCalculator;
 
 import java.util.List;
 import java.util.Set;
@@ -68,7 +69,7 @@ public class Mechanics extends Service implements Tickable {
 
                 for (Cell cell2 : player.getCells()) {
                     if (!cell.equals(cell2)) {
-                        if (cell.getLocation().distanceTo(cell2.getLocation()) < cell.getRadius()) {
+                        if (cell.getLocation().distanceTo(cell2.getLocation()) < 2.5 * cell.getRadius()) {
                                 cell.setMass(cell.getMass() + cell2.getMass());
                                 player.removeCell(cell2);
                         }
@@ -88,6 +89,7 @@ public class Mechanics extends Service implements Tickable {
                         && properPoint.getY() < GameConstraints.FIELD_HEIGHT
                         && properPoint.getX() > 0
                         && properPoint.getY() > 0) {
+
                     //Eating food
                     cell.setLocation(properPoint);
                     Set<Food> foods = player.getSession().sessionField().getFoods();
@@ -126,8 +128,7 @@ public class Mechanics extends Service implements Tickable {
                         if (checkDistance(first, second, virus.getLocation(), virus.getRadius() / 2, cell.getRadius())) {
                             if (oldMass >= virus.getMass()) {
                                 cell.setMass(oldMass / 2);
-                                Cell newCell = new Cell(new Location(cell.getLocation().getX() + cell.getRadius() * 5,
-                                        cell.getLocation().getY() + cell.getRadius() * 5));
+                                Cell newCell = new Cell(ServerCalculator.calculateLocationOnSplitting(cell));
                                 newCell.setMass(oldMass / 2);
                                 player.addCell(newCell);
                             }
@@ -162,19 +163,7 @@ public class Mechanics extends Service implements Tickable {
                     int oldMass = elem.getMass();
                     if (oldMass >= GameConstraints.DEFAULT_PLAYER_CELL_MASS * 2) {
                         elem.setMass(oldMass / 2);
-                        double x = elem.getLocation().getX();
-                        double y = elem.getLocation().getY();
-                        if (GameConstraints.FIELD_WIDTH - elem.getX() - elem.getRadius() * 6 > 0) {
-                            x = elem.getX() + elem.getRadius() * 5;
-                        } else if (elem.getLocation().getX() - elem.getRadius() * 6 > 0) {
-                            x = elem.getX() - elem.getRadius() * 5;
-                        }
-                        if (GameConstraints.FIELD_HEIGHT - elem.getY() - elem.getRadius() * 6 > 0) {
-                            y = elem.getY() + elem.getRadius() * 5;
-                        } else if (elem.getY() - elem.getRadius() * 6 > 0){
-                            y = elem.getLocation().getY() - elem.getRadius() * 5;
-                        }
-                        Location newCellLocation = new Location(x,y);
+                        Location newCellLocation = ServerCalculator.calculateLocationOnSplitting(elem);
                         Cell newCell = new Cell(newCellLocation);
                         newCell.setMass(oldMass / 2);
                         player.addCell(newCell);
@@ -208,7 +197,7 @@ public class Mechanics extends Service implements Tickable {
 
         double distanceOne = edgeDown.distanceTo(edgeUpCell);
         double distanceTwo = edgeUp.distanceTo(edgeDownCell);
-        double length = 2.5f * cellNormalVector.length();
+        double length = 3.0f * cellNormalVector.length();
         return (distanceOne < length) && (distanceTwo < length);
     }
 
