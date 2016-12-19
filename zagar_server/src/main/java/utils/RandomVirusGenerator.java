@@ -1,10 +1,10 @@
 package utils;
 
 import model.Field;
-import model.GameConstants;
 import model.Location;
 import model.Virus;
 import org.jetbrains.annotations.NotNull;
+import protocol.model.GameConstraints;
 
 import java.util.Random;
 
@@ -21,10 +21,10 @@ public class RandomVirusGenerator implements VirusGenerator {
     @Override
     public void generate() {
         Random random = new Random();
-        int virusRadius = (int) Math.sqrt(GameConstants.VIRUS_MASS / Math.PI);
+        int virusRadius = (int) Math.sqrt(GameConstraints.VIRUS_MASS / Math.PI);
         for (int i = 0; i < numberOfViruses; i++) {
-            new Virus(new Location(virusRadius + random.nextInt(GameConstants.FIELD_WIDTH - 2 * virusRadius),
-                    virusRadius + random.nextInt(GameConstants.FIELD_HEIGHT - 2 * virusRadius)));
+            new Virus(new Location(virusRadius + random.nextInt(GameConstraints.FIELD_WIDTH - 2 * virusRadius),
+                    virusRadius + random.nextInt(GameConstraints.FIELD_HEIGHT - 2 * virusRadius)));
         }
     }
 

@@ -2,6 +2,7 @@ package zagar.view;
 
 
 import org.jetbrains.annotations.NotNull;
+import protocol.model.Functions;
 import zagar.Game;
 import zagar.Main;
 
@@ -20,10 +21,11 @@ public class Virus {
         public int mass;
         private float rotation = 0;
 
-        public Virus(double x, double y, float size, int id) {
+        public Virus(double x, double y, float mass, int id) {
             this.x = x;
             this.y = y;
-            this.size = size;
+            this.size = Functions.calculateRadius(mass);
+            this.mass = (int) mass;
             this.id = id;
             this.xRender = this.x;
             this.yRender = this.y;
@@ -34,7 +36,6 @@ public class Virus {
             this.xRender -= (this.xRender - x) / 5f;
             this.yRender -= (this.yRender - y) / 5f;
             this.sizeRender -= (this.sizeRender - size) / 9f;
-            this.mass = Math.round((this.sizeRender * this.sizeRender) / 100);
         }
 
         public void render(@NotNull Graphics2D g, float scale) {
@@ -63,7 +64,7 @@ public class Virus {
                     return;
                 }
 
-                int massRender = (int) ((this.size * this.size) / 100);
+                int massRender = this.mass;
 
                     Polygon hexagon = new Polygon();
                     int a = 2 * (massRender / 8 + 10);

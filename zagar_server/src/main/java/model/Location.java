@@ -3,6 +3,7 @@ package model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import protocol.model.GameConstraints;
 
 import java.util.Random;
 
@@ -21,8 +22,8 @@ public class Location {
 
     public Location() {
         Random random = new Random();
-        this.x = random.nextInt(GameConstants.FIELD_WIDTH);
-        this.y = random.nextInt(GameConstants.FIELD_HEIGHT);
+        this.x = random.nextInt(GameConstraints.FIELD_WIDTH);
+        this.y = random.nextInt(GameConstraints.FIELD_HEIGHT);
         if (LOG.isInfoEnabled()) {
             LOG.info(toString() + " created");
         }
@@ -37,23 +38,23 @@ public class Location {
     }
 
     public void setX(double x) {
-        if (x < GameConstants.FIELD_WIDTH) {
+        if (x < GameConstraints.FIELD_WIDTH) {
             this.x = x;
         } else  if (x > 0){
-            this.x = GameConstants.FIELD_WIDTH - 2;
+            this.x = GameConstraints.FIELD_WIDTH - 2;
         } else {
-            this.x = 0;
+            this.x = 2;
         }
     }
 
 
     public void setY(double y) {
-        if (y < GameConstants.FIELD_HEIGHT) {
+        if (y < GameConstraints.FIELD_HEIGHT) {
             this.y = y;
         } else if (y > 0) {
-            this.y = GameConstants.FIELD_HEIGHT - 2;
+            this.y = GameConstraints.FIELD_HEIGHT - 2;
         } else {
-            this.y = 0;
+            this.y = 2;
         }
     }
 

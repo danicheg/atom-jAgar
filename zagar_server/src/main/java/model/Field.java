@@ -2,6 +2,7 @@ package model;
 
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
+import protocol.model.GameConstraints;
 import utils.RandomColorGenerator;
 
 import java.util.ArrayList;
@@ -24,12 +25,12 @@ public class Field {
     }
 
     public void generatePrimaryState() {
-        int foodAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 100000;
+        int foodAmount = GameConstraints.FIELD_HEIGHT * GameConstraints.FIELD_WIDTH / 100000;
         ConcurrentHashSet<Food> primaryFoods = new ConcurrentHashSet<>();
         for (int i = 0; i < foodAmount; i++) {
             primaryFoods.add(new Food(RandomColorGenerator.generateRandomColor(), new Location()));
         }
-        int virusAmount = GameConstants.FIELD_HEIGHT * GameConstants.FIELD_WIDTH / 200000;
+        int virusAmount = GameConstraints.FIELD_HEIGHT * GameConstraints.FIELD_WIDTH / 200000;
         List<Virus> primaryViruses = new ArrayList<>();
         for (int i = 0; i < virusAmount; i++) {
             primaryViruses.add(new Virus(new Location()));

@@ -1,7 +1,10 @@
 package zagar.view;
 
 import org.jetbrains.annotations.NotNull;
+import protocol.model.Functions;
+import protocol.model.GameConstraints;
 import zagar.Game;
+import zagar.GameConstants;
 
 import java.awt.*;
 
@@ -9,7 +12,8 @@ public class Food {
 
     private double x, y;
     private int id;
-    private static float size = 20f;
+    private static float size = Functions.calculateRadius(GameConstraints.FOOD_MASS);
+    private static float mass = GameConstraints.FOOD_MASS;
     private int r, g, b;
 
 

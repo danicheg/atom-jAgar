@@ -1,6 +1,7 @@
 package model;
 
 import org.jetbrains.annotations.NotNull;
+import protocol.model.GameConstraints;
 import utils.FoodGenerator;
 import utils.IDGenerator;
 import utils.PlayerPlacer;
@@ -28,10 +29,10 @@ public class GameSessionImpl implements GameSession {
     public GameSessionImpl(@NotNull Field fieldToPlace) {
         FoodGenerator foodGenerator = new UniformFoodGenerator(
                 fieldToPlace,
-                GameConstants.FOOD_PER_SECOND_GENERATION,
-                GameConstants.MAX_FOOD_ON_FIELD
+                GameConstraints.FOOD_PER_SECOND_GENERATION,
+                GameConstraints.MAX_FOOD_ON_FIELD
         );
-        VirusGenerator virusGenerator = new RandomVirusGenerator(fieldToPlace, GameConstants.NUMBER_OF_VIRUSES);
+        VirusGenerator virusGenerator = new RandomVirusGenerator(fieldToPlace, GameConstraints.NUMBER_OF_VIRUSES);
         playerPlacer = new RandomPlayerPlacer(fieldToPlace);
         field = fieldToPlace;
         players = new ArrayList<>();

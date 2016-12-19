@@ -25,22 +25,21 @@ public class Cell {
     private int b;
     private float rotation = 0;
 
-    public Cell(double x, double y, float size, int id) {
+    public Cell(double x, double y, float mass, int id) {
         this.x = x;
         this.y = y;
-        this.size = (float) Functions.calculateRadius(size);
+        this.size = Functions.calculateRadius(mass);
         this.id = id;
         this.xRender = this.x;
         this.yRender = this.y;
         this.sizeRender = this.size;
-        this.mass = (int) size;
+        this.mass = (int) mass;
     }
 
     public void tick() {
         this.xRender -= (this.xRender - x) / 5f;
         this.yRender -= (this.yRender - y) / 5f;
         this.sizeRender -= (this.sizeRender - size) / 9f;
-//        this.mass = Math.round((this.sizeRender * this.sizeRender) / 100);
         if (Game.cellNames.containsKey(this.id)) {
             this.name = Game.cellNames.get(this.id);
         }

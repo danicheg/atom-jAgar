@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import protocol.model.Functions;
+import protocol.model.GameConstraints;
 import ticker.Tickable;
 import ticker.Ticker;
 
@@ -77,16 +78,16 @@ public class Mechanics extends Service implements Tickable {
                 }
 
                 //Moving
-                double newX = Functions.calculateDestinationOnTurn(oldX, dx, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
-                double newY = Functions.calculateDestinationOnTurn(oldY, dy, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
+                double newX = Functions.calculateDestinationOnTurn(oldX, dx, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+                double newY = Functions.calculateDestinationOnTurn(oldY, dy, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
                 Location pointWithoutCorrecting = new Location(newX, newY);
                 Location pointWithCorrecting = vectorCenter.getEnd(cell.getLocation());
                 Location properPoint = Vector.createVector(pointWithCorrecting, pointWithoutCorrecting)
-                        .divide(2)
+                        .divide(4)
                         .getEnd(pointWithCorrecting);
 
-                if (properPoint.getX() < GameConstants.FIELD_WIDTH
-                        && properPoint.getY() < GameConstants.FIELD_HEIGHT
+                if (properPoint.getX() < GameConstraints.FIELD_WIDTH
+                        && properPoint.getY() < GameConstraints.FIELD_HEIGHT
                         && properPoint.getX() > 0
                         && properPoint.getY() > 0) {
                     //Eating food
@@ -143,10 +144,10 @@ public class Mechanics extends Service implements Tickable {
         Player player = Player.getPlayerByName(name);
         if (player != null) {
             Cell cell = player.getMostMassiveCell();
-            if (cell.getMass() >= GameConstants.DEFAULT_PLAYER_CELL_MASS + GameConstants.BLOB_MASS_CREATE) {
+            if (cell.getMass() >= GameConstraints.DEFAULT_PLAYER_CELL_MASS + GameConstraints.BLOB_MASS_CREATE) {
                 Location mouseLocation = new Location(x, y);
                 Blob blob = new Blob(mouseLocation, cell);
-                cell.setMass(cell.getMass() - GameConstants.BLOB_MASS_CREATE);
+                cell.setMass(cell.getMass() - GameConstraints.BLOB_MASS_CREATE);
                 player.getSession().sessionField().addBlob(blob);
                 player.getUser().setScore(player.getScore());
                 DatabaseAccessLayer.updateUser(player.getUser());
@@ -161,7 +162,7 @@ public class Mechanics extends Service implements Tickable {
             for (Cell elem : player.getCells()) {
                 if (player.getCells().size() < 16) {
                     int oldMass = elem.getMass();
-                    if (oldMass >= GameConstants.DEFAULT_PLAYER_CELL_MASS * 2) {
+                    if (oldMass >= GameConstraints.DEFAULT_PLAYER_CELL_MASS * 2) {
                         elem.setMass(oldMass / 2);
                         Cell newCell = new Cell(new Location(elem.getLocation().getX() + elem.getRadius() * 5,
                                 elem.getLocation().getY() + elem.getRadius() * 5));
@@ -197,7 +198,7 @@ public class Mechanics extends Service implements Tickable {
 
         double distanceOne = edgeDown.distanceTo(edgeUpCell);
         double distanceTwo = edgeUp.distanceTo(edgeDownCell);
-        double length = 2.1 * cellNormalVector.length();
+        double length = 2.5f * cellNormalVector.length();
         return (distanceOne < length) && (distanceTwo < length);
     }
 
@@ -216,8 +217,8 @@ public class Mechanics extends Service implements Tickable {
         radius = radius / player.getCells().size();
         int mass = (int) massCommon / player.getCells().size();
         Location startCenterPoint = new Location(xCenter, yCenter);
-        double newXCenter = Functions.calculateDestinationOnTurn(xCenter, dx, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
-        double newYCenter = Functions.calculateDestinationOnTurn(yCenter, dy, radius, mass, GameConstants.DEFAULT_PLAYER_CELL_MASS);
+        double newXCenter = Functions.calculateDestinationOnTurn(xCenter, dx, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+        double newYCenter = Functions.calculateDestinationOnTurn(yCenter, dy, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
         return Vector.createVector(startCenterPoint, new Location(newXCenter, newYCenter));
     }
 }

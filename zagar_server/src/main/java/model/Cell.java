@@ -1,5 +1,6 @@
 package model;
 
+import protocol.model.GameConstraints;
 import utils.IDGenerator;
 import utils.SequentialIDGenerator;
 
@@ -10,12 +11,12 @@ public class Cell extends GameUnit {
     public static final IDGenerator idGenerator = new SequentialIDGenerator();
 
     public Cell(Location x) {
-        super(x, GameConstants.DEFAULT_PLAYER_CELL_MASS);
+        super(x, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
         this.id = idGenerator.next();
     }
 
     public Cell() {
-        super(new Location(), GameConstants.DEFAULT_PLAYER_CELL_MASS);
+        super(new Location(), GameConstraints.DEFAULT_PLAYER_CELL_MASS);
         this.id = idGenerator.next();
     }
 

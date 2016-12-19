@@ -11,10 +11,10 @@ public final class Cell {
     private double x;
     private double y;
 
-    public Cell(int cellId, int playerId, int size, double x, double y) {
+    public Cell(int cellId, int playerId, int mass, double x, double y) {
         this.cellId = cellId;
         this.playerId = playerId;
-        this.size = size;
+        this.size = mass;
         this.x = x;
         this.y = y;
     }
