@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import protocol.CommandAuth;
 import utils.JSONDeserializationException;
 import utils.JSONHelper;
+import utils.RandomColorGenerator;
 
 import java.io.IOException;
 
@@ -53,7 +54,8 @@ public class PacketHandlerAuth {
                 if (toRemovePlayer != null) {
                     Player.removeUserFromSession(toRemovePlayer);
                 }
-                Player player = new Player(Player.idGenerator.next(), commandAuth.getLogin());
+                Player player = new Player(Player.idGenerator.next(), commandAuth.getLogin(),
+                        RandomColorGenerator.generateRandomColor());
                 UserEntity user = DatabaseAccessLayer.getUser(DatabaseAccessLayer.issueToken(commandAuth.getLogin()));
                 player.setUser(user);
                 ApplicationContext.instance().get(ClientConnections.class).registerConnection(player, session);

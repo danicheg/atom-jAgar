@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import utils.IDGenerator;
 import utils.SequentialIDGenerator;
 
+import java.awt.*;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,20 +17,27 @@ public class Player {
     public static final IDGenerator idGenerator = new SequentialIDGenerator();
 
     private final int id;
+
     @NotNull
     private final List<Cell> cells;
+
     @NotNull
     private String name;
+
     @Nullable
     private GameSession session;
 
+    @NotNull
+    private Color color;
+
     private UserEntity user;
 
-    public Player(int playerId, @NotNull String playerName) {
+    public Player(int playerId, @NotNull String playerName, Color color) {
         id = playerId;
         name = playerName;
         cells = new CopyOnWriteArrayList<>();
         addCell(new Cell(new Location(0, 0), this));
+        this.color = color;
     }
 
     public void setUser(UserEntity user) {
@@ -89,6 +97,10 @@ public class Player {
             massResult += c.getMass();
         }
         return massResult;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     @Override

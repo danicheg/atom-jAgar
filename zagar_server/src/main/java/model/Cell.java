@@ -47,9 +47,9 @@ public class Cell extends GameUnit {
                         playerCell.getMass(),
                         playerCell.getX(),
                         playerCell.getY(),
-                        playerCell.getColor().getRed(),
-                        playerCell.getColor().getGreen(),
-                        playerCell.getColor().getBlue()
+                        player.getColor().getRed(),
+                        player.getColor().getGreen(),
+                        player.getColor().getBlue()
                 );
                 i++;
             }
@@ -77,9 +77,9 @@ public class Cell extends GameUnit {
                         playerCell.getMass(),
                         playerCell.getX(),
                         playerCell.getY(),
-                        playerCell.getColor().getRed(),
-                        playerCell.getColor().getGreen(),
-                        playerCell.getColor().getBlue()
+                        playerCell.getOwner().getColor().getRed(),
+                        playerCell.getOwner().getColor().getGreen(),
+                        playerCell.getOwner().getColor().getBlue()
                 );
                 i++;
             }
