@@ -3,6 +3,7 @@ package zagar.view;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import protocol.GameConstraints;
 import zagar.Game;
 import zagar.controller.KeyboardListener;
 
@@ -16,7 +17,7 @@ public class GameFrame extends JFrame {
 
     private static final Logger LOG = LogManager.getLogger(GameFrame.class);
 
-    public static Dimension size = new Dimension(1100, 700);
+    public static Dimension size = new Dimension(GameConstraints.FRAME_WIDTH, GameConstraints.FRAME_HEIGHT);
     public static double mouseX;
     public static double mouseY;
 

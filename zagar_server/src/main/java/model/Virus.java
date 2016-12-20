@@ -2,6 +2,7 @@ package model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -31,6 +32,26 @@ public class Virus extends GameUnit {
         }
         return virusesOut;
     }
+
+    public static protocol.model.Virus[] generateProtocolVirusesFromModel(List<Virus> virusesIn, double borderTop, double borderBottom, double borderLeft, double borderRight) {
+        ConcurrentHashSet<Virus> viruses = new ConcurrentHashSet<>();
+        for (Virus virus : virusesIn) {
+            if (virus.getX() > borderLeft && virus.getX() < borderRight && virus.getY() > borderBottom && virus.getY() < borderTop) {
+                viruses.add(virus);
+            }
+        }
+        protocol.model.Virus[] virusesOut = new protocol.model.Virus[viruses.size()];
+        int k = 0;
+        for (Virus virusGot : viruses) {
+            virusesOut[k] = new protocol.model.Virus(virusGot.getId(),
+                    virusGot.getMass(),
+                    virusGot.getLocation().getX(),
+                    virusGot.getLocation().getY());
+            k++;
+        }
+        return virusesOut;
+    }
+
 
     @Override
     public String toString() {
