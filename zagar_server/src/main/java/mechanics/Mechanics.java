@@ -19,7 +19,10 @@ import ticker.Ticker;
 import utils.comparators.EatComparator;
 import utils.ServerCalculator;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -66,20 +69,30 @@ public class Mechanics extends Service implements Tickable {
                 //End of the game
             }
             Vector vectorCenter = buildMassCenter(player, dx, dy);
+
+            List<Cell> cellsToDelete = new ArrayList<>();
+
+            for (Cell cell : player.getCells()) {
+                for (Cell cell2 : player.getCells()) {
+                    if (!cellsToDelete.contains(cell) && !cellsToDelete.contains(cell2)) {
+                        if (!cell.equals(cell2)) {
+                            if (cell.getLocation().distanceTo(cell2.getLocation()) < 2.5 * cell.getRadius()) {
+                                cell.setMass(cell.getMass() + cell2.getMass());
+                                cellsToDelete.add(cell2);
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (Cell cell : cellsToDelete) {
+                    player.getCells().remove(cell);
+            }
             for (Cell cell : player.getCells()) {
                 double oldX = cell.getX();
                 double oldY = cell.getY();
                 double radius = cell.getRadius();
                 int mass = cell.getMass();
-
-                for (Cell cell2 : player.getCells()) {
-                    if (!cell.equals(cell2)) {
-                        if (cell.getLocation().distanceTo(cell2.getLocation()) < 2.5 * cell.getRadius()) {
-                                cell.setMass(cell.getMass() + cell2.getMass());
-                                player.removeCell(cell2);
-                        }
-                    }
-                }
 
                 //Moving
                 double newX = Calculator.calculateDestinationOnTurn(oldX, dx, radius, mass,

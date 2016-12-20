@@ -222,7 +222,9 @@ public class Game {
                 newScore += c.mass;
             }
 
-            score = newScore;
+            if (newScore > score) {
+                score = newScore;
+            }
 
             zoomm = GameFrame.size.height / (1024 / Math.pow(Math.min(64.0 / totalSize, 1), 0.4));
 
