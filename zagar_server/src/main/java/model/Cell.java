@@ -27,6 +27,10 @@ public class Cell extends GameUnit {
         return id;
     }
 
+    public String getName() {
+        return owner.getName();
+    }
+
     public static protocol.model.Cell[] generateProtocolCellsFromModel(GameSession gameSession) {
         int numberOfCellsInSession = 0;
         for (Player player : gameSession.sessionPlayersList()) {
@@ -42,7 +46,10 @@ public class Cell extends GameUnit {
                         player.getName(),
                         playerCell.getMass(),
                         playerCell.getX(),
-                        playerCell.getY()
+                        playerCell.getY(),
+                        playerCell.getColor().getRed(),
+                        playerCell.getColor().getGreen(),
+                        playerCell.getColor().getBlue()
                 );
                 i++;
             }
@@ -66,9 +73,13 @@ public class Cell extends GameUnit {
             cellsOut[i] = new protocol.model.Cell(
                         playerCell.getId(),
                         playerCell.getOwner().getId(),
+                        playerCell.getName(),
                         playerCell.getMass(),
                         playerCell.getX(),
-                        playerCell.getY()
+                        playerCell.getY(),
+                        playerCell.getColor().getRed(),
+                        playerCell.getColor().getGreen(),
+                        playerCell.getColor().getBlue()
                 );
                 i++;
             }

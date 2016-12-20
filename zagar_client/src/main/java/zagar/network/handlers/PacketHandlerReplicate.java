@@ -33,7 +33,8 @@ public class PacketHandlerReplicate {
         Cell[] gameCells = new Cell[commandReplicate.getCells().length];
         for (int i = 0; i < commandReplicate.getCells().length; i++) {
             protocol.model.Cell c = commandReplicate.getCells()[i];
-            gameCells[i] = new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(), c.getName());
+            gameCells[i] = new Cell(c.getX(), c.getY(), c.getSize(), c.getCellId(),
+                    c.getName(), c.getColor().getRed(), c.getColor().getGreen(), c.getColor().getBlue());
         }
 
         Game.player.clear();

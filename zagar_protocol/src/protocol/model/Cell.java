@@ -1,5 +1,7 @@
 package protocol.model;
 
+import java.awt.*;
+
 /**
  * @author apomosov
  */
@@ -11,14 +13,20 @@ public final class Cell {
     private final int size;
     private double x;
     private double y;
+    private int r;
+    private int g;
+    private int b;
 
-    public Cell(int cellId, int playerId, String name, int mass, double x, double y) {
+    public Cell(int cellId, int playerId, String name, int mass, double x, double y, int r, int g, int b) {
         this.cellId = cellId;
         this.playerId = playerId;
         this.name = name;
         this.size = mass;
         this.x = x;
         this.y = y;
+        this.r = r;
+        this.g = g;
+        this.b = b;
     }
 
     public int getPlayerId() {
@@ -42,5 +50,9 @@ public final class Cell {
     }
 
     public String getName() { return name;}
+
+    public Color getColor() {
+        return new Color(r,g,b);
+    }
     
 }
