@@ -1,4 +1,4 @@
-package utils;
+package utils.generators;
 
 import java.awt.*;
 import java.util.Random;

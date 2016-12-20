@@ -5,8 +5,8 @@ import main.ApplicationContext;
 import matchmaker.MatchMaker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import utils.IDGenerator;
-import utils.SequentialIDGenerator;
+import utils.generators.IDGenerator;
+import utils.generators.SequentialIDGenerator;
 
 import java.awt.*;
 import java.util.List;

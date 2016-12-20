@@ -16,7 +16,7 @@ import protocol.CommandAuth;
 import protocol.CommandEjectMass;
 import protocol.CommandMove;
 import protocol.CommandSplit;
-import utils.JSONHelper;
+import utils.json.JSONHelper;
 
 import java.util.Map;
 

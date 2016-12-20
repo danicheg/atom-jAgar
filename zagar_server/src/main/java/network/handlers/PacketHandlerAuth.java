@@ -1,9 +1,7 @@
 package network.handlers;
 
 import dao.DatabaseAccessLayer;
-import dao.TokenDao;
 import dao.Validator;
-import entities.token.Token;
 import entities.user.UserEntity;
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
@@ -16,9 +14,9 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
 import protocol.CommandAuth;
-import utils.JSONDeserializationException;
-import utils.JSONHelper;
-import utils.RandomColorGenerator;
+import utils.json.JSONDeserializationException;
+import utils.json.JSONHelper;
+import utils.generators.RandomColorGenerator;
 
 import java.io.IOException;
 

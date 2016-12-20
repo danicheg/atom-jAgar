@@ -16,7 +16,7 @@ import protocol.utils.Calculator;
 import protocol.GameConstraints;
 import ticker.Tickable;
 import ticker.Ticker;
-import utils.EatComparator;
+import utils.comparators.EatComparator;
 import utils.ServerCalculator;
 
 import java.util.List;

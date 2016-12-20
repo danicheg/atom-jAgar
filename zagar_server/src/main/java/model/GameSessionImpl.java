@@ -2,14 +2,14 @@ package model;
 
 import org.jetbrains.annotations.NotNull;
 import protocol.GameConstraints;
-import utils.FoodGenerator;
-import utils.IDGenerator;
+import utils.generators.FoodGenerator;
+import utils.generators.IDGenerator;
 import utils.PlayerPlacer;
 import utils.RandomPlayerPlacer;
-import utils.RandomVirusGenerator;
-import utils.SequentialIDGenerator;
-import utils.UniformFoodGenerator;
-import utils.VirusGenerator;
+import utils.generators.RandomVirusGenerator;
+import utils.generators.SequentialIDGenerator;
+import utils.generators.UniformFoodGenerator;
+import utils.generators.VirusGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

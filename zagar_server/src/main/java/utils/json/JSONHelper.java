@@ -1,10 +1,11 @@
-package utils;
+package utils.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import org.jetbrains.annotations.NotNull;
+import utils.json.JSONDeserializationException;
 
 public class JSONHelper {
 

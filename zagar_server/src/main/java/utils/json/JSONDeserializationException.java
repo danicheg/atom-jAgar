@@ -1,4 +1,4 @@
-package utils;
+package utils.json;
 
 import com.google.gson.JsonSyntaxException;
 import org.jetbrains.annotations.NotNull;

@@ -11,8 +11,8 @@ import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;
 import org.jetbrains.annotations.NotNull;
 import protocol.CommandSplit;
-import utils.JSONDeserializationException;
-import utils.JSONHelper;
+import utils.json.JSONDeserializationException;
+import utils.json.JSONHelper;
 
 public class PacketHandlerSplit {
 

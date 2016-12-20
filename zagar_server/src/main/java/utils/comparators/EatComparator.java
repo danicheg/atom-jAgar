@@ -1,4 +1,4 @@
-package utils;
+package utils.comparators;
 
 import model.Cell;
 import org.jetbrains.annotations.NotNull;

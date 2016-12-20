@@ -1,4 +1,4 @@
-package utils;
+package utils.generators;
 
 import model.Field;
 import model.Food;

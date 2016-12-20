@@ -3,9 +3,8 @@ package model;
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
 import protocol.GameConstraints;
-import utils.RandomColorGenerator;
+import utils.generators.RandomColorGenerator;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 

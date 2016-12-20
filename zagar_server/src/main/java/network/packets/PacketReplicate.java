@@ -9,7 +9,7 @@ import protocol.model.Blob;
 import protocol.model.Cell;
 import protocol.model.Food;
 import protocol.model.Virus;
-import utils.JSONHelper;
+import utils.json.JSONHelper;
 
 import java.io.IOException;
 

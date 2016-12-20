@@ -2,8 +2,8 @@ package model;
 
 import org.eclipse.jetty.util.ConcurrentHashSet;
 import protocol.GameConstraints;
-import utils.IDGenerator;
-import utils.SequentialIDGenerator;
+import utils.generators.IDGenerator;
+import utils.generators.SequentialIDGenerator;
 
 public class Cell extends GameUnit {
 
@@ -55,35 +55,6 @@ public class Cell extends GameUnit {
             }
         }
         return cells;
-    }
-
-
-    public static protocol.model.Cell[] generateProtocolCellsFromModel(GameSession gameSession, double borderTop, double borderBottom, double borderLeft, double borderRight) {
-        ConcurrentHashSet<Cell> cells = new ConcurrentHashSet<>();
-        for (Player player : gameSession.sessionPlayersList()) {
-            for (Cell cell : player.getCells()) {
-                if (cell.getX() > borderLeft && cell.getX() < borderRight && cell.getY() > borderBottom && cell.getY() < borderTop) {
-                    cells.add(cell);
-                }
-            }
-        }
-        protocol.model.Cell[] cellsOut = new protocol.model.Cell[cells.size()];
-        int i = 0;
-        for (Cell playerCell : cells) {
-            cellsOut[i] = new protocol.model.Cell(
-                        playerCell.getId(),
-                        playerCell.getOwner().getId(),
-                        playerCell.getName(),
-                        playerCell.getMass(),
-                        playerCell.getX(),
-                        playerCell.getY(),
-                        playerCell.getOwner().getColor().getRed(),
-                        playerCell.getOwner().getColor().getGreen(),
-                        playerCell.getOwner().getColor().getBlue()
-                );
-                i++;
-            }
-        return cellsOut;
     }
 
     @Override

@@ -1,4 +1,6 @@
-package utils;
+package utils.generators;
+
+import utils.generators.IDGenerator;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

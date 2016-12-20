@@ -2,7 +2,7 @@ package model;
 
 import org.jetbrains.annotations.NotNull;
 import protocol.utils.Calculator;
-import utils.RandomColorGenerator;
+import utils.generators.RandomColorGenerator;
 
 import java.awt.*;
 import java.util.Random;
