@@ -13,9 +13,8 @@ import utils.VirusGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class GameSessionImpl implements GameSession {
+public class GameSessionImpl implements GameSession, Comparable<List<Player>> {
 
     private static final IDGenerator idGenerator = new SequentialIDGenerator();
 
@@ -71,6 +70,28 @@ public class GameSessionImpl implements GameSession {
         return "GameSessionImpl{" +
                 "id=" + id +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        GameSessionImpl that = (GameSessionImpl) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public int compareTo(@NotNull List<Player> o) {
+        return this.sessionPlayersList().size() - o.size();
     }
 
 }

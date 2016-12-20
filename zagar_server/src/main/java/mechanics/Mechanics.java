@@ -34,14 +34,14 @@ public class Mechanics extends Service implements Tickable {
     @Override
     public void run() {
         log.info(getAddress() + " started");
-        Ticker ticker = new Ticker(this, 200);
+        Ticker ticker = new Ticker(this, 50);
         ticker.loop();
     }
 
     @Override
     public void tick(long elapsedNanos) {
         try {
-            Thread.sleep(5);
+            Thread.sleep(20);
         } catch (InterruptedException e) {
             log.error(e);
             Thread.currentThread().interrupt();
@@ -232,6 +232,9 @@ public class Mechanics extends Service implements Tickable {
         double xCenter = 0;
         double yCenter = 0;
         double radius = 0;
+        if (player.getCells().size() == 0) {
+            System.out.println("xxx");
+        }
         for (Cell cell : player.getCells()) {
             xCenter = xCenter + cell.getX() * cell.getMass();
             yCenter = yCenter + cell.getY() * cell.getMass();
@@ -240,7 +243,7 @@ public class Mechanics extends Service implements Tickable {
         xCenter = xCenter / massCommon;
         yCenter = yCenter / massCommon;
         radius = radius / player.getCells().size();
-        int mass = (int) massCommon / player.getCells().size();
+        int mass = massCommon / player.getCells().size();
         Location startCenterPoint = new Location(xCenter, yCenter);
         double newXCenter = Calculator.calculateDestinationOnTurn(xCenter, dx, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
         double newYCenter = Calculator.calculateDestinationOnTurn(yCenter, dy, radius, mass, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
