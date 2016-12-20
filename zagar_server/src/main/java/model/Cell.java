@@ -38,6 +38,7 @@ public class Cell extends GameUnit {
                 cells[i] = new protocol.model.Cell(
                         playerCell.getId(),
                         player.getId(),
+                        player.getName(),
                         playerCell.getMass(),
                         playerCell.getX(),
                         playerCell.getY()

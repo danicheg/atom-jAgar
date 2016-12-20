@@ -23,13 +23,17 @@ public class Cell {
     private int g;
     private int b;
 
-    public Cell(double x, double y, float mass, int id) {
+    public Cell(double x, double y, float mass, int id, String name, int r, int g, int b) {
         this.x = x;
         this.y = y;
         this.size = Calculator.calculateRadius(mass);
         this.id = id;
+        this.name = name;
         this.xRender = this.x;
         this.yRender = this.y;
+        this.r = r;
+        this.g = g;
+        this.b = b;
         this.sizeRender = this.size;
         this.mass = (int) mass;
     }
@@ -80,10 +84,7 @@ public class Cell {
                 BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
                 FontMetrics fm = img.getGraphics().getFontMetrics(font);
                 int fontSize = fm.stringWidth(this.name);
-                outlineString(g, this.name, cellX + cellSize / 2 - fontSize / 2, cellY + cellSize / 2);
-                String cellMass = Integer.toString(this.mass);
-                int massSize = fm.stringWidth(cellMass);
-                outlineString(g, cellMass, cellX + cellSize / 2 - massSize / 2, cellY + cellSize / 2 + 17);
+                outlineString(g, this.name, cellX + cellSize / 2 - fontSize / 2, cellY + cellSize / 2 + cellSize / 10);
             }
         }
     }
