@@ -51,10 +51,6 @@ public class Field {
         return viruses;
     }
 
-    private void setViruses(@NotNull List<Virus> viruses) {
-        this.viruses = viruses;
-    }
-
     @NotNull
     public ConcurrentHashSet<Food> getFoods() {
         return foods;

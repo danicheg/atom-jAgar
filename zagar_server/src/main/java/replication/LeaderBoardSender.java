@@ -1,12 +1,11 @@
 package replication;
 
-
 import main.ApplicationContext;
 import matchmaker.MatchMaker;
 import model.GameSession;
 import model.Player;
 import network.ClientConnections;
-import network.packets.PacketLeaderBoard;;
+import network.packets.PacketLeaderBoard;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.eclipse.jetty.websocket.api.Session;

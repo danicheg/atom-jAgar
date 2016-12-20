@@ -24,8 +24,10 @@ public class RandomVirusGenerator implements VirusGenerator {
         Random random = new Random();
         int virusRadius = (int) Calculator.calculateRadius(GameConstraints.INITIAL_VIRUS_MASS);
         for (int i = 0; i < numberOfViruses; i++) {
-            field.addVirus(new Virus(new Location(virusRadius + random.nextInt(GameConstraints.FIELD_WIDTH - 2 * virusRadius),
-                    virusRadius + random.nextInt(GameConstraints.FIELD_HEIGHT - 2 * virusRadius))));
+            field.addVirus(new Virus(new Location(
+                    virusRadius + random.nextInt(GameConstraints.FIELD_WIDTH - 2 * virusRadius),
+                    virusRadius + random.nextInt(GameConstraints.FIELD_HEIGHT - 2 * virusRadius)
+            )));
         }
     }
 

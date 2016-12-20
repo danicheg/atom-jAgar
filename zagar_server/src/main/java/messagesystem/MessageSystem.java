@@ -22,10 +22,7 @@ public final class MessageSystem {
     private static final Logger LOG = LogManager.getLogger(MessageSystem.class);
 
     private final Map<Address, Queue<Message>> messages = new HashMap<>();
-    @NotNull private final Map<Class<?>, Service> services = new ConcurrentHashMap<>();
-
-    public MessageSystem() {
-    }
+    private final Map<Class<?>, Service> services = new ConcurrentHashMap<>();
 
     public void registerService(Class<?> type, Service service) {
         services.put(type, service);
@@ -51,11 +48,6 @@ public final class MessageSystem {
             Message message = queue.poll();
             message.exec(service);
         }
-    }
-
-    public void execOneForService(Service service) throws InterruptedException {
-        BlockingQueue<Message> queue = (BlockingQueue<Message>) messages.get(service.getAddress());
-        queue.take().exec(service);
     }
 
     public void execOneForService(Service service, long timeout) throws InterruptedException {

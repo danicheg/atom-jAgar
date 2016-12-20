@@ -9,7 +9,7 @@ import java.util.concurrent.locks.LockSupport;
 
 public class Ticker {
 
-    private static final Logger log = LogManager.getLogger(Ticker.class);
+    private static final Logger LOG = LogManager.getLogger(Ticker.class);
 
     private final long sleepTimeNanos;
     private final AtomicLong tickNumber;
@@ -28,12 +28,12 @@ public class Ticker {
             tickable.tick(elapsed);
             elapsed = System.nanoTime() - started;
             if (elapsed < sleepTimeNanos) {
-                log.info("All tickers finish at " + TimeUnit.NANOSECONDS.toMillis(elapsed) + " ms");
+                LOG.info("All tickers finish at " + TimeUnit.NANOSECONDS.toMillis(elapsed) + " ms");
                 LockSupport.parkNanos(sleepTimeNanos - elapsed);
             } else {
-                log.warn("tick lag " + TimeUnit.NANOSECONDS.toMillis(elapsed - sleepTimeNanos) + " ms");
+                LOG.warn("tick lag " + TimeUnit.NANOSECONDS.toMillis(elapsed - sleepTimeNanos) + " ms");
             }
-            log.info(tickable + " <tick> " + tickNumber.incrementAndGet());
+            LOG.info(tickable + " <tick> " + tickNumber.incrementAndGet());
         }
     }
 

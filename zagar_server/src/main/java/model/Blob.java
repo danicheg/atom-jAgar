@@ -13,14 +13,15 @@ import java.awt.Color;
 public class Blob extends GameUnit {
 
     @NotNull
-    private static final Logger log = LogManager.getLogger(Blob.class);
+    private static final Logger LOG = LogManager.getLogger(Blob.class);
 
     private Vector vector;
 
     public Blob(@NotNull Location mouseLocation, Cell parent) {
-        super(Color.LIGHT_GRAY, calculateDislocation(parent, mouseLocation), GameConstraints.BLOB_SPEED, GameConstraints.BLOB_MASS_CREATE);
+        super(Color.LIGHT_GRAY, calculateDislocation(parent, mouseLocation),
+                GameConstraints.BLOB_SPEED, GameConstraints.BLOB_MASS_CREATE);
         vector = Vector.createVector(parent.getLocation(), getLocation());
-        log.info(toString() + " created");
+        LOG.info(toString() + " created");
     }
 
     public void makeMove() {
@@ -58,4 +59,5 @@ public class Blob extends GameUnit {
         }
         return blobsOut;
     }
+
 }

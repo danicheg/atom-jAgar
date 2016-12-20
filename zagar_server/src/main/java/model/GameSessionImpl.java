@@ -33,7 +33,7 @@ public class GameSessionImpl implements GameSession, Comparable<List<Player>> {
                 GameConstraints.MAX_FOOD_ON_FIELD
         );
         VirusGenerator virusGenerator = new RandomVirusGenerator(fieldToPlace, GameConstraints.NUMBER_OF_VIRUSES);
-        playerPlacer = new RandomPlayerPlacer(fieldToPlace);
+        playerPlacer = new RandomPlayerPlacer();
         field = fieldToPlace;
         players = new ArrayList<>();
         field.generateFieldWithFood();

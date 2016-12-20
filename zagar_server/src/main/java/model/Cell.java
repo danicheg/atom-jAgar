@@ -18,12 +18,6 @@ public class Cell extends GameUnit {
         this.id = idGenerator.next();
     }
 
-    public Cell(Player owner) {
-        super(new Location(), GameConstraints.DEFAULT_PLAYER_CELL_MASS);
-        this.owner = owner;
-        this.id = idGenerator.next();
-    }
-
     public Player getOwner() {
         return this.owner;
     }
@@ -65,4 +59,10 @@ public class Cell extends GameUnit {
         Cell player = (Cell) o;
         return id == player.id;
     }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
 }

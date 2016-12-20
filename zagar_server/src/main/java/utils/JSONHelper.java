@@ -6,9 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * @author apomosov
- */
 public class JSONHelper {
 
     private static Gson gson = new GsonBuilder().create();

@@ -36,9 +36,14 @@ public class Food extends GameUnit {
 
     @Override
     public boolean equals(@NotNull Object object) {
-        if (object.getClass() != Food.class) return false;
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
         Food food = (Food) object;
-        return (this.getLocation().equals(food.getLocation()));
+        return this.getLocation().equals(food.getLocation());
     }
 
     @Override
