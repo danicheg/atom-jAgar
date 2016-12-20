@@ -1,51 +1,77 @@
 package model;
 
-/**
- * @author apomosov
- */
-public abstract class Cell {
-  private int x;
-  private int y;
-  private int radius;
-  private int mass;
+import org.eclipse.jetty.util.ConcurrentHashSet;
+import protocol.GameConstraints;
+import utils.generators.IDGenerator;
+import utils.generators.SequentialIDGenerator;
 
-  public Cell(int x, int y, int mass) {
-    this.x = x;
-    this.y = y;
-    this.mass = mass;
-    updateRadius();
-  }
+public class Cell extends GameUnit {
 
-  public int getX() {
-    return x;
-  }
+    private final int id;
 
-  public void setX(int x) {
-    this.x = x;
-  }
+    private final Player owner;
 
-  public int getY() {
-    return y;
-  }
+    public static final IDGenerator idGenerator = new SequentialIDGenerator();
 
-  public void setY(int y) {
-    this.y = y;
-  }
+    public Cell(Location x, Player owner) {
+        super(x, GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+        this.owner = owner;
+        this.id = idGenerator.next();
+    }
 
-  public int getRadius() {
-    return radius;
-  }
+    public Player getOwner() {
+        return this.owner;
+    }
 
-  public int getMass() {
-    return mass;
-  }
+    public int getId() {
+        return id;
+    }
 
-  public void setMass(int mass) {
-    this.mass = mass;
-    updateRadius();
-  }
+    public String getName() {
+        return owner.getName();
+    }
 
-  private void updateRadius(){
-    this.radius = (int) Math.sqrt(this.mass/Math.PI);
-  }
+    public static protocol.model.Cell[] generateProtocolCellsFromModel(GameSession gameSession) {
+        int numberOfCellsInSession = 0;
+        for (Player player : gameSession.sessionPlayersList()) {
+            numberOfCellsInSession += player.getCells().size();
+        }
+        protocol.model.Cell[] cells = new protocol.model.Cell[numberOfCellsInSession];
+        int i = 0;
+        for (Player player : gameSession.sessionPlayersList()) {
+            for (Cell playerCell : player.getCells()) {
+                cells[i] = new protocol.model.Cell(
+                        playerCell.getId(),
+                        player.getId(),
+                        player.getName(),
+                        playerCell.getMass(),
+                        playerCell.getX(),
+                        playerCell.getY(),
+                        player.getColor().getRed(),
+                        player.getColor().getGreen(),
+                        player.getColor().getBlue()
+                );
+                i++;
+            }
+        }
+        return cells;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Cell player = (Cell) o;
+        return id == player.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
 }

@@ -1,60 +1,46 @@
 package matchmaker;
 
-import main.ApplicationContext;
-import model.*;
+import model.Field;
+import model.GameSession;
+import model.GameSessionImpl;
+import model.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import ticker.Ticker;
-import utils.RandomPlayerPlacer;
-import utils.RandomVirusGenerator;
-import utils.SimplePlayerPlacer;
-import utils.UniformFoodGenerator;
+import protocol.GameConstraints;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Creates {@link GameSession} for single player
- *
- * @author Alpi
- */
 public class MatchMakerImpl implements MatchMaker {
-  @NotNull
-  private final Logger log = LogManager.getLogger(MatchMakerImpl.class);
-  @NotNull
-  private final List<GameSession> activeGameSessions = new ArrayList<>();
 
-  /**
-   * Creates new GameSession for single player
-   *
-   * @param player single player
-   */
-  @Override
-  public void joinGame(@NotNull Player player) {
-    GameSession newGameSession = createNewGame();
-    activeGameSessions.add(newGameSession);
-    newGameSession.join(player);
-    if (log.isInfoEnabled()) {
-      log.info(player + " joined " + newGameSession);
+    @NotNull
+    private static final Logger LOG = LogManager.getLogger(MatchMakerImpl.class);
+    @NotNull
+    private final List<GameSession> activeGameSessions = new CopyOnWriteArrayList<>();
+
+    @Override
+    public void joinGame(@NotNull Player player) {
+        final Optional<GameSession> sessionOptional = activeGameSessions.stream()
+                .filter(session -> session.sessionPlayersList().size() < GameConstraints.MAX_PLAYERS_IN_SESSION)
+                .findFirst();
+        if (sessionOptional.isPresent()) {
+            final GameSession freeSession = sessionOptional.get();
+            freeSession.join(player);
+            LOG.info(player + " joined to session" + freeSession);
+        } else {
+            GameSession newGameSession = new GameSessionImpl(new Field());
+            activeGameSessions.add(newGameSession);
+            newGameSession.join(player);
+            LOG.info(player + " joined to new game session" + newGameSession);
+        }
     }
-  }
 
-  @NotNull
-  public List<GameSession> getActiveGameSessions() {
-    return new ArrayList<>(activeGameSessions);
-  }
+    @NotNull
+    @Override
+    public List<GameSession> getActiveGameSessions() {
+        return new CopyOnWriteArrayList<>(activeGameSessions);
+    }
 
-  /**
-   * @return new GameSession
-   */
-  private
-  @NotNull
-  GameSession createNewGame() {
-    Field field = new Field();
-    Ticker ticker = ApplicationContext.instance().get(Ticker.class);
-    UniformFoodGenerator foodGenerator = new UniformFoodGenerator(field, GameConstants.FOOD_PER_SECOND_GENERATION, GameConstants.MAX_FOOD_ON_FIELD);
-    ticker.registerTickable(foodGenerator);
-    return new GameSessionImpl(foodGenerator, new SimplePlayerPlacer(field), new RandomVirusGenerator(field, GameConstants.NUMBER_OF_VIRUSES));
-  }
 }

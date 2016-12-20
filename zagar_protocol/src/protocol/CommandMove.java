@@ -6,22 +6,29 @@ import org.jetbrains.annotations.NotNull;
  * @author apomosov
  */
 public final class CommandMove extends Command {
-  @NotNull
-  public static final String NAME = "move";
+    @NotNull
+    public static final String NAME = "move";
 
-  private final float dx;
-  private final float dy;
-  public CommandMove(float dx, float dy) {
-    super(NAME);
-    this.dx = dx;
-    this.dy = dy;
-  }
+    private final float dx;
+    private final float dy;
+    private final String name;
 
-  public float getDx() {
-    return dx;
-  }
+    public CommandMove(float dx, float dy, String name) {
+        super(NAME);
+        this.dx = dx;
+        this.dy = dy;
+        this.name = name;
+    }
 
-  public float getDy() {
-    return dy;
-  }
+    public float getDx() {
+        return dx;
+    }
+
+    public float getDy() {
+        return dy;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

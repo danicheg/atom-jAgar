@@ -1,42 +1,69 @@
 package model;
 
+import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.jetbrains.annotations.NotNull;
+import protocol.GameConstraints;
+import utils.generators.RandomColorGenerator;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * @author apomosov
- */
 public class Field {
-  private final int width;
-  private final int height;
-  @NotNull
-  private final List<Virus> viruses = new ArrayList<>();
-  @NotNull
-  private final HashSet<Food> foods = new HashSet<>();
 
-  public Field() {
-    this.width = GameConstants.FIELD_WIDTH;
-    this.height = GameConstants.FIELD_HEIGHT;
-  }
+    @NotNull
+    private List<Virus> viruses;
+    @NotNull
+    private ConcurrentHashSet<Blob> blobs;
+    @NotNull
+    private ConcurrentHashSet<Food> foods;
 
-  @NotNull
-  public List<Virus> getViruses() {
-    return viruses;
-  }
+    public Field() {
+        viruses = new CopyOnWriteArrayList<>();
+        foods = new ConcurrentHashSet<>();
+        blobs = new ConcurrentHashSet<>();
+    }
 
-  @NotNull
-  public HashSet<Food> getFoods() {
-    return foods;
-  }
+    public void generateFieldWithFood() {
+        int foodAmount = GameConstraints.FIELD_HEIGHT * GameConstraints.FIELD_WIDTH / 100000;
+        ConcurrentHashSet<Food> primaryFoods = new ConcurrentHashSet<>();
+        for (int i = 0; i < foodAmount; i++) {
+            primaryFoods.add(new Food(RandomColorGenerator.generateRandomColor(), new Location()));
+        }
+        setFoods(primaryFoods);
+    }
 
-  public int getWidth() {
-    return width;
-  }
+    public void addBlob(Blob blob) {
+        this.blobs.add(blob);
+    }
 
-  public int getHeight() {
-    return height;
-  }
+    public void removeBlob(Blob blob) {
+        this.blobs.remove(blob);
+    }
+
+    @NotNull
+    public ConcurrentHashSet<Blob> getBlobs() {
+        return this.blobs;
+    }
+
+    @NotNull
+    public List<Virus> getViruses() {
+        return viruses;
+    }
+
+    @NotNull
+    public ConcurrentHashSet<Food> getFoods() {
+        return foods;
+    }
+
+    private void setFoods(@NotNull ConcurrentHashSet<Food> food) {
+        this.foods = food;
+    }
+
+    public void addVirus(@NotNull Virus virus) {
+        this.viruses.add(virus);
+    }
+
+    public void addFood(@NotNull Food food) {
+        this.foods.add(food);
+    }
 }

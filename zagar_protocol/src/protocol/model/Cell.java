@@ -1,46 +1,58 @@
 package protocol.model;
 
+import java.awt.*;
+
 /**
  * @author apomosov
  */
 public final class Cell {
-  private final int cellId;
-  private final int playerId;
-  private final boolean isVirus;
-  private final float size;
-  private int x;
-  private int y;
 
-  public Cell(int cellId, int playerId, boolean isVirus, float size, int x, int y) {
-    this.cellId = cellId;
-    this.playerId = playerId;
-    this.isVirus = isVirus;
-    this.size = size;
-    this.x = x;
-    this.y = y;
-  }
+    private final int cellId;
+    private final int playerId;
+    private String name;
+    private final int size;
+    private double x;
+    private double y;
+    private int r;
+    private int g;
+    private int b;
 
-  public int getPlayerId() {
-    return playerId;
-  }
+    public Cell(int cellId, int playerId, String name, int mass, double x, double y, int r, int g, int b) {
+        this.cellId = cellId;
+        this.playerId = playerId;
+        this.name = name;
+        this.size = mass;
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.g = g;
+        this.b = b;
+    }
 
-  public boolean isVirus() {
-    return isVirus;
-  }
+    public int getPlayerId() {
+        return playerId;
+    }
 
-  public int getX() {
-    return x;
-  }
+    public double getX() {
+        return x;
+    }
 
-  public int getY() {
-    return y;
-  }
+    public double getY() {
+        return y;
+    }
 
-  public int getCellId() {
-    return cellId;
-  }
+    public int getCellId() {
+        return cellId;
+    }
 
-  public float getSize() {
-    return size;
-  }
+    public int getSize() {
+        return size;
+    }
+
+    public String getName() { return name;}
+
+    public Color getColor() {
+        return new Color(r,g,b);
+    }
+    
 }
