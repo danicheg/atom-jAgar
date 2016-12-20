@@ -34,6 +34,27 @@ public class Food extends GameUnit {
         return foodOut;
     }
 
+    public static protocol.model.Food[] generateProtocolFoodFromModel(ConcurrentHashSet<Food> foodIn, double borderTop, double borderBottom, double borderLeft, double borderRight) {
+        ConcurrentHashSet<Food> foods = new ConcurrentHashSet<>();
+        for (Food food : foodIn) {
+            if (food.getX() > borderLeft && food.getX() < borderRight && food.getY() > borderBottom && food.getY() < borderTop) {
+                foods.add(food);
+            }
+        }
+        protocol.model.Food[] foodOut = new protocol.model.Food[foods.size()];
+        int counter = 0;
+        for (Food foodGot : foods) {
+            foodOut[counter] = new protocol.model.Food(foodGot.getLocation().getX(),
+                    foodGot.getLocation().getY(),
+                    foodGot.getId(),
+                    foodGot.getColor().getRed(),
+                    foodGot.getColor().getGreen(),
+                    foodGot.getColor().getBlue());
+            counter++;
+        }
+        return foodOut;
+    }
+
     @Override
     public boolean equals(@NotNull Object object) {
         if (this == object) {

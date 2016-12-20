@@ -60,4 +60,24 @@ public class Blob extends GameUnit {
         return blobsOut;
     }
 
+
+    public static protocol.model.Blob[] generateProtocolBlobsFromModel(ConcurrentHashSet<Blob> blobsIn, double borderTop, double borderBottom, double borderLeft, double borderRight) {
+        ConcurrentHashSet<Blob> blobs = new ConcurrentHashSet<>();
+        for (Blob blob : blobsIn) {
+            if (blob.getX() > borderLeft && blob.getX() < borderRight && blob.getY() > borderBottom && blob.getY() < borderTop) {
+                blobs.add(blob);
+            }
+        }
+        protocol.model.Blob[] blobsOut = new protocol.model.Blob[blobs.size()];
+        int inc = 0;
+        for (model.Blob blobGot : blobs) {
+            blobsOut[inc] = new protocol.model.Blob(blobGot.getId(),
+                    blobGot.getMass(),
+                    blobGot.getLocation().getX(),
+                    blobGot.getLocation().getY());
+            inc++;
+        }
+        return blobsOut;
+    }
+
 }
