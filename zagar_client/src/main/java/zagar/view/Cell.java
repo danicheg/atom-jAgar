@@ -10,20 +10,18 @@ import java.awt.image.BufferedImage;
 
 public class Cell {
 
+    public final int id;
     public double x;
     public double y;
-    public final int id;
     public float size;
     public String name = "";
-
-    private float sizeRender;
     public double xRender;
     public double yRender;
     public int mass;
+    private float sizeRender;
     private int r;
     private int g;
     private int b;
-    private float rotation = 0;
 
     public Cell(double x, double y, float mass, int id) {
         this.x = x;

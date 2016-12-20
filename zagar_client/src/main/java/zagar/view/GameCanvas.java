@@ -83,7 +83,6 @@ public class GameCanvas extends JPanel {
         g.setFont(cellsFont);
 
 
-
         for (int foodsCounter = 0; foodsCounter < Game.foods.length; foodsCounter++) {
             Food food = Game.foods[foodsCounter];
             if (food != null) {

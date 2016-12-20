@@ -2,8 +2,8 @@ package protocol;
 
 public class GameConstraints {
     public static final int MAX_PLAYERS_IN_SESSION = 10;
-    public static final int FIELD_WIDTH = 1000;
-    public static final int FIELD_HEIGHT = 1000;
+    public static final int FIELD_WIDTH = 3000;
+    public static final int FIELD_HEIGHT = 3000;
     public static final int FOOD_MASS = 8;
     public static final int DEFAULT_PLAYER_CELL_MASS = 10;
     public static final int VIRUS_MASS = 100;
