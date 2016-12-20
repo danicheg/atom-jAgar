@@ -8,21 +8,26 @@ import messagesystem.Message;
 import messagesystem.MessageSystem;
 import messagesystem.messages.ReplicateLbd;
 import messagesystem.messages.ReplicateMsg;
-import model.*;
+import model.Blob;
+import model.Cell;
+import model.Food;
+import model.GameSession;
+import model.Location;
+import model.Player;
+import model.Vector;
+import model.Virus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import protocol.utils.Calculator;
 import protocol.GameConstraints;
+import protocol.utils.Calculator;
 import ticker.Tickable;
 import ticker.Ticker;
-import utils.comparators.EatComparator;
 import utils.ServerCalculator;
+import utils.comparators.EatComparator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -67,111 +72,113 @@ public class Mechanics extends Service implements Tickable {
         if (player != null) {
             if (player.getCells().size() == 0) {
                 //End of the game
-            }
-            Vector vectorCenter = buildMassCenter(player, dx, dy);
+            } else {
+                Vector vectorCenter = buildMassCenter(player, dx, dy);
 
-            List<Cell> cellsToDelete = new ArrayList<>();
+                List<Cell> cellsToDelete = new ArrayList<>();
 
-            for (Cell cell : player.getCells()) {
-                for (Cell cell2 : player.getCells()) {
-                    if (!cellsToDelete.contains(cell) && !cellsToDelete.contains(cell2)) {
-                        if (!cell.equals(cell2)) {
-                            if (cell.getLocation().distanceTo(cell2.getLocation()) < 2.5 * cell.getRadius()) {
-                                cell.setMass(cell.getMass() + cell2.getMass());
-                                cellsToDelete.add(cell2);
+                for (Cell cell : player.getCells()) {
+                    for (Cell cell2 : player.getCells()) {
+                        if (!cellsToDelete.contains(cell) && !cellsToDelete.contains(cell2)) {
+                            if (!cell.equals(cell2)) {
+                                if (cell.getLocation().distanceTo(cell2.getLocation()) < 2.5 * cell.getRadius()) {
+                                    cell.setMass(cell.getMass() + cell2.getMass());
+                                    cellsToDelete.add(cell2);
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            for (Cell cell : cellsToDelete) {
+                for (Cell cell : cellsToDelete) {
                     player.getCells().remove(cell);
-            }
-            for (Cell cell : player.getCells()) {
-                double oldX = cell.getX();
-                double oldY = cell.getY();
-                double radius = cell.getRadius();
-                int mass = cell.getMass();
+                }
 
-                //Moving
-                double newX = Calculator.calculateDestinationOnTurn(oldX, dx, radius, mass,
-                        GameConstraints.DEFAULT_PLAYER_CELL_MASS);
-                double newY = Calculator.calculateDestinationOnTurn(oldY, dy, radius, mass,
-                        GameConstraints.DEFAULT_PLAYER_CELL_MASS);
-                Location pointWithoutCorrecting = new Location(newX, newY);
-                Location pointWithCorrecting = vectorCenter.getEnd(cell.getLocation());
-                Location properPoint = Vector.createVector(pointWithCorrecting, pointWithoutCorrecting)
-                        .divide(4)
-                        .getEnd(pointWithCorrecting);
+                for (Cell cell : player.getCells()) {
+                    double oldX = cell.getX();
+                    double oldY = cell.getY();
+                    double radius = cell.getRadius();
+                    int mass = cell.getMass();
 
-                if (properPoint.getX() < GameConstraints.FIELD_WIDTH
-                        && properPoint.getY() < GameConstraints.FIELD_HEIGHT
-                        && properPoint.getX() > 0
-                        && properPoint.getY() > 0) {
+                    //Moving
+                    double newX = Calculator.calculateDestinationOnTurn(oldX, dx, radius, mass,
+                            GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+                    double newY = Calculator.calculateDestinationOnTurn(oldY, dy, radius, mass,
+                            GameConstraints.DEFAULT_PLAYER_CELL_MASS);
+                    Location pointWithoutCorrecting = new Location(newX, newY);
+                    Location pointWithCorrecting = vectorCenter.getEnd(cell.getLocation());
+                    Location properPoint = Vector.createVector(pointWithCorrecting, pointWithoutCorrecting)
+                            .divide(4)
+                            .getEnd(pointWithCorrecting);
 
-                    //Eating food
-                    cell.setLocation(properPoint);
-                    Set<Food> foods = player.getSession().sessionField().getFoods();
-                    Location first = new Location(oldX, oldY);
-                    Location second = new Location(newX, newY);
-                    for (Food food : foods) {
-                        double foodX = food.getX();
-                        double foodY = food.getY();
-                        Location foodCenter = new Location(foodX, foodY);
-                        if (checkDistance(first, second, foodCenter, food.getRadius(), cell.getRadius())) {
-                            cell.setMass(cell.getMass() + 1);
-                            player.getSession().sessionField().getFoods().remove(food);
-                            player.getUser().setScore(player.getScore());
-                            DatabaseAccessLayer.updateUser(player.getUser());
-                        }
-                    }
+                    if (properPoint.getX() < GameConstraints.FIELD_WIDTH
+                            && properPoint.getY() < GameConstraints.FIELD_HEIGHT
+                            && properPoint.getX() > 0
+                            && properPoint.getY() > 0) {
 
-                    //Eating blob
-                    Set<Blob> blobs = player.getSession().sessionField().getBlobs();
-                    for (Blob blob : blobs) {
-                        double blobX = blob.getX();
-                        double blobY = blob.getY();
-                        Location blobCenter = new Location(blobX, blobY);
-                        if (checkDistance(first, second, blobCenter, blob.getRadius(), cell.getRadius())) {
-                            cell.setMass(cell.getMass() + 13);
-                            player.getSession().sessionField().removeBlob(blob);
-                            player.getUser().setScore(player.getScore());
-                            DatabaseAccessLayer.updateUser(player.getUser());
-                        }
-                    }
-
-                    //Eating another cell
-                    List<Cell> enemies = new CopyOnWriteArrayList<>();
-                    player.getSession().sessionPlayersList().stream()
-                            .filter((c) -> !c.equals(player))
-                            .map(Player::getCells)
-                            .forEach(enemies::addAll);
-                    for (Cell enemy : enemies) {
-                        double enemyX = enemy.getX();
-                        double enemyY = enemy.getY();
-                        Location enemyCenter = new Location(enemyX, enemyY);
-                        if (checkDistance(first, second, enemyCenter, enemy.getRadius(), cell.getRadius())) {
-                            EatComparator comparator = new EatComparator();
-                            if (comparator.compare(cell, enemy) == 1) {
-                                cell.setMass(cell.getMass() + enemy.getMass());
-                                enemy.getOwner().getCells().remove(enemy);
+                        //Eating food
+                        cell.setLocation(properPoint);
+                        Set<Food> foods = player.getSession().sessionField().getFoods();
+                        Location first = new Location(oldX, oldY);
+                        Location second = new Location(newX, newY);
+                        for (Food food : foods) {
+                            double foodX = food.getX();
+                            double foodY = food.getY();
+                            Location foodCenter = new Location(foodX, foodY);
+                            if (checkDistance(first, second, foodCenter, food.getRadius(), cell.getRadius())) {
+                                cell.setMass(cell.getMass() + 1);
+                                player.getSession().sessionField().getFoods().remove(food);
                                 player.getUser().setScore(player.getScore());
                                 DatabaseAccessLayer.updateUser(player.getUser());
                             }
                         }
-                    }
 
-                    //Splitting if is more than virus
-                    int oldMass = cell.getMass();
-                    List<Virus> viruses = player.getSession().sessionField().getViruses();
-                    for (Virus virus : viruses) {
-                        if (checkDistance(first, second, virus.getLocation(), virus.getRadius() / 2, cell.getRadius())) {
-                            if (oldMass >= virus.getMass()) {
-                                cell.setMass(oldMass / 2);
-                                Cell newCell = new Cell(ServerCalculator.calculateLocationOnSplitting(cell), player);
-                                newCell.setMass(oldMass / 2);
-                                player.addCell(newCell);
+                        //Eating blob
+                        Set<Blob> blobs = player.getSession().sessionField().getBlobs();
+                        for (Blob blob : blobs) {
+                            double blobX = blob.getX();
+                            double blobY = blob.getY();
+                            Location blobCenter = new Location(blobX, blobY);
+                            if (checkDistance(first, second, blobCenter, blob.getRadius(), cell.getRadius())) {
+                                cell.setMass(cell.getMass() + 13);
+                                player.getSession().sessionField().removeBlob(blob);
+                                player.getUser().setScore(player.getScore());
+                                DatabaseAccessLayer.updateUser(player.getUser());
+                            }
+                        }
+
+                        //Eating another cell
+                        List<Cell> enemies = new CopyOnWriteArrayList<>();
+                        player.getSession().sessionPlayersList().stream()
+                                .filter((c) -> !c.equals(player))
+                                .map(Player::getCells)
+                                .forEach(enemies::addAll);
+                        for (Cell enemy : enemies) {
+                            double enemyX = enemy.getX();
+                            double enemyY = enemy.getY();
+                            Location enemyCenter = new Location(enemyX, enemyY);
+                            if (checkDistance(first, second, enemyCenter, enemy.getRadius(), cell.getRadius())) {
+                                EatComparator comparator = new EatComparator();
+                                if (comparator.compare(cell, enemy) == 1) {
+                                    cell.setMass(cell.getMass() + enemy.getMass());
+                                    enemy.getOwner().getCells().remove(enemy);
+                                    player.getUser().setScore(player.getScore());
+                                    DatabaseAccessLayer.updateUser(player.getUser());
+                                }
+                            }
+                        }
+
+                        //Splitting if is more than virus
+                        int oldMass = cell.getMass();
+                        List<Virus> viruses = player.getSession().sessionField().getViruses();
+                        for (Virus virus : viruses) {
+                            if (checkDistance(first, second, virus.getLocation(), virus.getRadius() / 2, cell.getRadius())) {
+                                if (oldMass >= virus.getMass()) {
+                                    cell.setMass(oldMass / 2);
+                                    Cell newCell = new Cell(ServerCalculator.calculateLocationOnSplitting(cell), player);
+                                    newCell.setMass(oldMass / 2);
+                                    player.addCell(newCell);
+                                }
                             }
                         }
                     }

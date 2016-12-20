@@ -1,5 +1,7 @@
 package model;
 
+import dao.LeaderboardDao;
+import entities.leaderboard.Leaderboard;
 import org.jetbrains.annotations.NotNull;
 import protocol.GameConstraints;
 import utils.generators.FoodGenerator;
@@ -26,6 +28,9 @@ public class GameSessionImpl implements GameSession, Comparable<List<Player>> {
     @NotNull
     private final PlayerPlacer playerPlacer;
 
+    @NotNull
+    private Leaderboard leaderboard;
+
     public GameSessionImpl(@NotNull Field fieldToPlace) {
         FoodGenerator foodGenerator = new UniformFoodGenerator(
                 fieldToPlace,
@@ -37,6 +42,8 @@ public class GameSessionImpl implements GameSession, Comparable<List<Player>> {
         field = fieldToPlace;
         players = new ArrayList<>();
         field.generateFieldWithFood();
+        leaderboard = new Leaderboard();
+        new LeaderboardDao().insert(leaderboard);
         foodGenerator.startGenerating();
         virusGenerator.generate();
     }
@@ -45,13 +52,21 @@ public class GameSessionImpl implements GameSession, Comparable<List<Player>> {
     public void join(@NotNull Player player) {
         players.add(player);
         player.setSession(this);
+        leaderboard.addUser(player.getUser());
+        new LeaderboardDao().update(leaderboard);
         this.playerPlacer.place(player);
     }
 
     @Override
     public void leave(@NotNull Player player) {
+        leaderboard.deleteUser(player.getUser());
         players.remove(player);
+        new LeaderboardDao().update(leaderboard);
         player.setSession(null);
+    }
+
+    public Leaderboard getLeaderboard() {
+        return this.leaderboard;
     }
 
     @Override

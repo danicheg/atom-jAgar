@@ -13,12 +13,8 @@ import zagar.view.Food;
 import zagar.view.Virus;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 public class PacketHandlerReplicate {
 
@@ -45,9 +41,9 @@ public class PacketHandlerReplicate {
 
         Game.player.clear();
         List<Cell> cellToPlayer = new ArrayList<>();
-        for (int i = 0; i < gameCells.length; i++) {
-            if (gameCells[i].name.equals(Game.login)) {
-                cellToPlayer.add(gameCells[i]);
+        for (Cell gameCell : gameCells) {
+            if (gameCell.name.equals(Game.login)) {
+                cellToPlayer.add(gameCell);
             }
         }
         Cell[] gameCellsToPlayer = new Cell[cellToPlayer.size()];

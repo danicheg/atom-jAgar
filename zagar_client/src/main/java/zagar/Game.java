@@ -20,7 +20,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +57,7 @@ public class Game {
     public static double minSizeY = 0;
 
     @NotNull
-    public static List<Integer> playerID = new ArrayList<>();
+    private static List<Integer> playerID = new ArrayList<>();
 
     public static float followX;
     public static float followY;
@@ -73,9 +72,6 @@ public class Game {
 
     @NotNull
     public static String login = DEFAULT_LOGIN;
-
-    @NotNull
-    public static String password = DEFAULT_PASSWORD;
 
     @NotNull
     public static Map<Integer, String> cellNames = new HashMap<>();
@@ -93,7 +89,6 @@ public class Game {
     private AuthClient authClient = new AuthClient();
 
     private double zoomm = -1;
-    private int sortTimer;
 
     public Game() throws Exception {
 
@@ -135,7 +130,7 @@ public class Game {
                     DEFAULT_LOGIN
             );
 
-            password = JOptionPane.showInputDialog(
+            String password = JOptionPane.showInputDialog(
                     null,
                     "Password",
                     DEFAULT_PASSWORD

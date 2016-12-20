@@ -44,6 +44,11 @@ public class Leaderboard {
         newUser.setLeaderboard(this);
     }
 
+    public void deleteUser(@NotNull UserEntity deleteUser) {
+        users.remove(deleteUser);
+        deleteUser.setLeaderboard(null);
+    }
+
     @Override
     public String toString() {
         return "Leaderboard{" +

@@ -3,16 +3,14 @@ package zagar;
 import org.jetbrains.annotations.NotNull;
 import zagar.view.GameFrame;
 
-import static java.lang.Thread.sleep;
-
 public class Main {
 
     @NotNull
     public static GameFrame frame;
     @NotNull
-    private static Game game;
+    public static Game game;
 
-    public static GameThread thread;
+    private static GameThread thread;
 
     public static void main(@NotNull String[] args) {
         try {
@@ -24,10 +22,9 @@ public class Main {
         thread = new GameThread();
         frame = new GameFrame();
         start();
-
     }
 
-    public static void start() {
+    private static void start() {
         Main.frame.setVisible(true);
         thread.start();
         try {

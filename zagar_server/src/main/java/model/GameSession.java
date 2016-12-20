@@ -1,5 +1,6 @@
 package model;
 
+import entities.leaderboard.Leaderboard;
 import org.jetbrains.annotations.NotNull;
 import protocol.GameConstraints;
 
@@ -30,4 +31,6 @@ public interface GameSession {
     List<Player> sessionPlayersList();
 
     Field sessionField();
+
+    Leaderboard getLeaderboard();
 }
