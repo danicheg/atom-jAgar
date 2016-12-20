@@ -236,26 +236,34 @@ public class Game {
             zoom += (zoomm - zoom) / 40f;
 
             if (socket.session.isOpen()) {
-                float avgX = 0;
-                float avgY = 0;
-                totalSize = 0;
+                if (Main.frame.isActive()) {
+                    if ((GameFrame.mouseX >= 0)
+                            && (GameFrame.mouseY >= 0)
+                            && (GameFrame.mouseX <= Main.frame.getWidth())
+                            && (GameFrame.mouseY <= Main.frame.getHeight())) {
+                        float avgX = 0;
+                        float avgY = 0;
+                        totalSize = 0;
 
-                for (Cell c : Game.player) {
-                    avgX += c.x;
-                    avgY += c.y;
-                    totalSize += c.size;
+                        for (Cell c : Game.player) {
+                            avgX += c.x;
+                            avgY += c.y;
+                            totalSize += c.size;
+                        }
+
+                        avgX /= Game.player.size();
+                        avgY /= Game.player.size();
+
+                        float x = avgX;
+                        float y = avgY;
+                        x += (float) ((GameFrame.mouseX - GameFrame.size.width / 2) / zoom);
+                        y += (float) ((GameFrame.mouseY - GameFrame.size.height / 2) / zoom);
+
+                        followX = x;
+                        followY = y;
+                        new PacketMove(x, y, login).write();
+                    }
                 }
-
-                avgX /= Game.player.size();
-                avgY /= Game.player.size();
-
-                float x = avgX;
-                float y = avgY;
-                x += (float) ((GameFrame.mouseX - GameFrame.size.width / 2) / zoom);
-                y += (float) ((GameFrame.mouseY - GameFrame.size.height / 2) / zoom);
-                followX = x;
-                followY = y;
-                new PacketMove(x, y, login).write();
             }
         }
 
